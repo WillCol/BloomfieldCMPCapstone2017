@@ -1,0 +1,13 @@
+#!/user/bin/python
+import MSQLdb
+
+db = MySQLdb.connect(host"localhost",user="root",passwd="root",d b="Inventory")
+cur = db.cursor()
+
+
+
+cur.execute("SELECT * ALL FROM Stuff")
+for column in cur.fetchall()
+print column [0]
+print column [1]cur.execute("INSERT INTO Stuff VALUES (A,B)")
+

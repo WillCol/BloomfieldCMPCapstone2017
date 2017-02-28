@@ -1,0 +1,29 @@
+<html>
+  <head>
+    <title>Search page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Please, Search</h1>
+      <br>
+      <form action="" method="post" name="TaskSearch" >
+        <input type="text" placeholder="TaskID" name="TaskID" value="{{
+          request.form.TaskID }}">
+        <input class="btn btn-default" type="submit" value="Search">
+      </form>
+	<form action ="" method="post" name="UserSearch" >
+	<input type ="text" placeholder="UserID" name="UserID" value="{{
+	request.form.UserID }} ">
+	<input class="btn btn-default" type="submit" value="Search">
+	</form>
+      {% if result %}
+        <p class="result"><strong>Result:</strong> {{ result }}
+      {% endif %}
+
+	{% if result1 %}
+	<p class ="result"><string>Result1:</string> {{ result1 }}
+	{% endif %}
+    </div>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>LoggedIn Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <body>
+    <div class="container">
+      <h1>You are LoggedIn</h1>
+      <br>
+      {% if userType %}
+        <p class="userType"><strong>UserType:</strong> {{ userType }}
+      {% endif %}
+    </div>
+  </body>
+</html>
