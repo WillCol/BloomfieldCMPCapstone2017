@@ -1,0 +1,156 @@
+html{
+	height:100%;
+	padding:0;
+	margin:0;
+}
+.sidebar{
+	background-color:black;
+	position:fixed;
+	width:250px;
+	height:100%;
+	left: 250px;
+	margin-left: -250px;
+	z-index: 1000;
+	  overflow-y:auto;
+	 
+}
+.sidebar::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+.sidebar::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+.sidebar::-webkit-scrollbar-thumb
+{
+	background-color: #000000;
+}
+.sidebar p{
+	color:white;
+	  
+}
+a:link{
+
+text-decoration:none;	  
+}
+
+ul{
+	padding:0;
+	margin:0;
+	list-style-type: none;
+}
+li{
+	text-align:center;
+	padding-top:30px;
+	padding-bottom:30px;
+}
+
+
+li#logout{
+	position:absolute;
+	bottom:0;
+	color:white!important;
+	text-align:center!important;
+width:250px;
+}
+
+.fa.fa-dashboard{
+color:white;
+font-size:45px;
+padding-bottom:10px;
+
+}
+
+.fa.fa-user{
+color:white;
+font-size:45px;
+padding-bottom:10px;
+
+}
+
+.fa.fa-calendar{
+color:white;
+font-size:45px;
+padding-bottom:10px;
+
+}
+
+.fa.fa-users{
+color:white;
+font-size:45px;
+padding-bottom:10px;
+
+}
+
+.fa.fa-power-off{
+color:white;
+font-size:45px;
+padding-bottom:10px;
+
+}
+
+.fa.fa-archive{
+color:white;
+font-size:100px;
+padding-bottom:10px;
+
+
+}
+
+.fa.fa-folder{
+color:white;
+font-size:100px;
+padding-bottom:10px;
+
+}
+
+
+.calendar{
+	background-color:gray;
+	height:600px;
+	font-size:36px;
+	width:100%;
+	 text-align:center;
+}
+
+.wrapper{
+	
+	 padding-left: 250px;
+}
+
+.content{
+	
+	width:100%;
+    
+    padding: 15px;
+}
+.actions{
+	padding-top:90px;
+	
+	
+}
+button{
+	
+	width:400px;
+	border-radius:4px;
+	background-color:#4E78A0;
+	border:none;
+	height:170px;
+	padding:15px;
+	min-width:50px;
+	width:100%;
+	max-width:400px;
+	
+}
+button p{
+	color:white;
+	font-size:32px;
+}
+.col-md-4{
+	padding-bottom:15px!important;
+}
