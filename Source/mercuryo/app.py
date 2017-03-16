@@ -29,7 +29,7 @@ def login_required(f):
 # use decorators to link the function to a url
 @app.route('/')
 def home():
-    return "Hello, World!"  # return a string
+    return redirect(url_for('login'))  # return a string
 
 # LoggedIn page
 @app.route('/LoggedIn')
@@ -52,13 +52,13 @@ def search():
 				#converts values of column[0] to string
 				string = "%d" % column[0]
 				result = result+", "+string
-		elif request.form['submit'] == 'Search Users':
-			userID = request.form['UserID']
-			cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID=\'"+userID+"\'")
-			for column in cur.fetchall():
-				string = "d" % column[0]
-				result = result+", "+string
-		else:
+#		elif request.form['submit'] == 'Search Users':
+#			userID = request.form['UserID']
+#			cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID=\'"+userID+"\'")
+#			for column in cur.fetchall():
+#				string = "d" % column[0]
+#				result = result+", "+string
+#		else:
 			result = 'Invalid entry.'
 
 	return render_template('search.html', result=result)
@@ -78,8 +78,12 @@ def login():
 	for column in cur.fetchall():
         	if request.form['username'] == column[0] and request.form['password'] == column [1]:
 			userType = column[2]
+			userName = column[0]
+			session['security'] = userType
 			session['logged_in'] = True
+			session['username'] = userName
 			flash('You were just logged in!')
+			flash(session['security'])
 			return redirect(url_for('LoggedIn'))
 			#return render_template('LoggedIn.html', userType=userType)
 			#return redirect(url_for('home'))         
@@ -91,6 +95,8 @@ def login():
 @app.route('/logout')
 def logout():
 	session.pop('logged_in', None)
+	session.pop('username', None)
+	session.pop('security', None)
 	flash('You were just logged out!')
 	return redirect(url_for('login'))
 
@@ -109,8 +115,6 @@ def generic():
                 return "Request sucessfully submited!!"
         else:
 
-                db = MySQLdb.connect(host="localhost",user="root",passwd="root",db="Inventory")
-                cur = db.cursor()
                 cur.execute("Select * from Calendar where TaskID = "+taskID)
 
                 task  = {"start" : "beginning"}
@@ -144,8 +148,6 @@ def mainTable():
                 emp["def"].append("EmployeeAddress")
                 emp["def"].append("EmployeeDepartment")
 
-                db = MySQLdb.connect(host="localhost",user="root",passwd="root",db="Inventory")
-                cur = db.cursor()
                 cur.execute("Select * from Employee")
 
                 rowNum = 0
