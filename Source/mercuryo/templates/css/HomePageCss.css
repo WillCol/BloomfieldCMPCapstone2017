@@ -1,0 +1,310 @@
+body {
+padding-top: 40px;
+padding-left: 80px;
+padding-right: 80px;
+font-family: 'Droid Sans', sans-serif;
+background-image: -ms-radial-gradient(center, ellipse closest-side, #FFFFFF 0%, #D4CFD3 100%);
+
+/* Mozilla Firefox */ 
+background-image: -moz-radial-gradient(center, ellipse closest-side, #FFFFFF 0%, #D4CFD3 100%);
+
+/* Opera */ 
+background-image: -o-radial-gradient(center, ellipse closest-side, #FFFFFF 0%, #D4CFD3 100%);
+
+/* Webkit (Safari/Chrome 10) */ 
+background-image: -webkit-gradient(radial, center center, 0, center center, 125, color-stop(0, #FFFFFF), color-stop(100, #D4CFD3));
+
+/* Webkit (Chrome 11+) */ 
+background-image: -webkit-radial-gradient(center, ellipse closest-side, #FFFFFF 0%, #D4CFD3 100%);
+
+/* W3C Markup */ 
+background-image: radial-gradient(ellipse closest-side at center, #FFFFFF 0%, #D4CFD3 100%);
+}
+
+.starter-template{
+ padding: 40px 15px;
+  text-align: center;
+}
+
+.navbar-inverse {
+ background-color:#000;
+
+ font-size:26px;
+}
+
+
+.navbar-brand,
+.navbar-nav li a {
+padding-left: 40px;
+padding-right: 40px;
+	
+	
+}
+
+.navbar .navbar-nav {
+  display: inline-block;
+  float: none;
+  vertical-align: top;
+margin-bottom: 0px;
+ 
+ }
+
+
+.navbar .navbar-collapse {
+  text-align: center;
+
+  }
+
+
+.fa.fa-facebook-square{
+color:white;
+font-size:50px;
+transition-duration: 0.4s;
+
+}
+
+.fa.fa-twitter{
+color:white;
+font-size:50px;
+transition-duration: 0.4s;
+
+}
+.fa.fa-youtube{
+color:white;
+font-size:50px;
+transition-duration: 0.4s;
+
+}
+.fa.fa-google-plus{
+color:white;
+font-size:50px;
+padding-top:20px;
+transition-duration: 0.4s;
+
+}
+.fa.fa-linkedin{
+color:white;
+font-size:50px;
+padding-top:20px;
+transition-duration: 0.4s;
+}
+.fa.fa-facebook-square:hover {
+color:#3b5998
+
+}
+
+.fa.fa-twitter:hover{
+color: #1dcaff;
+
+}
+.fa.fa-youtube:hover{
+color:red;
+
+
+
+}
+
+.fa.fa-google-plus:hover{
+color:#d34836;
+
+
+
+}
+.fa.fa-linkedin:hover{
+color:#0077B5;
+
+
+} 
+
+button.readMore{
+	height:30px;
+	float:right;
+	border:none;
+	background-color:#426E86;
+	color:white;
+	border-radius: 8px;
+	
+}
+button:hover.readMore{
+	
+	background-color:#F9BA32;
+	color:black;
+	
+}
+.socialButtons a{
+	display:inline-block;
+	 
+	 margin-left:25px;
+	 margin-right:25px;
+}
+.carousel img {
+    min-width: 100%;
+}
+
+.statement{
+	text-align: center;
+	font-size: 25px;
+	padding-top: 20px; 
+}
+.LongBranchPic{
+	width:1130px;
+       height:360px;
+}
+.carousel{width:1130px;
+       height:360px;}
+	   
+	   
+.secondParagraph{
+	position:absolute;
+	font-family:FjallaOne-Regular;
+	
+	
+}
+.StopHand{
+	width:125px;
+height:125px;}
+	
+.UpcomingEvents td 
+{
+	font-size:15px;
+	border-bottom: 0.5px solid #e0e0e0;
+	padding-bottom:10px;
+	
+}
+.UpcomingEvents  th{
+	font-size:15px;
+	padding-top:20px;
+	
+	
+}
+.NewsLetterButton {
+	width:285px;
+	height:175px;
+	background-color:#F9BA32;
+	font-size:22px;
+	padding-top:40px;
+	
+	box-shadow: -10px 10px 10px #000;
+}
+
+
+.NewsLetterButton i {
+	
+	float:right;
+	font-size:50px;
+	color:white;
+	position: absolute;
+	margin-left:200px;
+	margin-top:50px;
+	
+}
+.sendButton{
+width:30px;
+height:30px;	
+position:absolute;
+margin-left:250px;
+}
+
+.sendButton i{
+	color:Black;
+	position:relative;
+}
+
+.secondImage img{
+	width:530px;
+	height:343px;
+	box-shadow: -7px 7px 7px #000;
+}
+	
+	
+
+
+#caro.container-fluid{
+	background-color:Black;
+	padding-top:40px;
+	margin-right:-80px;
+	 margin-left:-80px;
+}
+
+#upcoming.container{
+	
+	padding:10px;
+	 padding-bottom:20px;
+}
+#container2
+	
+	padding:10px;
+	
+}
+
+}
+ .col-md-4{
+	font-family: 'Droid Sans', sans-serif;
+	padding: 0px 50px 40px 50px;
+ color:white;
+ }
+ 
+  .col-md-4 button{
+font-family: 'Droid Sans', sans-serif;
+  font-size:20px;
+  background-color:#3E6E99;
+color:white;
+	 text-align:center;
+	 width:55%;
+	 height:40px;
+	 box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+	border: none;
+	transition-duration: 0.4s;
+ }
+   .col-md-4 button:hover{
+ background-color:white;;
+color:#426E86;
+ }
+ .col-md-4 p{
+	 
+	 padding-left:20px;
+	 padding-right:20px;
+	 padding-bottom:20px;
+	 font-family: 'Droid Sans', sans-serif;
+ }
+
+h3, th{
+	font-family: 'Droid Sans', sans-serif;
+	
+}
+
+p{
+	font-family: 'Droid Sans', sans-serif;
+}
+
+footer{
+	 height:250px;
+	 background-color:black;
+	margin-bottom:-40px;
+	margin-left:-100px;
+margin-right:-95px;
+color:white;
+padding-top:50px;
+ }
+
+ #container3.container-fluid{
+	background-color:#426E86;
+	padding:20px;
+	color:white;
+	margin-right:-80px;
+	 margin-left:-80px;
+ text-align:center;}
+	 #container1.container-fluid{
+	background-color:#426E86;
+	padding:20px;
+	color:white;
+	margin-right:-80px;
+	 margin-left:-80px;
+ text-align:center;}
+.glyphicon{
+	font-size:40px;
+	color:white;
+
+}
+
+
