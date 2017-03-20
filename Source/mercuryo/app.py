@@ -100,8 +100,9 @@ def logout():
 	flash('You were just logged out!')
 	return redirect(url_for('login'))
 
-# generic page
+# generic page for adding tasks
 @app.route('/generic', methods=['GET', 'POST'])
+@login_required
 def generic():
         #if request.method == 'GET':
         taskID = request.args["id"]
@@ -138,6 +139,7 @@ def generic():
 
 # main table
 @app.route('/mainTable')
+@login_required
 def mainTable():
                 ## do calcs here, give send dictionary of objects
                 emp = {"start" : "beginning"}
@@ -162,8 +164,142 @@ def mainTable():
                         rowNum = rowNum + 1
                 return render_template('mainTable.html', emp=emp)
 
+#user account page
+@app.route('/account')
+@login_required
+def account():
+	account = {'uName': 'null',  'fName': 'John', 'lName': 'null', 'role': 'null', 'email': 'null'}
+	eID = "null"
+	eName = "null"
+	userName = session['username']
+	cur.execute("Select UserName, EmployeeID from User where UserName = "+userName)
+	for column in cur.fetchall():
+		account['uName'] = column[0]
+		eID = column[1]
+	cur.execute("Select EmployeeName, JobTitle, EmployeeEmail from Employee where EmployeeID = "+eID)
+	for column in cur.fetchall():
+		eName = column[0] 
+		account['role'] = column[1]
+		account['email'] = column[2]
+	eNameS = eName.split(" ")
+	fName = eNameS[0]
+	lName = eNameS[1]
+	account['fName'] = fName
+	account['lName'] = lName
+	
+	return render_template('account.html', account=account)
+	  
+#new device page
+@app.route('/addDevice', methods=['GET', 'POST'])
+@login_required
+def addDevice():
+	dLocation = "Null"
+	sNumber = "null"
+	deviceName = "null"
+	IP = "null"
+	owner = "null"
+	DoD = "null"
+	go_back = "null"
+	deviceCategory = "null"
+	deviceStatus = "null"
+	dStatusInt = 0
+	if request.method == 'POST':
+		dLocation = request.form("location")
+		sNumber = request.form("serialNumber")
+		deviceName = request.form("computer")
+		IP = request.form("IP")
+		IPInt = int(IP)
+		owner = request.form("owner")
+		DoD = request.form("dateOfDeployment")
+		go_back = request.form("go-backDate")
+		deviceCategory = request.form("deviceCategory")
+		deviceStatus = request.form("deviceStatus")
+		if deviceStatus == "On field":
+			dStatusInt = 11111
+		elif deviceStatus == "Not on field":
+			dStatisInt = 22222
+		else:
+			dStatusInt = 33333
+		cur.execute(	"Insert into Device("
+					+ " DeviceName"
+					+ ",Desc"
+					+ ",DeviceCategory"
+					+ ",DeviceStatus_StatusID"
+					+ ",DeviceLocation"
+					+ ",DeviceOwner"
+					+ ",DateOfDeployment"
+					+ ",Go-Back Date"
+					+ ",IPAddress"
+					+ ") "  
+				+ "VALUES("
+				+ deviceName+","
+				+ "Serial Number: " + sNumber+","
+				+ deviceCategory+","
+				+ dStatusInt+","
+				+ dLocation+","
+				+ owner+","
+				+ DoD+","
+				+ go_back+","
+				+ IPInt
+				+ ")")
+
+		return redirect(url_for('mainTable'))
+		
+	return render_template('account.html')		
+
+#edit account
+@app.route('/editAccount', methods=['GET', 'POST'])
+@login_required
+def editAccount():
+        account = {'uName': 'null',  'fName': 'John', 'lName': 'null', 'role': 'null', 'email': 'null'}
+        eID = "null"
+        eName = "null"
+        userName = session['username']
+        cur.execute("Select UserName, EmployeeID from User where UserName = "+userName)
+        for column in cur.fetchall():
+                account['uName'] = column[0]
+                eID = column[1]
+        cur.execute("Select EmployeeName, JobTitle, EmployeeEmail from Employee where EmployeeID = "+eID)
+        for column in cur.fetchall():
+                eName = column[0]
+                account['role'] = column[1]
+                account['email'] = column[2]
+        eNameS = eName.split(" ")
+        fName = eNameS[0]
+        lName = eNameS[1]
+        account['fName'] = fName
+        account['lName'] = lName
+	if request.method == 'POST':
+		account['fName'] = request.form("fName")
+		account['lName'] = request.form("lname")
+		account['role'] = request.form("role")
+		account['email'] = request.form("email")
+		firstName = account['fName']
+		lastName = account['lName']
+		fullName = firstName + " " + lastName
+		cur.execute("Update Employee "
+				+ "set EmployeeName = " + fullName +","
+				+ "JobtTitle = " + account['role']+","
+				+ "EmployeeEmail + account['email'] where EmployeeID = "+eID)
+		return redirect(url_for('account'))
+	
+	return render_template('editAccount.html', account=account)
+ 			
+#change password
+@app.route('/changePassword', methods=['GET', 'POST'])
+@login_required
+def changePassword():
+	pWord = "null"
+	username = sessions['username']
+	if request.method == 'POST':
+		pWord = request.form("newPassword")
+		cur.execute("Update User set Password = " + pWord + " where UserName = "+username)
+		return redirect(url_for('account'))
+	
+	return render_template('changePassword.html')
 
 
+	
 # start the server with the 'run()' method
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug = False)
