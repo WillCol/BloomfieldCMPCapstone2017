@@ -65,57 +65,24 @@
 																			<table class="table table-bordered table-striped  table-hover"  id="Table">
 																				<thead>
 																					<tr>
-																						<th>Name</th>
-																						<th>Color</th>
-																						<th>Number</th>
+																						<th>{{ dic["def"][0] }}</th>
+																						<th>{{ dic["def"][1] }}</th>
+																						<th>{{ dic["def"][2] }}</th>
+																						<th>{{ dic["def"][3] }}</th>
+																						<th>{{ dic["def"][4] }}</th>
 																					</tr>
 																				</thead>
 																				
 																				<tbody>
+																				{% for k in dic %}
 																					<tr>
-																						<td>T Ghazali</td>
-																						<td>Red</td>
-																						<td>10</td>
+																						<td><a href=generic?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>
+																						<td>{{ dic[k][1] }}</td>
+																						<td>{{ dic[k][2] }}</td>
+																						<td>{{ dic[k][3] }}</td>
+																						<td>{{ dic[k][4] }}</td>
 																					</tr>
-																					<tr>
-																						<td>P Sherman</td>
-																						<td>Yellow</td>
-																						<td>5</td>
-																					</tr>
-																					<tr>
-																						<td>A Newman</td>
-																						<td>Red</td>
-																						<td>7</td>
-																						</tr>
-																					<tr>
-
-																						<td>L Mulligan</td>
-																						<td>Yellow</td>
-																						<td>2</td>
-																					</tr>
-																					<tr>
-																						<td>H Harrington</td>
-																						<td>Cyan</td>
-																						<td>5</td>
-																					</tr>
-																					<tr>
-																						<td>L Tuckerton</td>
-																						<td>Magenta</td>
-																						<td>10</td>
-																					</tr>
-																					<tr>
-																						<td>T Middleton</td>
-																						<td>Orange</td>
-																						<td>7</td>
-																					</tr>
-																					<tr>
-																						<td>N Newman</td>
-																						<td>Blue</td>
-																						<td>2</td>
-																					</tr>
-																					
-
-																					
+																				{% endfor %}
 																			</tbody>
 
 																			</table>

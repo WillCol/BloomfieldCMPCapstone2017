@@ -37,6 +37,33 @@ def home():
 def LoggedIn():
 	return render_template('index.html')
 
+# inventory page
+@app.route('/inventory')
+def Inventory():
+	dic = {"start": 'beginning'}
+	dic.setdefault("def", [])
+	dic["def"].append("Task ID")
+	dic["def"].append("Date Started")
+	dic["def"].append("Date Completed")
+	dic["def"].append("Task Status")
+	dic["def"].append("Task Type")
+
+	db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="Inventory")
+	cur = db.cursor()
+	cur.execute("Select * from Calendar")
+
+	rowNum = 0
+	for row in cur.fetchall():
+		dic.setdefault(rowNum, [])
+		dic[rowNum].append(row[0])
+		dic[rowNum].append(row[1])
+		dic[rowNum].append(row[2])
+		dic[rowNum].append(row[3])
+		dic[rowNum].append(row[4])
+		rowNum = rowNum + 1	
+
+        return render_template('inventory.html', dic=dic)
+
 # search page
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
