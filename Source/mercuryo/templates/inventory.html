@@ -70,17 +70,27 @@
 																						<th>{{ dic["def"][2] }}</th>
 																						<th>{{ dic["def"][3] }}</th>
 																						<th>{{ dic["def"][4] }}</th>
+																						<th>{{ dic["def"][5] }}</th>
+																						<th>{{ dic["def"][6] }}</th>
+																						<th>{{ dic["def"][7] }}</th>
+																						<th>{{ dic["def"][8] }}</th>
+																						<th>{{ dic["def"][9] }}</th>
 																					</tr>
 																				</thead>
 																				
 																				<tbody>
 																				{% for k in dic %}
 																					<tr>
-																						<td><a href=generic?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>
+																						<td><a href=editEntry?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>
 																						<td>{{ dic[k][1] }}</td>
 																						<td>{{ dic[k][2] }}</td>
 																						<td>{{ dic[k][3] }}</td>
 																						<td>{{ dic[k][4] }}</td>
+																						<td>{{ dic[k][5] }}</td>
+																						<td>{{ dic[k][6] }}</td>
+																						<td>{{ dic[k][7] }}</td>
+																						<td>{{ dic[k][8] }}</td>
+																						<td>{{ dic[k][9] }}</td>
 																					</tr>
 																				{% endfor %}
 																			</tbody>

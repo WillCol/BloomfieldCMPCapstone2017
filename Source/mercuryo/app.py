@@ -42,15 +42,20 @@ def LoggedIn():
 def Inventory():
 	dic = {"start": 'beginning'}
 	dic.setdefault("def", [])
-	dic["def"].append("Task ID")
-	dic["def"].append("Date Started")
-	dic["def"].append("Date Completed")
-	dic["def"].append("Task Status")
-	dic["def"].append("Task Type")
+	dic["def"].append("Device Name")
+	dic["def"].append("Description")
+	dic["def"].append("Category")
+	dic["def"].append("Status")
+	dic["def"].append("Location")
+	dic["def"].append("Owner")
+	dic["def"].append("Date of Deployment")
+	dic["def"].append("Go-back Date")
+	dic["def"].append("IP Address")
+	dic["def"].append("Serial Number")
 
 	db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="Inventory")
 	cur = db.cursor()
-	cur.execute("Select * from Calendar")
+	cur.execute("Select * from Device")
 
 	rowNum = 0
 	for row in cur.fetchall():
@@ -60,6 +65,11 @@ def Inventory():
 		dic[rowNum].append(row[2])
 		dic[rowNum].append(row[3])
 		dic[rowNum].append(row[4])
+		dic[rowNum].append(row[5])
+		dic[rowNum].append(row[6])
+		dic[rowNum].append(row[7])
+		dic[rowNum].append(row[8])
+		dic[rowNum].append(row[9])
 		rowNum = rowNum + 1	
 
         return render_template('inventory.html', dic=dic)
