@@ -37,43 +37,44 @@ def home():
 def editDevice():
         if request.method == 'POST':
          
-        	dLocation = request.form["location"]
-                sNumber = request.form["serialNumber"]
-                deviceName = request.form["computer"]
-                IP = request.form["IP"]
-                IPInt = int(IP)
-                owner = request.form["owner"]
-		desc = request.form["Desc"]
-                DoD = request.form["dateOfDeployment"]
-                go_back = request.form["go-backDate"]
-                deviceCategory = request.form["deviceCategory"]
-                deviceStatus = request.form["deviceStatus"]
-		deviceID = request.form["deviceID"]
-                if deviceStatus == "On field":
-                        dStatusInt = 11111
-                elif deviceStatus == "Not on field":
-                        dStatisInt = 22222
-                else:
-                        dStatusInt = 33333
-		cur.execute("UPDATE Device SET DeviceName = \'"+deviceName+"\' WHERE DeviceID =\'"+deviceID+"\'")
-		cur.execute("UPDATE Device SET Description = \'"+desc+"\' WHERE DeviceID = \'"+deviceID+"\'")
-		cur.execute("UPDATE Device SET DeviceCategory = \'"+deviceCategory+"\' WHERE DeviceID = \'"+deviceID+"\'")
-		cur.execute("UPDATE Device SET DeviceStatus_StatusID = \'"+deviceStatus+"\' WHERE DeviceID = \'"+deviceID+"\'")
-		cur.execute("UPDATE Device SET DeviceLocation = \'"+dLocation+"\' WHERE DeviceID = \'"+deviceID+"\'")
-		cur.execute("UPDATE Device SET DeviceOwner = \'"+owner+"\' WHERE DeviceID = \'"+deviceID+"\'")
-		cur.execute("UPDATE Device SET DateOfDeployment = \'"+DoD+"\' WHERE DeviceID = \'"+deviceID+"\'")
-		cur.execute("UPDATE Device SET GoBackDate = \'"+go_back+"\' WHERE DeviceID = \'"+deviceID+"\'")
-		cur.execute("UPDATE Device SET IPAddress = \'"+IP+"\' WHERE DeviceID = \'"+deviceID+"\'")
-		cur.execute("UPDATE Device SET SerialNumber = \'"+sNumber+"\' WHERE DeviceID = \'"+deviceID+"\'")
+	    dLocation = request.form["location"]
+            sNumber = request.form["serialNumber"]
+            deviceName = request.form["computer"]
+            IP = request.form["IP"]
+            IPInt = int(IP)
+            owner = request.form["owner"]
+  	    desc = request.form["Desc"]
+            DoD = request.form["dateOfDeployment"]
+            go_back = request.form["go-backDate"]
+            deviceCategory = request.form["deviceCategory"]
+            deviceStatus = request.form["deviceStatus"]
+	    deviceID = request.form["deviceID"]
+            if deviceStatus == "On field":
+            	dStatusInt = 11111
+            elif deviceStatus == "Not on field":
+            	dStatisInt = 22222
+            else:
+            	dStatusInt = 33333
+	    cur.execute("UPDATE Device SET DeviceName = \'"+deviceName+"\' WHERE DeviceID =\'"+deviceID+"\'")
+	    cur.execute("UPDATE Device SET Description = \'"+desc+"\' WHERE DeviceID = \'"+deviceID+"\'")
+            cur.execute("UPDATE Device SET DeviceCategory = \'"+deviceCategory+"\' WHERE DeviceID = \'"+deviceID+"\'")
+	    cur.execute("UPDATE Device SET DeviceStatus_StatusID = \'"+deviceStatus+"\' WHERE DeviceID = \'"+deviceID+"\'")
+	    cur.execute("UPDATE Device SET DeviceLocation = \'"+dLocation+"\' WHERE DeviceID = \'"+deviceID+"\'")
+	    cur.execute("UPDATE Device SET DeviceOwner = \'"+owner+"\' WHERE DeviceID = \'"+deviceID+"\'")
+	    cur.execute("UPDATE Device SET DateOfDeployment = \'"+DoD+"\' WHERE DeviceID = \'"+deviceID+"\'")
+	    cur.execute("UPDATE Device SET GoBackDate = \'"+go_back+"\' WHERE DeviceID = \'"+deviceID+"\'")
+	    cur.execute("UPDATE Device SET IPAddress = \'"+IP+"\' WHERE DeviceID = \'"+deviceID+"\'")
+	    cur.execute("UPDATE Device SET SerialNumber = \'"+sNumber+"\' WHERE DeviceID = \'"+deviceID+"\'")
 		
-		db.commit()
+	    db.commit()
 		
-                return redirect(url_for("Inventory"))
-        else:
+            return redirect(url_for("Inventory"))
+        
+	else:
 		devID = request.args["id"]
                 cur.execute("Select * from Device where DeviceID = "+devID)
 
-                labels = {"start": 'beginning'}
+		labels = {"start": 'beginning'}
         	labels.setdefault("def", [])
         	labels["def"].append("Device ID")
         	labels["def"].append("Device Name")
@@ -90,12 +91,12 @@ def editDevice():
 		dev = {"start": 'beginning'}
 
 		for row in cur.fetchall():
-                	dev.setdefault("data", [])
-                	dev["data"].append(row[0])
-               		dev["data"].append(row[1])
-                	dev["data"].append(row[2])
-                	dev["data"].append(row[3])
-                	dev["data"].append(row[4])
+			dev.setdefault("data", [])
+            		dev["data"].append(row[0])
+            		dev["data"].append(row[1])
+            		dev["data"].append(row[2])
+            		dev["data"].append(row[3])
+           		dev["data"].append(row[4])
 			dev["data"].append(row[5])
 			dev["data"].append(row[6])
 			dev["data"].append(row[7])
@@ -103,7 +104,6 @@ def editDevice():
 			dev["data"].append(row[9])
 			dev["data"].append(row[10])
 		
-               
                 return render_template('editDevice.html', dev=dev, labels=labels)
 
 
@@ -308,59 +308,44 @@ def account():
 @app.route('/addDevice', methods=['GET', 'POST'])
 @login_required
 def addDevice():
-	dLocation = "Null"
-	sNumber = "null"
-	deviceName = "null"
-	IP = "null"
-	owner = "null"
-	DoD = "null"
-	go_back = "null"
-	deviceCategory = "null"
-	deviceStatus = "null"
-	dStatusInt = 0
-	if request.method == 'POST':
-		dLocation = request.form("location")
-		sNumber = request.form("serialNumber")
-		deviceName = request.form("computer")
-		IP = request.form("IP")
-		IPInt = int(IP)
-		owner = request.form("owner")
-		DoD = request.form("dateOfDeployment")
-		go_back = request.form("go-backDate")
-		deviceCategory = request.form("deviceCategory")
-		deviceStatus = request.form("deviceStatus")
-		if deviceStatus == "On field":
+	if request.method == "POST":
+		dLocation = request.form["location"]
+        	sNumber = request.form["serialNumber"]
+        	deviceName = request.form["computer"]
+        	IP = request.form["IP"]
+        	owner = request.form["owner"]
+		desc = request.form["Desc"]
+        	DoD = request.form["dateOfDeployment"]
+        	go_back = request.form["go-backDate"]
+        	deviceCategory = request.form["deviceCategory"]
+        	deviceStatus = request.form["deviceStatus"]
+		deviceID = request.form["deviceID"]
+        	if deviceStatus == "On field":
 			dStatusInt = 11111
-		elif deviceStatus == "Not on field":
-			dStatisInt = 22222
-		else:
-			dStatusInt = 33333
-		cur.execute(	"Insert into Device("
-					+ " DeviceName"
-					+ ",Desc"
-					+ ",DeviceCategory"
-					+ ",DeviceStatus_StatusID"
-					+ ",DeviceLocation"
-					+ ",DeviceOwner"
-					+ ",DateOfDeployment"
-					+ ",Go-Back Date"
-					+ ",IPAddress"
-					+ ") "  
-				+ "VALUES("
-				+ deviceName+","
-				+ "Serial Number: " + sNumber+","
-				+ deviceCategory+","
-				+ dStatusInt+","
-				+ dLocation+","
-				+ owner+","
-				+ DoD+","
-				+ go_back+","
-				+ IPInt
-				+ ")")
-
-		return redirect(url_for('mainTable'))
+        	elif deviceStatus == "Not on field":
+            		dStatisInt = 22222
+        	else:
+            		dStatusInt = 33333
 		
-	return render_template('account.html')		
+		cur.execute("INSERT INTO Device (DeviceID, DeviceName, Description, DeviceCategory," 
+					+" DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
+					+" VALUES("
+					+"\'"+deviceName+"\',"
+					+"\'"+desc+"\',"
+					+"\'"+deviceCategory+"\',"
+					+"\'"+dStatusInt+"\',"
+					+"\'"+dLocation+"\',"
+					+"\'"+owner+"\',"
+					+"\'"+DoD+"\',"
+					+"\'"+go_back+"\',"
+					+"\'"+IP+"\',"
+					+"\'"+sNumber+"\'"
+					+")")		
+		db.commit()
+		
+        	return redirect(url_for("Inventory"))
+		
+	return render_template('addDevice.html')		
 
 #edit account
 @app.route('/editAccount', methods=['GET', 'POST'])
