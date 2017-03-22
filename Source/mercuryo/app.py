@@ -31,6 +31,82 @@ def login_required(f):
 def home():
     return redirect(url_for('login'))  # return a string
 
+# edit Entry page
+@app.route('/editDevice', methods=["GET", "POST"])
+@login_required
+def editDevice():
+        if request.method == 'POST':
+         
+        	dLocation = request.form["location"]
+                sNumber = request.form["serialNumber"]
+                deviceName = request.form["computer"]
+                IP = request.form["IP"]
+                IPInt = int(IP)
+                owner = request.form["owner"]
+		desc = request.form["Desc"]
+                DoD = request.form["dateOfDeployment"]
+                go_back = request.form["go-backDate"]
+                deviceCategory = request.form["deviceCategory"]
+                deviceStatus = request.form["deviceStatus"]
+		deviceID = request.form["deviceID"]
+                if deviceStatus == "On field":
+                        dStatusInt = 11111
+                elif deviceStatus == "Not on field":
+                        dStatisInt = 22222
+                else:
+                        dStatusInt = 33333
+		cur.execute("UPDATE Device SET DeviceName = \'"+deviceName+"\' WHERE DeviceID =\'"+deviceID+"\'")
+		cur.execute("UPDATE Device SET Description = \'"+desc+"\' WHERE DeviceID = \'"+deviceID+"\'")
+		cur.execute("UPDATE Device SET DeviceCategory = \'"+deviceCategory+"\' WHERE DeviceID = \'"+deviceID+"\'")
+		cur.execute("UPDATE Device SET DeviceStatus_StatusID = \'"+deviceStatus+"\' WHERE DeviceID = \'"+deviceID+"\'")
+		cur.execute("UPDATE Device SET DeviceLocation = \'"+dLocation+"\' WHERE DeviceID = \'"+deviceID+"\'")
+		cur.execute("UPDATE Device SET DeviceOwner = \'"+owner+"\' WHERE DeviceID = \'"+deviceID+"\'")
+		cur.execute("UPDATE Device SET DateOfDeployment = \'"+DoD+"\' WHERE DeviceID = \'"+deviceID+"\'")
+		cur.execute("UPDATE Device SET GoBackDate = \'"+go_back+"\' WHERE DeviceID = \'"+deviceID+"\'")
+		cur.execute("UPDATE Device SET IPAddress = \'"+IP+"\' WHERE DeviceID = \'"+deviceID+"\'")
+		cur.execute("UPDATE Device SET SerialNumber = \'"+sNumber+"\' WHERE DeviceID = \'"+deviceID+"\'")
+		
+		db.commit()
+		
+                return redirect(url_for("Inventory"))
+        else:
+		devID = request.args["id"]
+                cur.execute("Select * from Device where DeviceID = "+devID)
+
+                labels = {"start": 'beginning'}
+        	labels.setdefault("def", [])
+        	labels["def"].append("Device ID")
+        	labels["def"].append("Device Name")
+        	labels["def"].append("Description")
+        	labels["def"].append("Category")
+        	labels["def"].append("Status")
+        	labels["def"].append("Location")
+        	labels["def"].append("Owner")
+        	labels["def"].append("Date of Deployment")
+        	labels["def"].append("Go-back Date")
+        	labels["def"].append("IP Address")
+        	labels["def"].append("Serial Number")
+
+		dev = {"start": 'beginning'}
+
+		for row in cur.fetchall():
+                	dev.setdefault("data", [])
+                	dev["data"].append(row[0])
+               		dev["data"].append(row[1])
+                	dev["data"].append(row[2])
+                	dev["data"].append(row[3])
+                	dev["data"].append(row[4])
+			dev["data"].append(row[5])
+			dev["data"].append(row[6])
+			dev["data"].append(row[7])
+			dev["data"].append(row[8])
+			dev["data"].append(row[9])
+			dev["data"].append(row[10])
+		
+               
+                return render_template('editDevice.html', dev=dev, labels=labels)
+
+
 # LoggedIn page
 @app.route('/LoggedIn')
 @login_required
@@ -40,23 +116,24 @@ def LoggedIn():
 # inventory page
 @app.route('/inventory')
 def Inventory():
-	dic = {"start": 'beginning'}
-	dic.setdefault("def", [])
-	dic["def"].append("Device Name")
-	dic["def"].append("Description")
-	dic["def"].append("Category")
-	dic["def"].append("Status")
-	dic["def"].append("Location")
-	dic["def"].append("Owner")
-	dic["def"].append("Date of Deployment")
-	dic["def"].append("Go-back Date")
-	dic["def"].append("IP Address")
-	dic["def"].append("Serial Number")
+		
+	labels = {"start": 'beginning'}
+	labels.setdefault("def", [])
+	labels["def"].append("Device ID")
+	labels["def"].append("Device Name")
+	labels["def"].append("Description")
+	labels["def"].append("Category")
+	labels["def"].append("Status")
+	labels["def"].append("Location")
+	labels["def"].append("Owner")
+	labels["def"].append("Date of Deployment")
+	labels["def"].append("Go-back Date")
+	labels["def"].append("IP Address")
+	labels["def"].append("Serial Number")
 
-	db = MySQLdb.connect(host="localhost", user="root", passwd="root", db="Inventory")
-	cur = db.cursor()
 	cur.execute("Select * from Device")
 
+	dic = {"start": 'beginning'}
 	rowNum = 0
 	for row in cur.fetchall():
 		dic.setdefault(rowNum, [])
@@ -70,9 +147,10 @@ def Inventory():
 		dic[rowNum].append(row[7])
 		dic[rowNum].append(row[8])
 		dic[rowNum].append(row[9])
+		dic[rowNum].append(row[10])
 		rowNum = rowNum + 1	
 
-        return render_template('inventory.html', dic=dic)
+        return render_template('inventory.html', dic=dic, labels=labels)
 
 # search page
 @app.route('/search', methods=['GET', 'POST'])
