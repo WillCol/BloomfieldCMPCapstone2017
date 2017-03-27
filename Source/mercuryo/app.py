@@ -26,12 +26,22 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
 
+#security decorator
+def security_check(f):
+	@wraps(f)
+	def wrap(*args, **kwargs):
+		if session['security'] > 1:
+		return f(*args, **kwargs)
+	else:
+	return redirect(url_for('Inventory'))
+	return wrap
+
 # use decorators to link the function to a url
 @app.route('/')
 def home():
     return redirect(url_for('login'))  # return a string
 
-# edit Entry page
+# edit Device page
 @app.route('/editDevice', methods=["GET", "POST"])
 @login_required
 def editDevice():
@@ -49,12 +59,6 @@ def editDevice():
             deviceCategory = request.form["deviceCategory"]
             deviceStatus = request.form["deviceStatus"]
 	    deviceID = request.form["deviceID"]
-            if deviceStatus == "On field":
-            	dStatusInt = 11111
-            elif deviceStatus == "Not on field":
-            	dStatisInt = 22222
-            else:
-            	dStatusInt = 33333
 	    cur.execute("UPDATE Device SET DeviceName = \'"+deviceName+"\' WHERE DeviceID =\'"+deviceID+"\'")
 	    cur.execute("UPDATE Device SET Description = \'"+desc+"\' WHERE DeviceID = \'"+deviceID+"\'")
             cur.execute("UPDATE Device SET DeviceCategory = \'"+deviceCategory+"\' WHERE DeviceID = \'"+deviceID+"\'")
@@ -105,13 +109,6 @@ def editDevice():
 			dev["data"].append(row[10])
 		
                 return render_template('editDevice.html', dev=dev, labels=labels)
-
-
-# LoggedIn page
-@app.route('/LoggedIn')
-@login_required
-def LoggedIn():
-	return render_template('index.html')
 
 # inventory page
 @app.route('/inventory')
@@ -178,10 +175,6 @@ def search():
 
 	return render_template('search.html', result=result)
 
-@app.route('/welcome')
-def welcome():
-    return render_template('index.html')  # render a template
-
 # route for handling the login page logic
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -199,9 +192,7 @@ def login():
 			session['username'] = userName
 			flash('You were just logged in!')
 			flash(session['security'])
-			return redirect(url_for('LoggedIn'))
-			#return render_template('LoggedIn.html', userType=userType)
-			#return redirect(url_for('home'))         
+			return redirect(url_for('Inventory'))
 	
 	error = 'Invalid Credentials. Please, try again.'
     return render_template('login.html', error=error)
@@ -252,11 +243,39 @@ def generic():
                         rowNum = rowNum + 1
                 return render_template('generic.html', task=task)
 
-# main table
-@app.route('/mainTable')
+#edit employee
+@app.route('/editEmployee', methods=['GET', 'POST'])
 @login_required
-def mainTable():
-                ## do calcs here, give send dictionary of objects
+@security_check
+def editEmployee():
+	if request.method == "POST":
+                cur.execute("SELECT EmployeeID WHERE EmployeeEmail = "+email)
+                for column in cur.fetchall():
+                        eID = column[0]
+                eName = request.form["EmployeeName"]
+                jTitle = request.form["JobTitle"]
+                eAddress = request.form["EmployeeAddress"]
+                ePNumber = request.form["EmployeePhoneNumber"]
+                eDepartment = request.form["EmployeeDepartment"]
+                email = request.form["Email"]
+                cur.execute("UPDATE Phone SET (EmployeeName, JobTitle, EmployeeAddress,"
+                                +" EmployeeDepartment, EmployeeEmail)"
+                                +" VALUES("
+                                +"\'"+eName+"\',"
+                                +"\'"+jTitle+"\',"
+                                +"\'"+eAddress+"\',"
+                                +"\'"+email+"\'"
+                                +") WHERE EmployeeID = \'"+eID+"\'")
+                db.commit()
+                cur.execute("UPDATE Phone SET (PhoneNum, Employee_EmployeeID)"
+                                +" VALUES("
+                                +"\'"+ePNumber+"\',"
+                                +"\'"+eID+"\'"
+                                +") WHERE Employee_EmployeeID = \'"+eID+"\'")
+                db.commit()
+                return redirect(url_for('employeeTable'))
+	else:
+		eID = request.args["'id"
                 emp = {"start" : "beginning"}
                 emp.setdefault("def", [])
                 emp["def"].append("EmployeeID")
@@ -264,8 +283,9 @@ def mainTable():
                 emp["def"].append("JobTitle")
                 emp["def"].append("EmployeeAddress")
                 emp["def"].append("EmployeeDepartment")
+		emp["def"].append("EmployeeEmail")
 
-                cur.execute("Select * from Employee")
+                cur.execute("Select * from Employee WHERE EmployeeID = \'"+eID+"\'")
 
                 rowNum = 0
 
@@ -276,8 +296,33 @@ def mainTable():
                         emp[rowNum].append(row[2])
                         emp[rowNum].append(row[3])
                         emp[rowNum].append(row[4])
+			emp[rowNum].append(row[5])
                         rowNum = rowNum + 1
-                return render_template('mainTable.html', emp=emp)
+                return render_template('editEmployee.html', emp=emp)
+
+#edit user
+@app.route('/editUser', methods=['GET', 'POST']) 
+@login_required
+@security_check
+def editUser():
+        if request.method == "POST":
+		uID = request.args['id']
+                uName = request.form["UserName"]
+                pWord = request.form["Password"]
+                sec = request.form["Security"]
+                eID = request.form["EmployeeID"]
+                cur.execute("UPDATE User SET(UserName, Password, Security, Employee_EmployeeID, Security)"
+                                +" VALUES("
+                                +"\'"+uName+"\',"
+                                +"\'"+pWord+"\',"
+                                +"\'"+eID+"\',"
+                                +"\'"+sec+"\'"
+                                +") WHERE UserID = \'"+uID+"\'")
+                db.commit()
+                return redirect(url_for('userTable'))
+	else:
+		uID = request.args['id']
+
 
 #user account page
 @app.route('/account')
@@ -304,6 +349,97 @@ def account():
 	
 	return render_template('account.html', account=account)
 	  
+#add employee
+@app.route('/addemployee', methods=['GET', 'POST'])
+@login_required
+@security_check
+def addemployee():
+	if request.method == "POST":
+		eID = "null"
+		eName = request.form["EmployeeName"]
+		jTitle = request.form["JobTitle"]
+		eAddress = request.form["EmployeeAddress"]
+		ePNumber = request.form["EmployeePhoneNumber"]
+		eDepartment = request.form["EmployeeDepartment"]
+		email = request.form["Email"]
+		cur.execute("INSERT INTO Device (EmployeeName, JobTitle, EmployeeAddress,"
+				+" EmployeeDepartment, EmployeeEmail)"
+				+" VALUES("
+				+"\'"+eName+"\',"
+				+"\'"+jTitle+"\',"
+				+"\'"+eAddress+"\',"
+				+"\'"+email+"\'"
+				+")")
+		db.commit()
+		cur.execute("SELECT EmployeeID WHERE EmployeeEmail = "+email)
+		for column in cur.fetchall():
+			eID = column[0]
+		cur.execute("INSERT INTO Phone (PhoneNum, Employee_EmployeeID)"
+				+" VALUES("
+				+"\'"+ePNumber+"\',"
+				+"\'"+eID+"\'"
+				+")")
+		db.commit()
+		return redirect(url_for('employeeTable'))
+	
+	return render_template('addemployee.html')
+
+#add user
+@app.route('/adduser', methods=['GET', 'POST']
+@login_required
+@security_check
+def adduser():
+	if request.method == "POST":
+		uName = request.form["UserName"]
+		pWord = request.form["Password"]
+		sec = request.form["Security"]
+		eID = request.form["EmployeeID"]
+		cur.execute("INSERT INTO User (UserName, Password, Security, Employee_EmployeeID, Security)"
+				+" VALUES("
+				+"\'"+uName+"\',"
+				+"\'"+pWord+"\',"
+				+"\'"+eID+"\',"
+				+"\'"+sec+"\'"
+				+")")
+		db.commit()
+		return redirect(url_for('userTable'))
+	
+	return render_template('adduser.html')
+
+#add taskType
+@app.route('/addTaskType', methods=['GET', 'POST'])
+@login_required
+@security_check
+def addTaskType():
+	if request.user == "POST":
+		tDesc = request.form["TaskDesc"]
+		cur.execute("INSERT INTO Task (TaskDesc)"
+				+" VALUES("
+				+"\'"+tDesc+"\'"
+				+")")
+		db.commit()
+		return redirect(url_for('taskTable'))
+	
+	return render_template('addTaskType.html')
+
+#add deviceStatus
+@app.route('/addDeviceStatus', methods=['GET', 'POST')
+@login_required
+@security_check
+def addDeviceStatus():
+	if request.user == "POST":
+                sDesc = request.form["StatusDesc"]
+                cur.execute("INSERT INTO DeviceStatus (StatusDesc)"
+                                +" VALUES("
+                                +"\'"+sDesc+"\'"
+                                +")")
+                db.commit()
+                return redirect(url_for('statusTable'))
+
+        return render_template('addDeviceStatis.html')
+	
+		
+
 #new device page
 @app.route('/addDevice', methods=['GET', 'POST'])
 @login_required
@@ -327,7 +463,7 @@ def addDevice():
         	else:
             		dStatusInt = 33333
 		
-		cur.execute("INSERT INTO Device (DeviceID, DeviceName, Description, DeviceCategory," 
+		cur.execute("INSERT INTO Device (DeviceName, Description, DeviceCategory," 
 					+" DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
 					+" VALUES("
 					+"\'"+deviceName+"\',"
@@ -376,11 +512,14 @@ def editAccount():
 		account['email'] = request.form("email")
 		firstName = account['fName']
 		lastName = account['lName']
+		role = account['role']
+		email = account['email']
 		fullName = firstName + " " + lastName
 		cur.execute("Update Employee "
-				+ "set EmployeeName = " + fullName +","
-				+ "JobtTitle = " + account['role']+","
-				+ "EmployeeEmail + account['email'] where EmployeeID = "+eID)
+				+ "set EmployeeName = \'"+fullName+"\',"
+				+ " JobtTitle = \'" +role+"\',"
+				+ " EmployeeEmail = \'"+email+"\' where EmployeeID = \'"+eID"\'")
+				db.commit()
 		return redirect(url_for('account'))
 	
 	return render_template('editAccount.html', account=account)
