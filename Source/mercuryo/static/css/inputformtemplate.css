@@ -1,4 +1,5 @@
 
+
 html{
 	height:100%;
 	padding:0;
@@ -120,9 +121,9 @@ button{
 
 
 fieldset>input{
-	min-width:50%;
-
-width:50%;
+	min-width:200px;
+	
+width:310px;
 	
 }
 
@@ -149,7 +150,7 @@ label{
     display:inline-block;
 	width:150px;
     padding-right:60px;
-	padding-bottom:40px;
+	padding-bottom:30px;
 }
 
 #inputImage img{
@@ -167,8 +168,8 @@ label{
 	
 }
 #inputImage input{
-	width:150px;
-	
+	width:310px;
+	min-width:200px
 }
 
 #submitButton{
@@ -204,7 +205,15 @@ fieldset{
 	width:30%;
 	
 }
+form .error {
+  color: #ff0000;
+}
 
+ .error {
+    display:inline-flex;
+	width:310px;
+	min-width:200px;
+  }
 h1{
 	text-align:center;
 	
