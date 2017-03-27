@@ -80,7 +80,6 @@ def editDevice():
 
 		labels = {"start": 'beginning'}
         	labels.setdefault("def", [])
-        	labels["def"].append("Device ID")
         	labels["def"].append("Device Name")
         	labels["def"].append("Description")
         	labels["def"].append("Category")
@@ -106,7 +105,6 @@ def editDevice():
 			dev["data"].append(row[7])
 			dev["data"].append(row[8])
 			dev["data"].append(row[9])
-			dev["data"].append(row[10])
 		
                 return render_template('editDevice.html', dev=dev, labels=labels)
 
@@ -285,7 +283,7 @@ def editEmployee():
                 emp["def"].append("EmployeeDepartment")
 		emp["def"].append("EmployeeEmail")
 
-                cur.execute("Select * from Employee WHERE EmployeeID = \'"+eID+"\'")
+                cur.execute("SELECT * FROM Employee WHERE EmployeeID = \'"+eID+"\'")
 
                 rowNum = 0
 
@@ -298,7 +296,12 @@ def editEmployee():
                         emp[rowNum].append(row[4])
 			emp[rowNum].append(row[5])
                         rowNum = rowNum + 1
-                return render_template('editEmployee.html', emp=emp)
+		pNumber = {'pNum' : 'null'}
+		cur.execute("SELECT PhoneNum from Phone WHERE Employee_EmployeeID = \'"+eID+"\'")
+		for column in cur.fetchall():
+			pNumber['pNum'] = column[0]
+		 
+                return render_template('editEmployee.html', emp=emp, pNumber=pNumber)
 
 #edit user
 @app.route('/editUser', methods=['GET', 'POST']) 
@@ -311,7 +314,7 @@ def editUser():
                 pWord = request.form["Password"]
                 sec = request.form["Security"]
                 eID = request.form["EmployeeID"]
-                cur.execute("UPDATE User SET(UserName, Password, Security, Employee_EmployeeID, Security)"
+                cur.execute("UPDATE User SET(UserName, Password, Employee_EmployeeID, Security)"
                                 +" VALUES("
                                 +"\'"+uName+"\',"
                                 +"\'"+pWord+"\',"
@@ -322,6 +325,84 @@ def editUser():
                 return redirect(url_for('userTable'))
 	else:
 		uID = request.args['id']
+                emp = {"start" : "beginning"}
+                emp.setdefault("def", [])
+                emp["def"].append("UserName")
+                emp["def"].append("Password")
+                emp["def"].append("Security")
+                emp["def"].append("EmployeeID")
+
+		cur.execute("SELECT UserName, Password, Employee_EmployeeID, Security FROM User WHERE UserID = \'"+uID+"\'")
+
+                rowNum = 0
+
+                for row in cur.fetchall():
+                        emp.setdefault(rowNum, [])
+                        emp[rowNum].append(row[0])
+                        emp[rowNum].append(row[1])
+                        emp[rowNum].append(row[2])
+                        emp[rowNum].append(row[3])
+                        rowNum = rowNum + 1
+                return render_template('editUser.html', emp=emp)
+
+#edit tasktype
+@app.route('/editTaskType', methods=['GET', 'POST'])
+@login_required
+@security_check
+def editTaskType():
+        if request.method == "POST":
+		tID = request.args['id']
+                tDesc = request.form["TaskDesc"]
+                cur.execute("UPDATE Task SET(TaskDesc)"
+                                +" VALUES("
+                                +"\'"+tDesc+"\'"
+                                +") WHERE TaskType = \'"+tID+"\'")
+                db.commit()
+                return redirect(url_for('taskTable'))
+	else:
+                tID = request.args['id']
+                emp = {"start" : "beginning"}
+                emp.setdefault("def", [])
+                emp["def"].append("TaskDesc")
+
+                cur.execute("SELECT TaskDesc FROM Task WHERE TaskType = \'"+uID+"\'")
+
+                rowNum = 0
+
+                for row in cur.fetchall():
+                        emp.setdefault(rowNum, [])
+                        emp[rowNum].append(row[0])
+                        rowNum = rowNum + 1
+                return render_template('editTaskType.html', emp=emp)
+
+#edit device status
+@app.route('/editDeviceStatus', methods=['GET', 'POST'])
+@login_required	
+@security_check
+def editDeviceStatus():
+        if request.user == "POST":
+		dID = request.args['id']
+                sDesc = request.form["StatusDesc"]
+                cur.execute ("UPDATE DeviceStatus SET (StatusDesc)"
+                                +" VALUES("
+                                +"\'"+sDesc+"\'"
+                                +") WHERE StatusID = \'"+dID+"\'") 
+                db.commit()
+                return redirect(url_for('statusTable'))
+	else:
+		dID = request.args['id']
+		emp = {"start" : "beginning"}
+                emp["def"].append("StatusDesc")
+
+                cur.execute("SELECT StatusDesc FROM DeviceStatus WHERE StatusID = \'"+dID+"\'")
+
+                rowNum = 0
+
+                for row in cur.fetchall():
+                        emp.setdefault(rowNum, [])
+                        emp[rowNum].append(row[0])
+                        rowNum = rowNum + 1
+                return render_template('editDeviceStatus.html', emp=emp)
 
 
 #user account page
@@ -411,7 +492,7 @@ def adduser():
 @login_required
 @security_check
 def addTaskType():
-	if request.user == "POST":
+	if request.method == "POST":
 		tDesc = request.form["TaskDesc"]
 		cur.execute("INSERT INTO Task (TaskDesc)"
 				+" VALUES("
@@ -456,12 +537,6 @@ def addDevice():
         	deviceCategory = request.form["deviceCategory"]
         	deviceStatus = request.form["deviceStatus"]
 		deviceID = request.form["deviceID"]
-        	if deviceStatus == "On field":
-			dStatusInt = 11111
-        	elif deviceStatus == "Not on field":
-            		dStatisInt = 22222
-        	else:
-            		dStatusInt = 33333
 		
 		cur.execute("INSERT INTO Device (DeviceName, Description, DeviceCategory," 
 					+" DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
