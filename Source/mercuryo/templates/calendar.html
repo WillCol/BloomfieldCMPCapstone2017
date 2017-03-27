@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../favicon.ico">
+
+<title></title>
+
+<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"> 
+<link  rel="stylesheet"href="../static/css/inputformtemplate.css">
+<link rel="stylesheet" href="../static/css/font-awesome.css">
+<link  rel="stylesheet"href="../static/css/fullcalendar.css">
+
+<script type="text/javascript" src="../static/js/moment.min.js"></script>
+<script type="text/javascript" src="../static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../static/js/fullcalendar.js"></script>
+</head>
+
+<body>
+
+
+<div id="wrapper">
+
+
+<div id="sidebar">
+<ul>
+<li id="Logo"><img src="http://placehold.it/119x121"></li>
+
+<li><a href=""><i class="fa fa-table" aria-hidden="true"></i><p>Inventory</p></a></li>
+
+<li><a href=""><i class="fa fa-user" aria-hidden="true"></i><p>My account</p></a></li>
+
+<li><a href=""><i class="fa fa-calendar" aria-hidden="true"></i><p>Calendar</p></a></li>
+
+<li><a href=""><i class="fa fa-users" aria-hidden="true"></i><p>Users</p></a></li>
+<li></li>
+<li><a href=""><i class="fa fa-power-off" aria-hidden="true"></i><p>Logout
+</p></a></li>
+
+</ul>
+</div>
+<div id="content">
+
+<div class="container-fluid" style="padding-top:45px">
+<div  class="row">
+<div class="col-md-12">
+<div id='calendar'></div>
+<div id="fullCalModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
+                <h4 id="modalTitle" class="modal-title"></h4>
+            </div>
+            <div id="modalBody" class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary"><a id="eventUrl" target="_blank" style="color:white">Event Page</a></button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+</div>
+</div>
+
+
+
+
+
+
+<script>
+$(document).ready(function() {
+
+
+
+$('#calendar').fullCalendar({
+ 
+    events: '/hackyjson/cal/',
+        header: {
+            left: '',
+            center: 'prev title next',
+            right: ''
+        },
+        eventClick:  function(event, jsEvent, view) {
+            $('#modalTitle').html(event.title);
+            $('#modalBody').html(event.description);
+            $('#eventUrl').attr('href',event.url);
+            $('#fullCalModal').modal();
+        },
+ 
+ events: [
+        {
+            title  : 'Event1',
+            start  : '2017-03-01',
+			description: 'This event is on 03/01/2017'
+		},
+        {
+            title  : 'Event2',
+            start  : '2017-03-05',
+			description: 'This event is on 03/05/2017'
+        },
+        {
+            title  : 'Event3',
+            start  : '2017-03-09',
+			description: 'This event is on 03/09/2017'
+            
+        }
+    ]
+	
+})
+
+$('#calendar').fullCalendar('option', 'height', 850);
+});
+</script>
+
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+
+
+
+</body>
+
+
+</html>																																			
