@@ -594,10 +594,40 @@ def editAccount():
 				+ "set EmployeeName = \'"+fullName+"\',"
 				+ " JobtTitle = \'" +role+"\',"
 				+ " EmployeeEmail = \'"+email+"\' where EmployeeID = \'"+eID"\'")
-				db.commit()
+		db.commit()
 		return redirect(url_for('account'))
 	
 	return render_template('editAccount.html', account=account)
+
+#delete employee
+@app.route('/deleteEmployee', methods['GET', 'POST'])
+@login_required
+@security_check
+def deleteEmployee():
+	if request.method == 'POST':
+		eID = request.form["employeeID"]
+		cur.execute("DELETE FROM Employee where EmployeeID = \'"+eID+"\'")
+		db.commit()
+		return redirect(url_for('employeeTable')
+	
+	return render_template('deleteEmployee.html')
+
+#delete user
+@app.route('/deleteUser', methods['GET', 'POST'])
+@login_required
+@security_check
+def deleteUser():
+        if request.method == 'POST':
+                uID = request.form["userID"]
+                cur.execute("DELETE FROM User where UserID = \'"+uID+"\'")
+                db.commit()
+                return redirect(url_for('userTable')
+
+        return render_template('deleteUser.html')
+
+#delete calendar task
+
+		
  			
 #change password
 @app.route('/changePassword', methods=['GET', 'POST'])
