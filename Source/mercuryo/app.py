@@ -147,6 +147,164 @@ def Inventory():
 
         return render_template('inventory.html', dic=dic, labels=labels)
 
+#user table
+@app.route('/userTable')
+@login_required
+@security_check
+def userTable():
+
+        labels = {"start": 'beginning'}
+        labels.setdefault("def", [])
+        labels["def"].append("UserID")
+        labels["def"].append("UserName")
+        labels["def"].append("Password")
+        labels["def"].append("Employee_EmployeeID")
+        labels["def"].append("Security")
+
+        cur.execute("Select * from User")
+
+        dic = {"start": 'beginning'}
+        rowNum = 0
+        for row in cur.fetchall():
+                dic.setdefault(rowNum, [])
+                dic[rowNum].append(row[0])
+                dic[rowNum].append(row[1])
+                dic[rowNum].append(row[2])
+                dic[rowNum].append(row[3])
+                dic[rowNum].append(row[4])
+                rowNum = rowNum + 1
+
+        return render_template('userTable.html', dic=dic, labels=labels)
+
+#employee table
+@app.route('/employeeTable')
+@login_required
+@security_check
+def employeeTable():
+
+        labels = {"start": 'beginning'}
+        labels.setdefault("def", [])
+        labels["def"].append("EmployeeID")
+        labels["def"].append("EmployeeName")
+        labels["def"].append("JobTitle")
+        labels["def"].append("EmployeeAddress")
+        labels["def"].append("EmployeeDepartment")
+        labels["def"].append("EmployeeEmail")
+
+
+        cur.execute("Select * from Employee")
+
+        dic = {"start": 'beginning'}
+        rowNum = 0
+        for row in cur.fetchall():
+                dic.setdefault(rowNum, [])
+                dic[rowNum].append(row[0])
+                dic[rowNum].append(row[1])
+                dic[rowNum].append(row[2])
+                dic[rowNum].append(row[3])
+                dic[rowNum].append(row[4])
+		dic[rowNum].append(row[5])
+		pNum = "null"
+		cur.execute("SELECT PhoneNum FROM Phone WHERE Employee_EmployeeID = "+row[0])
+		for column in cur.fetchall():
+			pNum = column[0]
+		dic[rowNum].append(pNum) 
+                rowNum = rowNum + 1
+
+        return render_template('employeeTable.html', dic=dic, labels=labels)
+
+#taskType table
+@app.route('/taskTypeTable')
+@login_required
+def taskTypeTable():
+
+        labels = {"start": 'beginning'}
+        labels.setdefault("def", [])
+        labels["def"].append("TaskType")
+        labels["def"].append("TaskDesc")
+
+        cur.execute("Select * from Task")
+
+        dic = {"start": 'beginning'}
+        rowNum = 0
+        for row in cur.fetchall():
+                dic.setdefault(rowNum, [])
+                dic[rowNum].append(row[0])
+                dic[rowNum].append(row[1])
+                rowNum = rowNum + 1
+
+        return render_template('taskTypeTable.html', dic=dic, labels=labels)
+
+#deviceStatus table
+@app.route('/deviceStatusTable')
+@login_required
+def deviceStatusTable():
+
+        labels = {"start": 'beginning'}
+        labels.setdefault("def", [])
+        labels["def"].append("StatusID")
+        labels["def"].append("StatusDesc")
+
+        cur.execute("Select * from DeviceStatus")
+
+        dic = {"start": 'beginning'}
+        rowNum = 0
+        for row in cur.fetchall():
+                dic.setdefault(rowNum, [])
+                dic[rowNum].append(row[0])
+                dic[rowNum].append(row[1])
+                rowNum = rowNum + 1
+
+        return render_template('deviceStatusTable.html', dic=dic, labels=labels)
+
+
+
+#task table
+@app.route('/taskTable')
+@login_required
+def taskTable():
+	uID = session['userID']
+
+        labels = {"start": 'beginning'}
+        labels.setdefault("def", [])
+        labels["def"].append("TaskID")
+        labels["def"].append("DateStarted")
+        labels["def"].append("DateCompleted")
+        labels["def"].append("TaskStatus")
+        labels["def"].append("TaskType")
+        labels["def"].append("TaskDescription")
+        labels["def"].append("DeviceID")
+
+	taskList["null"]
+        cur.execute("SELECT Calendar_TaskID FROM User_Has_Calendar WHERE User_UserID = "+uID)
+	for row in cur.fetchall():
+		taskList.append(row[0])
+		
+	
+        dic = {"start": 'beginning'}
+        rowNum = 0
+        for tasks in taskList:
+		taskCheck = rowNum + 1
+		cur.execute("SELECT * FROM Calendar where TaskID = "+taskList[taskCheck])
+		for row in cur.fetchall():
+			dic.setdefault(rowNum, [])
+                        dic[rowNum].append(row[0])
+                        dic[rowNum].append(row[1])
+                        dic[rowNum].append(row[2])
+                        dic[rowNum].append(row[3])
+                        dic[rowNum].append(row[4])
+                        dic[rowNum].append(row[5])
+                        dID = "null"
+                        cur.execute("SELECT Device_DeviceID FROM Device_Has_Calendar WHERE Calendar_TaskID = "+row[0])
+                        for column in cur.fetchall():
+				dID = column[0]
+                                dic[rowNum].append(dID)
+                rowNum = rowNum + 1
+
+        return render_template('employeeTable.html', dic=dic, labels=labels)
+
+
+
 # search page
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
@@ -180,14 +338,16 @@ def login():
     error = None
     userType = None
     if request.method == 'POST':
-	cur.execute("SELECT UserName, Password, Security FROM User")
+	cur.execute("SELECT UserID, UserName, Password, Security FROM User")
 	for column in cur.fetchall():
-        	if request.form['username'] == column[0] and request.form['password'] == column [1]:
+        	if request.form['username'] == column[1] and request.form['password'] == column [2]:
 			userType = column[2]
-			userName = column[0]
+			userName = column[1]
+			userID = column[0]
 			session['security'] = userType
 			session['logged_in'] = True
 			session['username'] = userName
+			session['userID'] = userID
 			flash('You were just logged in!')
 			flash(session['security'])
 			return redirect(url_for('Inventory'))
@@ -348,7 +508,7 @@ def editUser():
 #edit tasktype
 @app.route('/editTaskType', methods=['GET', 'POST'])
 @login_required
-#@security_check
+@security_check
 def editTaskType():
         if request.method == "POST":
 		tID = request.args['id']
@@ -487,6 +647,48 @@ def adduser():
 	
 	return render_template('adduser.html')
 
+#add task
+@app.route('/addtask', methods=['GET', 'POST'])
+@login_required
+@security_check
+def addTask():
+	uID = sessions["userID"]
+        if request.method == "POST":
+                taskID = request.form["TaskID"]
+                dStart = request.form["DateStarted"]
+                dComp = request.form["DateCompleted"]
+                tStatus = request.form["TaskStatus"]
+		tType = request.form["TaskType"]
+		device = request.form["DeviceID"]
+                cur.execute("INSERT INTO Calendar (TaskID, DateStart, DateComplete, TaskStatus, Task_TaskType)"
+                                +" VALUES("
+                                +"\'"+taskID+"\',"
+                                +"\'"+dStart+"\',"
+                                +"\'"+dComp+"\',"
+                                +"\'"+tStatus+"\'"
+                                +"\'"+tType+"\'"
+                                +")")
+		db.commit()
+
+		cur.execute("INSERT INTO User_Has Calendar (User_UserID, Calendar_TaskID)"
+				+" VALUES("
+                                +"\'"+uID+"\',"
+                                +"\'"+taskID+"\',"
+				+")")
+                db.commit()
+		
+		cur.execute("INSERT INTO Device_Has_Calendar (Device_DeviceID, Calendar_TaskID)"
+				+" VALUES("
+                                +"\'"+device+"\',"
+                                +"\'"+taskID+"\',"
+                                +")")
+		db.commit()
+
+		return redirect(url_for('taskTable'))
+
+	return render_template('addtask.html')
+
+
 #add taskType
 @app.route('/addTaskType', methods=['GET', 'POST'])
 @login_required
@@ -607,8 +809,10 @@ def editAccount():
 def deleteEmployee():
 	if request.method == 'POST':
 		eID = request.form["employeeID"]
-		cur.execute("DELETE FROM Employee where EmployeeID = \'"+eID+"\'")
+		cur.execute("DELETE FROM Employee where EmployeeID = "+eID)
 		db.commit()
+		cur.execute("DELETE FROM Phone WHERE Employee_EmployeeID = "+eID)
+		db.commit() 
 		return redirect(url_for('employeeTable'))
 	
 	return render_template('deleteEmployee.html')
@@ -620,15 +824,65 @@ def deleteEmployee():
 def deleteUser():
         if request.method == 'POST':
                 uID = request.form["userID"]
-                cur.execute("DELETE FROM User where UserID = \'"+uID+"\'")
+                cur.execute("DELETE FROM User WHERE UserID = "+uID)
                 db.commit()
                 return redirect(url_for('userTable'))
 
         return render_template('deleteUser.html')
 
 #delete calendar task
+app.route('/deleteTask', methods=['GET', 'POST'])
+@login_required
+def deleteTask():
+	if request.method == 'POST':
+		tID = request.form["taskID"]
+		cur.execute("DELETE FROM Calendar WHERE TaskID = "+tID)
+		db.commit()
+		cur.execute("DELETE FROM User_Has_Calendar WHERE TaskID = "+tID)
+		db.commit()
+		cur.execute("DELETE FROM Device_Has_Calendar WHERE TaskID ="+tID)
+		db.commit()
+		return redirect(url_for('calendar'))
+	
+	return render_template('deleteTask.html')
 
-		
+#delete device
+app.route('/deleteDevice', methods=['GET', 'POST'])
+@login_required
+def deleteDevice():
+        if request.method == 'POST':
+                dID = request.form["deviceID"]
+                cur.execute("DELETE FROM Device WHERE deviceID = "+dID)
+                db.commit()
+                return redirect(url_for('inventory'))
+
+        return render_template('deleteDevice.html')
+
+#delete deviceStatus
+app.route('/deleteDeviceStatus', methods=['GET', 'POST'])
+@login_required
+@security_check
+def deleteDeviceStatus():
+        if request.method == 'POST':
+                sID = request.form["statusID"]
+                cur.execute("DELETE FROM DeviceStatus WHERE StatusID = "+sID)
+                db.commit()
+                return redirect(url_for('deviceStatusTable'))
+
+        return render_template('deleteDeviceStatus.html')
+
+#delete TaskType
+app.route('/deleteTaskType', methods=['GET', 'POST'])
+@login_required
+@security_check
+def deleteTaskType():
+        if request.method == 'POST':
+                tID = request.form["taskType"]
+                cur.execute("DELETE FROM Task WHERE TaskType = "+tID)
+                db.commit()
+                return redirect(url_for('taskTypeTable'))
+
+        return render_template('deleteTaskType.html')
  			
 #change password
 @app.route('/changePassword', methods=['GET', 'POST'])
