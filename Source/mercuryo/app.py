@@ -190,6 +190,7 @@ def employeeTable():
         labels["def"].append("EmployeeAddress")
         labels["def"].append("EmployeeDepartment")
         labels["def"].append("EmployeeEmail")
+	labels["def"].append("EmployeePhoneNum")
 
 
         cur.execute("Select * from Employee")
@@ -199,13 +200,14 @@ def employeeTable():
         for row in cur.fetchall():
                 dic.setdefault(rowNum, [])
                 dic[rowNum].append(row[0])
-                dic[rowNum].append(row[1])
+		dic[rowNum].append(row[1])
                 dic[rowNum].append(row[2])
                 dic[rowNum].append(row[3])
                 dic[rowNum].append(row[4])
 		dic[rowNum].append(row[5])
 		pNum = "null"
-		cur.execute("SELECT PhoneNum FROM Phone WHERE Employee_EmployeeID = "+row[0])
+		empID = str(row[0])
+		cur.execute("SELECT PhoneNum FROM Phone WHERE Employee_EmployeeID = "+empID)
 		for column in cur.fetchall():
 			pNum = column[0]
 		dic[rowNum].append(pNum) 
@@ -406,34 +408,33 @@ def generic():
 @login_required
 @security_check
 def editEmployee():
+	empPhone = "null"
 	if request.method == "POST":
-                cur.execute("SELECT EmployeeID WHERE EmployeeEmail = "+email)
-                for column in cur.fetchall():
-                        eID = column[0]
+		
+            	eID = request.args["id"]
                 eName = request.form["EmployeeName"]
                 jTitle = request.form["JobTitle"]
                 eAddress = request.form["EmployeeAddress"]
                 ePNumber = request.form["EmployeePhoneNumber"]
                 eDepartment = request.form["EmployeeDepartment"]
-                email = request.form["Email"]
-                cur.execute("UPDATE Phone SET (EmployeeName, JobTitle, EmployeeAddress,"
-                                +" EmployeeDepartment, EmployeeEmail)"
-                                +" VALUES("
-                                +"\'"+eName+"\',"
-                                +"\'"+jTitle+"\',"
-                                +"\'"+eAddress+"\',"
-                                +"\'"+email+"\'"
-                                +") WHERE EmployeeID = \'"+eID+"\'")
+                email = request.form["EmployeeEmail"]
+                
+		cur.execute("UPDATE Employee SET EmployeeName = \'"+eName+"\' WHERE EmployeeID = "+eID)
+		cur.execute("UPDATE Employee SET JobTitle = \'"+jTitle+"\' WHERE EmployeeID = "+eID)
+		cur.execute("UPDATE Employee SET EmployeeAddress = \'"+eAddress+"\' WHERE EmployeeID = "+eID)
+		cur.execute("UPDATE Employee SET EmployeeDepartment = \'"+eDepartment+"\' WHERE EmployeeID = "+eID)
+		cur.execute("UPDATE Employee SET EmployeeEmail = \'"+email+"\' WHERE EmployeeID = "+eID)
+		cur.execute("UPDATE Employee SET EmployeeName = \'"+eName+"\' WHERE EmployeeID = "+eID)
+
                 db.commit()
-                cur.execute("UPDATE Phone SET (PhoneNum, Employee_EmployeeID)"
-                                +" VALUES("
-                                +"\'"+ePNumber+"\',"
-                                +"\'"+eID+"\'"
-                                +") WHERE Employee_EmployeeID = \'"+eID+"\'")
+
+		cur.execute("UPDATE Phone SET PhoneNum = \'"+ePNumber+"\' WHERE Employee_EmployeeID = "+eID+" AND PhoneNum = "+str(empPhone))
+               	
                 db.commit()
                 return redirect(url_for('employeeTable'))
 	else:
-		eID = request.args["'id"]
+		
+		eID = request.args["id"]
                 emp = {"start" : "beginning"}
                 emp.setdefault("def", [])
                 emp["def"].append("EmployeeID")
@@ -442,26 +443,24 @@ def editEmployee():
                 emp["def"].append("EmployeeAddress")
                 emp["def"].append("EmployeeDepartment")
 		emp["def"].append("EmployeeEmail")
+		emp["def"].append("EmployeePhoneNumber")
 
-                cur.execute("SELECT * FROM Employee WHERE EmployeeID = \'"+eID+"\'")
-
-                rowNum = 0
+                cur.execute("SELECT * FROM Employee WHERE EmployeeID = "+eID)
 
                 for row in cur.fetchall():
-                        emp.setdefault(rowNum, [])
-                        emp[rowNum].append(row[0])
-                        emp[rowNum].append(row[1])
-                        emp[rowNum].append(row[2])
-                        emp[rowNum].append(row[3])
-                        emp[rowNum].append(row[4])
-			emp[rowNum].append(row[5])
-                        rowNum = rowNum + 1
+                        emp.setdefault("data", [])
+                        emp["data"].append(row[0])
+                        emp["data"].append(row[1])
+                        emp["data"].append(row[2])
+                        emp["data"].append(row[3])
+                        emp["data"].append(row[4])
+			emp["data"].append(row[5])
 		pNumber = {'pNum' : 'null'}
-		cur.execute("SELECT PhoneNum from Phone WHERE Employee_EmployeeID = \'"+eID+"\'")
+		cur.execute("SELECT PhoneNum from Phone WHERE Employee_EmployeeID = "+eID)
 		for column in cur.fetchall():
-			pNumber['pNum'] = column[0]
-		 
-                return render_template('editEmployee.html', emp=emp, pNumber=pNumber)
+			emp["data"].append(column[0])
+		 	empPhone = column[0]
+                return render_template('editEmployee.html', emp=emp)
 
 #edit user
 @app.route('/editUser', methods=['GET', 'POST']) 
@@ -469,40 +468,41 @@ def editEmployee():
 @security_check
 def editUser():
         if request.method == "POST":
-		uID = request.args['id']
+		uID = request.args["id"]
                 uName = request.form["UserName"]
                 pWord = request.form["Password"]
                 sec = request.form["Security"]
                 eID = request.form["EmployeeID"]
-                cur.execute("UPDATE User SET(UserName, Password, Employee_EmployeeID, Security)"
-                                +" VALUES("
-                                +"\'"+uName+"\',"
-                                +"\'"+pWord+"\',"
-                                +"\'"+eID+"\',"
-                                +"\'"+sec+"\'"
-                                +") WHERE UserID = \'"+uID+"\'")
+		
+        	cur.execute("UPDATE User SET UserName = \'"+uName+"\' WHERE UserID = "+uID)
+         	cur.execute("UPDATE User SET Password = \'"+pWord+"\' WHERE UserID = "+uID)
+         	cur.execute("UPDATE User SET Security = \'"+sec+"\' WHERE UserID = "+uID)
+         
+
                 db.commit()
                 return redirect(url_for('userTable'))
 	else:
 		uID = request.args['id']
                 emp = {"start" : "beginning"}
                 emp.setdefault("def", [])
-                emp["def"].append("UserName")
+		emp["def"].append("User ID")
+                emp["def"].append("Username")
                 emp["def"].append("Password")
+                emp["def"].append("Employee ID")
                 emp["def"].append("Security")
-                emp["def"].append("EmployeeID")
 
-		cur.execute("SELECT UserName, Password, Employee_EmployeeID, Security FROM User WHERE UserID = \'"+uID+"\'")
+		cur.execute("SELECT * FROM User WHERE UserID = "+uID)
 
-                rowNum = 0
+       
 
                 for row in cur.fetchall():
-                        emp.setdefault(rowNum, [])
-                        emp[rowNum].append(row[0])
-                        emp[rowNum].append(row[1])
-                        emp[rowNum].append(row[2])
-                        emp[rowNum].append(row[3])
-                        rowNum = rowNum + 1
+			emp.setdefault("data", [])
+                        emp["data"].append(row[0])
+                        emp["data"].append(row[1])
+                        emp["data"].append(row[2])
+                        emp["data"].append(row[3])
+			emp["data"].append(row[4])
+          
                 return render_template('editUser.html', emp=emp)
 
 #edit tasktype
