@@ -1,0 +1,82 @@
+
+
+html,body,h1,h2,h3,h4,h5,h6, .button {font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Tahoma, Arial, sans-serif;}
+
+.button {
+	padding: .5em;
+	margin-top: 1em;
+	border: hidden;
+	background-color: #e6f2ff;
+}
+
+.avatar {
+	margin: 1em;
+}
+
+
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 80%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+thead tr th{
+	background-color: #e6f2ff;
+}
+
+#nav-right {
+	float: right;
+}
+
+.content {
+	margin-top: 4em;
+}
+
+.scheme-text {color: #e6f2ff}
+
+.colorscheme {color: black;background-color:#e6f2ff}
+
+.w3-display-container{position:relative}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: .01em;
+    overflow: hidden;
+    background-color: #333;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+li {
+    float: left;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+    background-color: #e6f2ff;
+	color: black;
+}

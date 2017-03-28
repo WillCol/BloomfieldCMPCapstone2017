@@ -1,157 +1,227 @@
 <!DOCTYPE html>
 
-<!-- USER PAGE -->
+<!-- MY ACCOUNT PAGE -->
 <!-- COLOR NOT FINAL -->
 
 <html>
-<title>My Account</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
-<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<title>My Account</title>
+	
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/myAccountPage.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/pageTemplate.css">
+
+	<body class="w3-light-grey">
+
+		<ul>
+		  <li><a href="#home">Home</a></li>
+		  <li><a class="active" href="#myaccount">My Account</a></li>
+		  <li><a href="#about">Calendar</a></li>
+		  <li><a href="#contact">Contact</a></li>
+		  <li id="nav-right"><a href="#logout">Log Out</a></li>
+		</ul>
 
 
-<style>
-		html,body,h1,h2,h3,h4,h5,h6 {font-family: "Roboto", sans-serif}
-</style>
-<body class="w3-light-grey">
+		<!-- Page Container -->
+		<div class="w3-content content" style="max-width:1400px;">
 
-<!-- Page Container -->
-<div class="w3-content w3-margin-top" style="max-width:1400px;">
-
-  <!-- The Grid -->
-  <div class="w3-row-padding">
-  
-    <!-- Left Column -->
-    <div class="w3-third">
-    
-      <div class="w3-white w3-text-grey w3-card-4">
-        <div class="w3-display-container" align="center">
+		  <!-- The Grid -->
+		  <div class="w3-row-padding">
 		  
-		  <h3>My Account</h3>
-		  
-		  <!-- EMPLOYEE ID PHOTO -->
-		  <img src="../images/user-icon.png" style="width:80%" alt="Avatar">
-		  
-          <div class="w3-display-bottomleft w3-container w3-text-black">
-            <!-- EMPLOYEE NAME -->
-		
-          </div><h2>Jane Doe</h2>
-        </div>
-        
-		<div class="w3-container">
-		
-			<!-- EMPLOYEE JOB TITLE -->
-          <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"></i>Designer</p>
-			<!-- EMPLOYEE LOCATION OF EMPLOYMENT -->
-          <p><i class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"></i>Bloomfield, NJ</p>
-			<!-- EMPLOYEE PRIMARY E-MAIL -->
-          <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"></i>Jane_Doe@gmail.com</p>
-			<!-- EMPLOYEE PRIMARY PHONE NUMBER -->
-          <p><i class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"></i>1224435534</p>
-          <hr>
+			<!-- Left Column -->
+			<div class="w3-third">
+			
+			  <div class="w3-white w3-text-grey w3-card-4">
+				<div class="w3-display-container" align="center">
+				  
+				  <!-- EDIT ACCOUNT AND CHANGE PASSWORD BUTTONS -->
+				  <button class="button" href="editAccount.html">Edit Account</button> <button class="button">Change Password</button>
+				  
+				  <!-- EMPLOYEE ID PHOTO -->
+				  <img src="../static/images/user-icon.png" style="width:80%" alt="Avatar" class="avatar">
+				  
+					<div class="w3-display-bottomleft w3-container w3-text-black"></div>
+					
+					<!-- EMPLOYEE NAME -->
+					<h2>Jane Doe</h2>
+				</div>
+				
+				<div class="w3-container">
+				
+					<!-- EMPLOYEE JOB TITLE -->
+				  <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large"></i>Designer</p>
+					<!-- EMPLOYEE LOCATION OF EMPLOYMENT -->
+				  <p><i class="fa fa-home fa-fw w3-margin-right w3-large"></i>Bloomfield, NJ</p>
+					<!-- EMPLOYEE PRIMARY E-MAIL -->
+				  <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large"></i>Jane_Doe@gmail.com</p>
+					<!-- EMPLOYEE PRIMARY PHONE NUMBER -->
+				  <p><i class="fa fa-phone fa-fw w3-margin-right w3-large"></i>1224435534</p>
+				  <hr>
 
-          <p class="w3-large"><b><i class="fa fa-asterisk fa-fw w3-margin-right w3-text-teal"></i>Skills</b></p>
-          <p>Adobe Photoshop</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:90%">90%</div>
-          </div>
-          <p>Database Systems</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:80%">
-              <div class="w3-center w3-text-white">80%</div>
-            </div>
-          </div>
-          <p>Illustrator</p>
-          <div class="w3-light-grey w3-round-xlarge w3-small">
-            <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:75%">75%</div>
-          </div>
-          <br>
+				  <br>
+				</div>
+			  </div><br>
 
-          <p class="w3-large w3-text-theme"><b><i class="fa fa-globe fa-fw w3-margin-right w3-text-teal"></i>Languages</b></p>
-          <p>English</p>
-          <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div>
-          </div>
-          <p>Spanish</p>
-          <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-round-xlarge w3-teal" style="height:24px;width:55%"></div>
-          </div>
-          <p>German</p>
-          <div class="w3-light-grey w3-round-xlarge">
-            <div class="w3-round-xlarge w3-teal" style="height:24px;width:25%"></div>
-          </div>
-          <br>
-        </div>
-      </div><br>
+			<!-- End Left Column -->
+			</div>
 
-    <!-- End Left Column -->
-    </div>
+			<!-- Right Column -->
+			<div class="w3-twothird" >
+			
+				<!-- CURRENT PROJECTS -->
 
-    <!-- Right Column -->
-    <div class="w3-twothird">
-    
-		<!-- CURRENT PROJECTS -->
-      <div class="w3-container w3-card-2 w3-white w3-margin-bottom">
-        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Currently Assigned</h2>
-        
-		<div class="w3-container">
-          <h5 class="w3-opacity"><b>Currently Assigned Project or Task</b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2016 - <span class="w3-tag w3-teal w3-round">Current</span></h6>
-          <p>Job Description/Details/Updates</p>
-          <hr>
-        </div>
+<div class="w3-container w3-card-2 w3-white w3-margin-bottom">
+				
+	<table align="center" style="margin-top: 1em; margin-bottom: 1em;">
 		
-		<div class="w3-container">
-          <h5 class="w3-opacity"><b>Currently Assigned Project or Task</b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2016 - <span class="w3-tag w3-teal w3-round">Current</span></h6>
-          <p>Job Description/Details/Updates</p>
-          <hr>
-        </div>
-		
-      </div>
-
-	  <!-- COMPLETED PROJECTS -->
-      <div class="w3-container w3-card-2 w3-white">
-        <h2 class="w3-text-grey w3-padding-16"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Recently Completed</h2>
-        
-		<div class="w3-container">
-          <h5 class="w3-opacity"><b>Completed Project</b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2014 - June 2014</h6>
-          <p>Job Description/Details/Outcome</p>
-          <hr>
-        </div>
-		
-		<div class="w3-container">
-          <h5 class="w3-opacity"><b>Completed Project</b></h5>
-          <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2014 - June 2014</h6>
-          <p>Job Description/Details/Outcome</p>
-          <hr>
-        </div>
-		
-     
-      </div>
-
-    <!-- End Right Column -->
-    </div>
-    
-  <!-- End Grid -->
-  </div>
-  
-  <!-- End Page Container -->
+		<thead>
+			 <tr>
+				<th colspan="3"><i class="fa fa-suitcase fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Current Projects & Tasks</th>
+			</tr>
+			<tr>
+				<th>Due Date</th>
+				<th>Task ID/Name</th>
+				<th>Task Description</th>
+			</tr>
+		</thead>
+			
+		<tbody>
+			<tr>
+				<td>
+					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2017</h6>
+				</td>
+				
+				<td>
+					<p>Task ID/Name</p>
+				</td>
+					
+				<td>
+					<p>Job Description/Details/Updates</p>
+				</td>
+					
+			</tr>
+			<tr>
+				<td>
+					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Feb 2017</h6>
+				</td>
+				
+				<td>
+					<p>Task ID/Name</p>
+				</td>
+					
+				<td>
+					<p>Job Description/Details/Updates</p>
+				</td>
+					
+			</tr>
+			<tr>
+				<td>
+					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2017</h6>
+				</td>
+				
+				<td>
+					<p>Task ID/Name</p>
+				</td>
+					
+				<td>
+					<p>Job Description/Details/Updates</p>
+				</td>
+					
+			</tr>
+		</tbody>
+	</table>	
 </div>
 
-<footer class="w3-container w3-teal w3-center w3-margin-top">
-  <p>Follow MerCuryo on social media.</p>
-  <i class="fa fa-facebook-official w3-hover-text-indigo w3-large"></i>
-  <i class="fa fa-instagram w3-hover-text-purple w3-large"></i>
-  <i class="fa fa-snapchat w3-hover-text-yellow w3-large"></i>
-  <i class="fa fa-pinterest-p w3-hover-text-red w3-large"></i>
-  <i class="fa fa-twitter w3-hover-text-light-blue w3-large"></i>
-  <i class="fa fa-linkedin w3-hover-text-indigo w3-large"></i>
-  <p>&copy; MerCuryo 2017</p>
-</footer>
+			  <!-- COMPLETED PROJECTS -->
+			  <div class="w3-container w3-card-2 w3-white">
+			  
+			  <table align="center" style="margin-top: 1em; margin-bottom: 1em;">
+		
+		<thead>
+			 <tr>
+				<th colspan="3"><i class="fa fa-certificate fa-fw w3-margin-right w3-xxlarge w3-text-teal"></i>Completed Projects & Tasks</th>
+			</tr>
+			<tr>
+				<th>Completion Date</th>
+				<th>Task ID/Name</th>
+				<th>Task Description</th>
+			</tr>
+		</thead>
+			
+		<tbody>
+			<tr>
+				<td>
+					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2016</h6>
+				</td>
+				
+				<td>
+					<p>Task ID/Name</p>
+				</td>
+					
+				<td>
+					<p>Job Description/Details/Updates</p>
+				</td>
+					
+			</tr>
+			<tr>
+				<td>
+					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Feb 2016</h6>
+				</td>
+				
+				<td>
+					<p>Task ID/Name</p>
+				</td>
+					
+				<td>
+					<p>Job Description/Details/Updates</p>
+				</td>
+					
+			</tr>
+			<tr>
+				<td>
+					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2016</h6>
+				</td>
+				
+				<td>
+					<p>Task ID/Name</p>
+				</td>
+					
+				<td>
+					<p>Job Description/Details/Updates</p>
+				</td>
+					
+			</tr>
+		</tbody>
+	</table>
+			  
+			  
+				
+			 
+			  </div>
 
-</body>
+			<!-- End Right Column -->
+			</div>
+			
+		  <!-- End Grid -->
+		  </div>
+		  
+		  <!-- End Page Container -->
+		</div>
+
+		<footer class="w3-container colorscheme w3-center w3-margin-top">
+		  <p>Follow MerCuryo on social media.</p>
+		  <i class="fa fa-facebook-official w3-hover-text-indigo w3-large"></i>
+		  <i class="fa fa-instagram w3-hover-text-purple w3-large"></i>
+		  <i class="fa fa-snapchat w3-hover-text-yellow w3-large"></i>
+		  <i class="fa fa-pinterest-p w3-hover-text-red w3-large"></i>
+		  <i class="fa fa-twitter w3-hover-text-light-blue w3-large"></i>
+		  <i class="fa fa-linkedin w3-hover-text-indigo w3-large"></i>
+		  <p>&copy; MerCuryo 2017</p>
+		</footer>
+
+	</body>
 </html>
