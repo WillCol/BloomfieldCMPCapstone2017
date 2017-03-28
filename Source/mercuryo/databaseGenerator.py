@@ -124,7 +124,7 @@ cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`User` ("
 +"  `UserName` VARCHAR(45) NOT NULL,"
 +"  `Password` VARCHAR(45) NOT NULL,"
 +"  `Employee_EmployeeID` INT(11) NOT NULL,"
-+"  `Security` VARCHAR(10) NOT NULL,"
++"  `Security` INT(11) NOT NULL,"
 +"  PRIMARY KEY (`UserID`),"
 +"  UNIQUE INDEX `UserID_UNIQUE` (`UserID` ASC),"
 +"  UNIQUE INDEX `UserName_UNIQUE` (`UserName` ASC),"
@@ -159,6 +159,13 @@ cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`User_has_Calendar` ("
 +" ENGINE = InnoDB"
 +" DEFAULT CHARACTER SET = utf8;")
 
+cur.execute("INSERT INTO Employee (EmployeeID, EmployeeName, JobTitle, EmployeeAddress, EmployeeDepartment, EmployeeEmail)"
+		+" VALUES ('0', 'admin', 'admin', 'admin', 'admin', 'admin@admin.com')")
+con.commit()
+
+cur.execute("INSERT INTO User (UserName, Password, Employee_EmployeeID, Security)"
+		+" VALUES ('admin', 'admin',(SELECT EmployeeID FROM Employee WHERE EmployeeName = 'admin'),'2')")
+con.commit()
 
 con.close()
 
