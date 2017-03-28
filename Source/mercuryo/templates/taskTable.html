@@ -51,7 +51,7 @@
 
 																<div class="content">
 																	<div id="top-bar">
-																		<a href="adduser"><button onclick="myFunction()"><i class="fa fa-plus-circle" aria-hidden="true"></i></button></a>
+																		<a href="addtask"><button onclick="myFunction()"><i class="fa fa-plus-circle" aria-hidden="true"></i></button></a>
 																		<i class="fa fa-trash" aria-hidden="true"></i>
 
 																	</div>
@@ -70,17 +70,21 @@
 																						<th>{{ labels["def"][2] }}</th>
 																						<th>{{ labels["def"][3] }}</th>
 																						<th>{{ labels["def"][4] }}</th>
+																						<th>{{ labels["def"][5] }}</th>
+																						
 																					</tr>
 																				</thead>
 																				
 																				<tbody>
 																				{% for k in dic %}
 																					<tr>
-																						<td><a href=editUser?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>
+																						<td><a href=edittask?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>
 																						<td>{{ dic[k][1] }}</td>
 																						<td>{{ dic[k][2] }}</td>
 																						<td>{{ dic[k][3] }}</td>
 																						<td>{{ dic[k][4] }}</td>
+																						<td>{{ dic[k][5] }}</td>
+																						
 																					</tr>
 																				{% endfor %}
 																			</tbody>

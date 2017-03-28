@@ -274,11 +274,11 @@ def taskTable():
         labels["def"].append("DateCompleted")
         labels["def"].append("TaskStatus")
         labels["def"].append("TaskType")
-        labels["def"].append("TaskDescription")
         labels["def"].append("DeviceID")
 
-	taskList["null"]
-        cur.execute("SELECT Calendar_TaskID FROM User_Has_Calendar WHERE User_UserID = "+uID)
+	taskList = []
+
+        cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID = "+str(uID))
 	for row in cur.fetchall():
 		taskList.append(row[0])
 		
@@ -286,8 +286,8 @@ def taskTable():
         dic = {"start": 'beginning'}
         rowNum = 0
         for tasks in taskList:
-		taskCheck = rowNum + 1
-		cur.execute("SELECT * FROM Calendar where TaskID = "+taskList[taskCheck])
+		taskCheck = rowNum
+		cur.execute("SELECT * FROM Calendar where TaskID = "+str(taskList[taskCheck]))
 		for row in cur.fetchall():
 			dic.setdefault(rowNum, [])
                         dic[rowNum].append(row[0])
@@ -295,9 +295,8 @@ def taskTable():
                         dic[rowNum].append(row[2])
                         dic[rowNum].append(row[3])
                         dic[rowNum].append(row[4])
-                        dic[rowNum].append(row[5])
                         dID = "null"
-                        cur.execute("SELECT Device_DeviceID FROM Device_Has_Calendar WHERE Calendar_TaskID = "+row[0])
+                        cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID = "+str(row[0]))
                         for column in cur.fetchall():
 				dID = column[0]
                                 dic[rowNum].append(dID)
@@ -540,28 +539,26 @@ def editTaskType():
 @login_required	
 @security_check
 def editDeviceStatus():
-        if request.user == "POST":
+        if request.method == "POST":
 		dID = request.args['id']
                 sDesc = request.form["StatusDesc"]
-                cur.execute ("UPDATE DeviceStatus SET (StatusDesc)"
-                                +" VALUES("
-                                +"\'"+sDesc+"\'"
-                                +") WHERE StatusID = \'"+dID+"\'") 
+
+		cur.execute("UPDATE DeviceStatus SET StatusDesc = \'"+sDesc+"\' WHERE StatusID = "+dID)
+                
                 db.commit()
-                return redirect(url_for('statusTable'))
+                return redirect(url_for('deviceStatusTable'))
 	else:
 		dID = request.args['id']
 		emp = {"start" : "beginning"}
-                emp["def"].append("StatusDesc")
+		emp.setdefault("def", [])
+                emp["def"].append("Status Description")
 
-                cur.execute("SELECT StatusDesc FROM DeviceStatus WHERE StatusID = \'"+dID+"\'")
-
-                rowNum = 0
+                cur.execute("SELECT StatusDesc FROM DeviceStatus WHERE StatusID = "+dID)
 
                 for row in cur.fetchall():
-                        emp.setdefault(rowNum, [])
-                        emp[rowNum].append(row[0])
-                        rowNum = rowNum + 1
+                        emp.setdefault("data", [])
+                        emp["data"].append(row[0])
+            
                 return render_template('editDeviceStatus.html', emp=emp)
 
 
@@ -596,30 +593,24 @@ def account():
 @security_check
 def addemployee():
 	if request.method == "POST":
-		eID = "null"
+		
 		eName = request.form["EmployeeName"]
 		jTitle = request.form["JobTitle"]
 		eAddress = request.form["EmployeeAddress"]
 		ePNumber = request.form["EmployeePhoneNumber"]
 		eDepartment = request.form["EmployeeDepartment"]
-		email = request.form["Email"]
-		cur.execute("INSERT INTO Device (EmployeeName, JobTitle, EmployeeAddress,"
-				+" EmployeeDepartment, EmployeeEmail)"
-				+" VALUES("
-				+"\'"+eName+"\',"
-				+"\'"+jTitle+"\',"
-				+"\'"+eAddress+"\',"
-				+"\'"+email+"\'"
-				+")")
+		email = request.form["EmployeeEmail"]
+	    	
+		cur.execute("INSERT INTO Employee (EmployeeName, JobTitle, EmployeeAddress, EmployeeDepartment, EmployeeEmail)"
+				+" VALUES (\'"+eName+"\',\'"+jTitle+"\',\'"+eAddress+"\',\'"+eDepartment+"\',\'"+email+"\'"+")")
 		db.commit()
-		cur.execute("SELECT EmployeeID WHERE EmployeeEmail = "+email)
-		for column in cur.fetchall():
-			eID = column[0]
+		
+		cur.execute("select EmployeeID from Employee where EmployeeEmail = \'"+email+"\'")
+		eID = "null"	
+		for row in cur.fetchall():
+			eID = row[0]
 		cur.execute("INSERT INTO Phone (PhoneNum, Employee_EmployeeID)"
-				+" VALUES("
-				+"\'"+ePNumber+"\',"
-				+"\'"+eID+"\'"
-				+")")
+				+" VALUES (\'"+ePNumber+"\',"+"\'"+str(eID)+"\')")
 		db.commit()
 		return redirect(url_for('employeeTable'))
 	
@@ -635,7 +626,7 @@ def adduser():
 		pWord = request.form["Password"]
 		sec = request.form["Security"]
 		eID = request.form["EmployeeID"]
-		cur.execute("INSERT INTO User (UserName, Password, Security, Employee_EmployeeID, Security)"
+		cur.execute("INSERT INTO User (UserName, Password, Employee_EmployeeID, Security)"
 				+" VALUES("
 				+"\'"+uName+"\',"
 				+"\'"+pWord+"\',"
@@ -651,7 +642,7 @@ def adduser():
 @app.route('/addtask', methods=['GET', 'POST'])
 @login_required
 @security_check
-def addTask():
+def addtask():
 	uID = sessions["userID"]
         if request.method == "POST":
                 taskID = request.form["TaskID"]
@@ -670,14 +661,14 @@ def addTask():
                                 +")")
 		db.commit()
 
-		cur.execute("INSERT INTO User_Has Calendar (User_UserID, Calendar_TaskID)"
+		cur.execute("INSERT INTO User_has_Calendar (User_UserID, Calendar_TaskID)"
 				+" VALUES("
                                 +"\'"+uID+"\',"
                                 +"\'"+taskID+"\',"
 				+")")
                 db.commit()
 		
-		cur.execute("INSERT INTO Device_Has_Calendar (Device_DeviceID, Calendar_TaskID)"
+		cur.execute("INSERT INTO Device_has_Calendar (Device_DeviceID, Calendar_TaskID)"
 				+" VALUES("
                                 +"\'"+device+"\',"
                                 +"\'"+taskID+"\',"
@@ -728,7 +719,6 @@ def addDeviceStatus():
 @login_required
 def addDevice():
 	if request.method == 'POST':
-
 	
 		dLocation = request.form["location"]
         	sNumber = request.form["serialNumber"]
