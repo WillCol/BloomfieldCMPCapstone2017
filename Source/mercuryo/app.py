@@ -17,23 +17,24 @@ app.secret_key = "my precious"
 
 # login required decorator
 def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'logged_in' in session:
-            return f(*args, **kwargs)
-        else:
-            flash('You need to login first.')
-            return redirect(url_for('login'))
-    return wrap
+	@wraps(f)
+	def wrap(*args, **kwargs):
+		if 'logged_in' in session:
+            		return f(*args, **kwargs)
+        	
+		else:
+            		flash('You need to login first.')
+			return redirect(url_for('login'))
+	return wrap
 
 #security decorator
 def security_check(f):
 	@wraps(f)
 	def wrap(*args, **kwargs):
 		if session['security'] > 1:
-		return f(*args, **kwargs)
-	else:
-	return redirect(url_for('Inventory'))
+			return f(*args, **kwargs)
+		else:
+			return redirect(url_for('Inventory'))
 	return wrap
 
 # use decorators to link the function to a url
@@ -95,16 +96,16 @@ def editDevice():
 
 		for row in cur.fetchall():
 			dev.setdefault("data", [])
-            		dev["data"].append(row[0])
             		dev["data"].append(row[1])
             		dev["data"].append(row[2])
             		dev["data"].append(row[3])
-           		dev["data"].append(row[4])
-			dev["data"].append(row[5])
+            		dev["data"].append(row[4])
+           		dev["data"].append(row[5])
 			dev["data"].append(row[6])
 			dev["data"].append(row[7])
 			dev["data"].append(row[8])
 			dev["data"].append(row[9])
+			dev["data"].append(row[10])
 		
                 return render_template('editDevice.html', dev=dev, labels=labels)
 
@@ -273,7 +274,7 @@ def editEmployee():
                 db.commit()
                 return redirect(url_for('employeeTable'))
 	else:
-		eID = request.args["'id"
+		eID = request.args["'id"]
                 emp = {"start" : "beginning"}
                 emp.setdefault("def", [])
                 emp["def"].append("EmployeeID")
@@ -348,7 +349,7 @@ def editUser():
 #edit tasktype
 @app.route('/editTaskType', methods=['GET', 'POST'])
 @login_required
-@security_check
+#@security_check
 def editTaskType():
         if request.method == "POST":
 		tID = request.args['id']
@@ -466,7 +467,7 @@ def addemployee():
 	return render_template('addemployee.html')
 
 #add user
-@app.route('/adduser', methods=['GET', 'POST']
+@app.route('/adduser', methods=['GET', 'POST'])
 @login_required
 @security_check
 def adduser():
@@ -504,7 +505,7 @@ def addTaskType():
 	return render_template('addTaskType.html')
 
 #add deviceStatus
-@app.route('/addDeviceStatus', methods=['GET', 'POST')
+@app.route('/addDeviceStatus', methods=['GET', 'POST'])
 @login_required
 @security_check
 def addDeviceStatus():
@@ -522,10 +523,12 @@ def addDeviceStatus():
 		
 
 #new device page
-@app.route('/addDevice', methods=['GET', 'POST'])
+@app.route('/addDevice', methods=["GET", "POST"])
 @login_required
 def addDevice():
-	if request.method == "POST":
+	if request.method == 'POST':
+
+	
 		dLocation = request.form["location"]
         	sNumber = request.form["serialNumber"]
         	deviceName = request.form["computer"]
@@ -538,9 +541,8 @@ def addDevice():
         	deviceStatus = request.form["deviceStatus"]
 		deviceID = request.form["deviceID"]
 		
-		cur.execute("INSERT INTO Device (DeviceName, Description, DeviceCategory," 
-					+" DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
-					+" VALUES("
+		cur.execute("INSERT INTO Device VALUES("
+					+"\'"+deviceID+"\',"
 					+"\'"+deviceName+"\',"
 					+"\'"+desc+"\',"
 					+"\'"+deviceCategory+"\',"
@@ -593,14 +595,14 @@ def editAccount():
 		cur.execute("Update Employee "
 				+ "set EmployeeName = \'"+fullName+"\',"
 				+ " JobtTitle = \'" +role+"\',"
-				+ " EmployeeEmail = \'"+email+"\' where EmployeeID = \'"+eID"\'")
+				+ " EmployeeEmail = \'"+email+"\' where EmployeeID = \'"+eID+"\'")
 		db.commit()
 		return redirect(url_for('account'))
 	
 	return render_template('editAccount.html', account=account)
 
 #delete employee
-@app.route('/deleteEmployee', methods['GET', 'POST'])
+@app.route('/deleteEmployee', methods=['GET', 'POST'])
 @login_required
 @security_check
 def deleteEmployee():
@@ -608,12 +610,12 @@ def deleteEmployee():
 		eID = request.form["employeeID"]
 		cur.execute("DELETE FROM Employee where EmployeeID = \'"+eID+"\'")
 		db.commit()
-		return redirect(url_for('employeeTable')
+		return redirect(url_for('employeeTable'))
 	
 	return render_template('deleteEmployee.html')
 
 #delete user
-@app.route('/deleteUser', methods['GET', 'POST'])
+@app.route('/deleteUser', methods=['GET', 'POST'])
 @login_required
 @security_check
 def deleteUser():
@@ -621,7 +623,7 @@ def deleteUser():
                 uID = request.form["userID"]
                 cur.execute("DELETE FROM User where UserID = \'"+uID+"\'")
                 db.commit()
-                return redirect(url_for('userTable')
+                return redirect(url_for('userTable'))
 
         return render_template('deleteUser.html')
 
