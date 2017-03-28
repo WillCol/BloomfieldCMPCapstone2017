@@ -47,7 +47,7 @@ def home():
 @login_required
 def editDevice():
         if request.method == 'POST':
-         
+            deviceID = request.args["id"]
 	    dLocation = request.form["location"]
             sNumber = request.form["serialNumber"]
             deviceName = request.form["computer"]
@@ -59,17 +59,16 @@ def editDevice():
             go_back = request.form["go-backDate"]
             deviceCategory = request.form["deviceCategory"]
             deviceStatus = request.form["deviceStatus"]
-	    deviceID = request.form["deviceID"]
-	    cur.execute("UPDATE Device SET DeviceName = \'"+deviceName+"\' WHERE DeviceID =\'"+deviceID+"\'")
-	    cur.execute("UPDATE Device SET Description = \'"+desc+"\' WHERE DeviceID = \'"+deviceID+"\'")
-            cur.execute("UPDATE Device SET DeviceCategory = \'"+deviceCategory+"\' WHERE DeviceID = \'"+deviceID+"\'")
-	    cur.execute("UPDATE Device SET DeviceStatus_StatusID = \'"+deviceStatus+"\' WHERE DeviceID = \'"+deviceID+"\'")
-	    cur.execute("UPDATE Device SET DeviceLocation = \'"+dLocation+"\' WHERE DeviceID = \'"+deviceID+"\'")
-	    cur.execute("UPDATE Device SET DeviceOwner = \'"+owner+"\' WHERE DeviceID = \'"+deviceID+"\'")
-	    cur.execute("UPDATE Device SET DateOfDeployment = \'"+DoD+"\' WHERE DeviceID = \'"+deviceID+"\'")
-	    cur.execute("UPDATE Device SET GoBackDate = \'"+go_back+"\' WHERE DeviceID = \'"+deviceID+"\'")
-	    cur.execute("UPDATE Device SET IPAddress = \'"+IP+"\' WHERE DeviceID = \'"+deviceID+"\'")
-	    cur.execute("UPDATE Device SET SerialNumber = \'"+sNumber+"\' WHERE DeviceID = \'"+deviceID+"\'")
+	    cur.execute("UPDATE Device SET DeviceName = \'"+deviceName+"\' WHERE DeviceID = "+deviceID)
+	    cur.execute("UPDATE Device SET Description = \'"+desc+"\' WHERE DeviceID = "+deviceID)
+            cur.execute("UPDATE Device SET DeviceCategory = \'"+deviceCategory+"\' WHERE DeviceID = "+deviceID)
+	    cur.execute("UPDATE Device SET DeviceStatus_StatusID = \'"+deviceStatus+"\' WHERE DeviceID = "+deviceID)
+	    cur.execute("UPDATE Device SET DeviceLocation = \'"+dLocation+"\' WHERE DeviceID = "+deviceID)
+	    cur.execute("UPDATE Device SET DeviceOwner = \'"+owner+"\' WHERE DeviceID = "+deviceID)
+	    cur.execute("UPDATE Device SET DateOfDeployment = \'"+DoD+"\' WHERE DeviceID = "+deviceID)
+	    cur.execute("UPDATE Device SET GoBackDate = \'"+go_back+"\' WHERE DeviceID = "+deviceID)
+	    cur.execute("UPDATE Device SET IPAddress = \'"+IP+"\' WHERE DeviceID = "+deviceID)
+	    cur.execute("UPDATE Device SET SerialNumber = \'"+sNumber+"\' WHERE DeviceID = "+deviceID)
 		
 	    db.commit()
 		
@@ -536,7 +535,7 @@ def addDevice():
         	owner = request.form["owner"]
 		desc = request.form["Desc"]
         	DoD = request.form["dateOfDeployment"]
-        	go_back = request.form["go-backDate"]
+        	go_back = request.form["backDate"]
         	deviceCategory = request.form["deviceCategory"]
         	deviceStatus = request.form["deviceStatus"]
 		deviceID = request.form["deviceID"]
@@ -546,7 +545,7 @@ def addDevice():
 					+"\'"+deviceName+"\',"
 					+"\'"+desc+"\',"
 					+"\'"+deviceCategory+"\',"
-					+"\'"+dStatusInt+"\',"
+					+"\'"+deviceStatus+"\',"
 					+"\'"+dLocation+"\',"
 					+"\'"+owner+"\',"
 					+"\'"+DoD+"\',"
