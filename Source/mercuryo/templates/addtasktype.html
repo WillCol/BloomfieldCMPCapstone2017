@@ -45,7 +45,7 @@
 <div class="container-fluid" >
 																<div  class="row">
 																	<div id="titleBar" class="col-md-12">
-																		<h1>Add Employee</h1>
+																		<h1>Add Task Type</h1>
 																			</div>
 																		</div>
 																	</div>
@@ -54,18 +54,16 @@
 																			<div  class="row">
 																				<div class="col-md-12">
 
-																					<form name="addTaskType">
+																					<form method="POST">
 																						<fieldset>
-																							<label>Task Type</label> <input type="text"  name="TaskType"><br>
-																							
-																							
-																							<label>Type Description</label> <input type="text"  name="TypeDesc"><br>
-																							
-																							<center><input type="submit" value="Submit"></center>
+																							<label>Task Type ID</label> <input type="text" name="TaskTypeID" value=""><br>
+																							<label>Task Description</label> <input type="text" name="TaskDesc" value=""><br>
+																						
 																								
-																							
+																							</select>
 
 																						</fieldset>
+																						<input type="submit" value="Submit">
 																					</form>
 																					
 																					</div>
@@ -81,19 +79,26 @@
 											
 
 														
+																	<div class="container-fluid" style="padding-bottom:40px">
+																		<div id="submit">
+																			<div class="row">
+																				<div id="submitButton" class="col">
+																						
+																				</div>
+																			</div>
 																		</div>
 																	</div>
 
 
 			
 
+<!-- Bootstrap core JavaScript================================================== -->
+																																			
 
-			
+<script type="text/javascript" src="js/jquery.js"></script>
 
-<script type="text/javascript" src="../static/js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../static/js/jquery.js"></script>
 <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../static/js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="../static/js/formvalidation.js"></script>
 
 											</body>
 

@@ -45,32 +45,23 @@
 <div class="container-fluid" >
 																<div  class="row">
 																	<div id="titleBar" class="col-md-12">
-																		<h1>Add Task</h1>
+																		<h1>Edit Task Type</h1>
 																			</div>
 																		</div>
 																	</div>
 																	<div class="center" id="inputFields">
-																		<div class="container-fluid" style="padding-top:45px">
+																		<div class="container-fluid"style="padding-top:45px">
 																			<div  class="row">
 																				<div class="col-md-12">
 
 																					<form method="POST">
 																						<fieldset>
-																							<label>Task ID</label> <input type="text" name="TaskID" value=""><br>
-																							<label>Date Start</label> <input type="text" name="DateStarted" value=""><br>
-																							<label>Date Complete</label> <input type="text" name="DateCompleted" value=""><br>
-																							<label>Task Status</label> <input type="text" name="TaskStatus" value=""><br>
-																							<label>Task Type</label> <input type="text" name="TaskType" value=""><br>
-																							<label>Device ID</label> <input type="text" name="DeviceID" value=""><br>
-																								
-																								
-																								
-																								
-																								
-																							</select>
-
+																							<label>Status Description</label> <input type="text" name="StatusDesc" value="{{ emp["data"][0] }}"><br>
+																					
 																						</fieldset>
+																						
 																						<input type="submit" value="Submit">
+
 																					</form>
 																					
 																					</div>
@@ -90,7 +81,6 @@
 																		<div id="submit">
 																			<div class="row">
 																				<div id="submitButton" class="col">
-																						
 																				</div>
 																			</div>
 																		</div>

@@ -301,8 +301,7 @@ def taskTable():
 				dID = column[0]
                                 dic[rowNum].append(dID)
                 rowNum = rowNum + 1
-
-        return render_template('employeeTable.html', dic=dic, labels=labels)
+	return render_template('taskTable.html', dic=dic, labels=labels)
 
 
 
@@ -504,41 +503,83 @@ def editUser():
           
                 return render_template('editUser.html', emp=emp)
 
-#edit tasktype
-@app.route('/editTaskType', methods=['GET', 'POST'])
+#edit task
+@app.route('/edittask', methods=['GET', 'POST'])
 @login_required
 @security_check
-def editTaskType():
+def edittask():
+	
+	tID = request.args["id"]
+	devID = 0
         if request.method == "POST":
-		tID = request.args['id']
-                tDesc = request.form["TaskDesc"]
-                cur.execute("UPDATE Task SET(TaskDesc)"
-                                +" VALUES("
-                                +"\'"+tDesc+"\'"
-                                +") WHERE TaskType = \'"+tID+"\'")
+             
+               
+                dStart = request.form["DateStarted"]
+                dComp = request.form["DateCompleted"]
+                tStatus = request.form["TaskStatus"]
+                tType = request.form["TaskType"]
+                device = request.form["DeviceID"]
+                
+		cur.execute("UPDATE Calendar SET DateStart = \'"+dStart+"\' WHERE TaskID = "+tID)
+		cur.execute("UPDATE Calendar SET DateComplete = \'"+dComp+"\' WHERE TaskID = "+tID)
+		cur.execute("UPDATE Calendar SET TaskStatus = \'"+tStatus+"\' WHERE TaskID = "+tID)
+		cur.execute("UPDATE Calendar SET Task_TaskType = \'"+tType+"\' WHERE TaskID = "+tID)
+		
                 db.commit()
+		
+		cur.execute("UPDATE Device_has_Calendar SET Device_DeviceID = \'"+device+"\' WHERE Calendar_TaskID = "+str(tID)+" AND Device_DeviceID = "+str(devID))
+
+                db.commit()
+
                 return redirect(url_for('taskTable'))
-	else:
+        else:
                 tID = request.args['id']
-                emp = {"start" : "beginning"}
-                emp.setdefault("def", [])
-                emp["def"].append("TaskDesc")
-
-                cur.execute("SELECT TaskDesc FROM Task WHERE TaskType = \'"+uID+"\'")
-
-                rowNum = 0
-
+               	emp = {"start": "beginning"}
+                cur.execute("SELECT DateStart, DateComplete, TaskStatus, Task_TaskType FROM Calendar WHERE TaskID = "+tID)
+		
                 for row in cur.fetchall():
-                        emp.setdefault(rowNum, [])
-                        emp[rowNum].append(row[0])
-                        rowNum = rowNum + 1
-                return render_template('editTaskType.html', emp=emp)
+                        emp.setdefault("data", [])
+                        emp["data"].append(row[0])
+                        emp["data"].append(row[1])
+                        emp["data"].append(row[2])
+                        emp["data"].append(row[3])
+
+                cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID ="+tID)
+
+		for row in cur.fetchall():
+			emp["data"].append(row[0])
+			devID = row[0] 
+                return render_template('edittask.html', emp=emp)
+
+#edit tasktype
+@app.route('/edittasktype', methods=['GET', 'POST'])
+@login_required
+@security_check
+def edittasktype():
+	
+        if request.method == "POST":
+		ttID = request.args['id']
+                tDesc = request.form["TaskDesc"]
+                cur.execute("UPDATE Task SET TaskDesc = \'"+tDesc+"\' WHERE TaskType = "+ttID)
+                db.commit()
+                return redirect(url_for('taskTypeTable'))
+	else:
+                ttID = request.args['id']
+                emp = {"start" : "beginning"}
+             
+                cur.execute("SELECT TaskDesc FROM Task WHERE TaskType = "+ttID)
+           
+                for row in cur.fetchall():
+                        emp.setdefault("data", [])
+                        emp["data"].append(row[0])
+                       
+                return render_template('edittasktype.html', emp=emp)
 
 #edit device status
-@app.route('/editDeviceStatus', methods=['GET', 'POST'])
+@app.route('/editdevicestatus', methods=['GET', 'POST'])
 @login_required	
 @security_check
-def editDeviceStatus():
+def editdevicestatus():
         if request.method == "POST":
 		dID = request.args['id']
                 sDesc = request.form["StatusDesc"]
@@ -559,7 +600,7 @@ def editDeviceStatus():
                         emp.setdefault("data", [])
                         emp["data"].append(row[0])
             
-                return render_template('editDeviceStatus.html', emp=emp)
+                return render_template('editdevicestatus.html', emp=emp)
 
 
 #user account page
@@ -643,7 +684,7 @@ def adduser():
 @login_required
 @security_check
 def addtask():
-	uID = sessions["userID"]
+	uID = session["userID"]
         if request.method == "POST":
                 taskID = request.form["TaskID"]
                 dStart = request.form["DateStarted"]
@@ -651,27 +692,22 @@ def addtask():
                 tStatus = request.form["TaskStatus"]
 		tType = request.form["TaskType"]
 		device = request.form["DeviceID"]
-                cur.execute("INSERT INTO Calendar (TaskID, DateStart, DateComplete, TaskStatus, Task_TaskType)"
-                                +" VALUES("
-                                +"\'"+taskID+"\',"
-                                +"\'"+dStart+"\',"
-                                +"\'"+dComp+"\',"
-                                +"\'"+tStatus+"\'"
-                                +"\'"+tType+"\'"
-                                +")")
+                cur.execute("INSERT INTO Calendar" 
+				#(TaskID, DateStart, DateComplete, TaskStatus, Task_TaskType)"
+                                +" VALUES(\'"+taskID+"\',"+"\'"+dStart+"\',"+"\'"+dComp+"\',"+"\'"+tStatus+"\',"+"\'"+tType+"\')")
 		db.commit()
 
 		cur.execute("INSERT INTO User_has_Calendar (User_UserID, Calendar_TaskID)"
 				+" VALUES("
-                                +"\'"+uID+"\',"
-                                +"\'"+taskID+"\',"
+                                +"\'"+str(uID)+"\',"
+                                +"\'"+taskID+"\'"
 				+")")
                 db.commit()
 		
 		cur.execute("INSERT INTO Device_has_Calendar (Device_DeviceID, Calendar_TaskID)"
 				+" VALUES("
                                 +"\'"+device+"\',"
-                                +"\'"+taskID+"\',"
+                                +"\'"+taskID+"\'"
                                 +")")
 		db.commit()
 
@@ -681,36 +717,38 @@ def addtask():
 
 
 #add taskType
-@app.route('/addTaskType', methods=['GET', 'POST'])
+@app.route('/addtasktype', methods=['GET', 'POST'])
 @login_required
 @security_check
-def addTaskType():
+def addtasktype():
 	if request.method == "POST":
+		ttID = request.form["TaskTypeID"]
 		tDesc = request.form["TaskDesc"]
-		cur.execute("INSERT INTO Task (TaskDesc)"
+		cur.execute("INSERT INTO Task ( TaskType, TaskDesc)"
 				+" VALUES("
+				+"\'"+ttID+"\',"
 				+"\'"+tDesc+"\'"
 				+")")
 		db.commit()
-		return redirect(url_for('taskTable'))
+		return redirect(url_for('taskTypeTable'))
 	
-	return render_template('addTaskType.html')
+	return render_template('addtasktype.html')
 
 #add deviceStatus
-@app.route('/addDeviceStatus', methods=['GET', 'POST'])
+@app.route('/adddevicestatus', methods=['GET', 'POST'])
 @login_required
 @security_check
-def addDeviceStatus():
-	if request.user == "POST":
+def adddevicestatus():
+	if request.method == "POST":
                 sDesc = request.form["StatusDesc"]
                 cur.execute("INSERT INTO DeviceStatus (StatusDesc)"
                                 +" VALUES("
                                 +"\'"+sDesc+"\'"
                                 +")")
                 db.commit()
-                return redirect(url_for('statusTable'))
+                return redirect(url_for('deviceStatusTable'))
 
-        return render_template('addDeviceStatis.html')
+        return render_template('adddevicestatus.html')
 	
 		
 
