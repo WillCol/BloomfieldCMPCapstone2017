@@ -5,16 +5,20 @@ import MySQLdb as db
 con = db.connect(user="root",passwd="root")
 cur = con.cursor()
 
+dName = raw_input("Input Database Name: ")
+
 cur.execute("SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;")
 cur.execute("SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;")
 cur.execute("SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';")
 
-cur.execute('CREATE SCHEMA IF NOT EXISTS `mrcInventory` DEFAULT CHARACTER SET utf8;')
+cur.execute('CREATE SCHEMA IF NOT EXISTS '+dName+' DEFAULT CHARACTER SET utf8;')
+#cur.execute('CREATE SCHEMA IF NOT EXISTS `mrcInventory` DEFAULT CHARACTER SET utf8;')
 
-con = db.connect(host="localhost",user="root",passwd="root",db="mrcInventory")
+
+con = db.connect(host="localhost",user="root",passwd="root",db=dName)
 cur = con.cursor()
 
-cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Task`"
+cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`Task`"
 	+" (`TaskType` INT(11) NOT NULL AUTO_INCREMENT,`TaskDesc` VARCHAR(45) NOT NULL, PRIMARY KEY (`TaskType`),"
   	+" UNIQUE INDEX `TaskDesc_UNIQUE` (`TaskDesc` ASC),"
   	+" UNIQUE INDEX `TaskType_UNIQUE` (`TaskType` ASC))"
@@ -22,7 +26,7 @@ cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Task`"
 	+" AUTO_INCREMENT = 889"
 	+" DEFAULT CHARACTER SET = utf8;")
 
-cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Calendar` ("
+cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`Calendar` ("
   +" `TaskID` INT(11) NOT NULL AUTO_INCREMENT,"
   +" `DateStart` DATE NOT NULL,"
   +" `DateComplete` DATE NULL DEFAULT NULL,"
@@ -33,14 +37,14 @@ cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Calendar` ("
   +" INDEX `fk_Calendar_Task1_idx` (`Task_TaskType` ASC),"
   +" CONSTRAINT `fk_Calendar_Task1`"
    +"  FOREIGN KEY (`Task_TaskType`)"
-   +" REFERENCES `mrcInventory`.`Task` (`TaskType`)"
+   +" REFERENCES "+dName+".`Task` (`TaskType`)"
    +" ON DELETE NO ACTION"
    +" ON UPDATE NO ACTION)"
 +" ENGINE = InnoDB"
 +" AUTO_INCREMENT = 11"
 +" DEFAULT CHARACTER SET = utf8;")
 
-cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`DeviceStatus` ("
+cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`DeviceStatus` ("
   +" `StatusID` INT(11) NOT NULL AUTO_INCREMENT,"
   +" `StatusDesc` VARCHAR(45) NOT NULL,"
   +" PRIMARY KEY (`StatusID`),"
@@ -49,7 +53,7 @@ cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`DeviceStatus` ("
 +" AUTO_INCREMENT = 33334"
 +" DEFAULT CHARACTER SET = utf8;")
 
-cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Device` ("
+cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`Device` ("
   +" `DeviceID` INT(11) NOT NULL AUTO_INCREMENT,"
   +" `DeviceName` VARCHAR(25) NOT NULL,"
   +" `Description` VARCHAR(45) NULL DEFAULT NULL,"
@@ -67,14 +71,14 @@ cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Device` ("
   +" INDEX `fk_Device_DeviceStatus1_idx` (`DeviceStatus_StatusID` ASC),"
   +" CONSTRAINT `fk_Device_DeviceStatus1`"
   +" FOREIGN KEY (`DeviceStatus_StatusID`)"
-  +" REFERENCES `mrcInventory`.`DeviceStatus` (`StatusID`)"
+  +" REFERENCES "+dName+".`DeviceStatus` (`StatusID`)"
   +" ON DELETE NO ACTION"
   +" ON UPDATE NO ACTION)"
 +" ENGINE = InnoDB"
 +" AUTO_INCREMENT = 100000"
 +" DEFAULT CHARACTER SET = utf8;")
 
-cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Device_has_Calendar` ("
+cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`Device_has_Calendar` ("
 +"  `Device_DeviceID` INT(11) NOT NULL,"
 +"  `Calendar_TaskID` INT(11) NOT NULL,"
 +"  PRIMARY KEY (`Device_DeviceID`, `Calendar_TaskID`),"
@@ -82,18 +86,18 @@ cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Device_has_Calendar` ("
 +"  INDEX `fk_Device_has_Calendar_Device1_idx` (`Device_DeviceID` ASC),"
 +"  CONSTRAINT `fk_Device_has_Calendar_Calendar1`"
 +"    FOREIGN KEY (`Calendar_TaskID`)"
-+"    REFERENCES `mrcInventory`.`Calendar` (`TaskID`)"
++"    REFERENCES "+dName+".`Calendar` (`TaskID`)"
 +"    ON DELETE NO ACTION"
 +"    ON UPDATE NO ACTION,"
 +"  CONSTRAINT `fk_Device_has_Calendar_Device1`"
 +"  FOREIGN KEY (`Device_DeviceID`)"
-+"  REFERENCES `mrcInventory`.`Device` (`DeviceID`)"
++"  REFERENCES "+dName+".`Device` (`DeviceID`)"
 +"   ON DELETE NO ACTION"
 +"   ON UPDATE NO ACTION)"
 +" ENGINE = InnoDB"
 +" DEFAULT CHARACTER SET = utf8;")
 
-cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Employee` ("
+cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`Employee` ("
 +"  `EmployeeID` INT(11) NOT NULL AUTO_INCREMENT,"
 +"  `EmployeeName` VARCHAR(45) NOT NULL,"
 +"  `JobTitle` VARCHAR(45) NOT NULL,"
@@ -106,20 +110,20 @@ cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Employee` ("
 +" AUTO_INCREMENT = 13"
 +" DEFAULT CHARACTER SET = utf8;")
 
-cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`Phone` ("
+cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`Phone` ("
 +"  `PhoneNum` CHAR(11) NOT NULL,"
 +"  `Employee_EmployeeID` INT(11) NOT NULL,"
 +"  PRIMARY KEY (`PhoneNum`, `Employee_EmployeeID`),"
 +"  INDEX `fk_Phone_Employee1_idx` (`Employee_EmployeeID` ASC),"
 +"  CONSTRAINT `fk_Phone_Employee1`"
 +"    FOREIGN KEY (`Employee_EmployeeID`)"
-+"    REFERENCES `mrcInventory`.`Employee` (`EmployeeID`)"
++"    REFERENCES "+dName+".`Employee` (`EmployeeID`)"
 +"    ON DELETE NO ACTION"
 +"    ON UPDATE NO ACTION)"
 +" ENGINE = InnoDB"
 +" DEFAULT CHARACTER SET = utf8;")
 
-cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`User` ("
+cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`User` ("
 +"  `UserID` INT(11) NOT NULL AUTO_INCREMENT,"
 +"  `UserName` VARCHAR(45) NOT NULL,"
 +"  `Password` VARCHAR(45) NOT NULL,"
@@ -133,14 +137,14 @@ cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`User` ("
 +"  INDEX `fk_User_Employee1_idx` (`Employee_EmployeeID` ASC),"
 +"  CONSTRAINT `fk_User_Employee1`"
 +"    FOREIGN KEY (`Employee_EmployeeID`)"
-+"    REFERENCES `mrcInventory`.`Employee` (`EmployeeID`)"
++"    REFERENCES "+dName+".`Employee` (`EmployeeID`)"
 +"    ON DELETE NO ACTION"
 +"    ON UPDATE NO ACTION)"
 +" ENGINE = InnoDB"
 +" AUTO_INCREMENT = 901"
 +" DEFAULT CHARACTER SET = utf8;")
 
-cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`User_has_Calendar` ("
+cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`User_has_Calendar` ("
 +"  `User_UserID` INT(11) NOT NULL,"
 +"  `Calendar_TaskID` INT(11) NOT NULL,"
 +"  PRIMARY KEY (`User_UserID`, `Calendar_TaskID`),"
@@ -148,12 +152,12 @@ cur.execute("CREATE TABLE IF NOT EXISTS `mrcInventory`.`User_has_Calendar` ("
 +"  INDEX `fk_User_has_Calendar_User1_idx` (`User_UserID` ASC),"
 +"  CONSTRAINT `fk_User_has_Calendar_Calendar1`"
 +"    FOREIGN KEY (`Calendar_TaskID`)"
-+"    REFERENCES `mrcInventory`.`Calendar` (`TaskID`)"
++"    REFERENCES "+dName+".`Calendar` (`TaskID`)"
 +"    ON DELETE NO ACTION"
 +"    ON UPDATE NO ACTION,"
 +"  CONSTRAINT `fk_User_has_Calendar_User1`"
 +"    FOREIGN KEY (`User_UserID`)"
-+"    REFERENCES `mrcInventory`.`User` (`UserID`)"
++"    REFERENCES "+dName+".`User` (`UserID`)"
 +"    ON DELETE NO ACTION"
 +"   ON UPDATE NO ACTION)"
 +" ENGINE = InnoDB"
