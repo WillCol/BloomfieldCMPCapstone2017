@@ -831,48 +831,51 @@ def editAccount():
 	return render_template('editAccount.html', account=account)
 
 #delete employee
-@app.route('/deleteEmployee', methods=['GET', 'POST'])
+@app.route('/deleteemployee', methods=['GET', 'POST'])
 @login_required
 @security_check
-def deleteEmployee():
+def deleteemployee():
 	if request.method == 'POST':
-		eID = request.form["employeeID"]
+		eID = request.form["EmployeeID"]
+		cur.execute("DELETE FROM User WHERE Employee_EmployeeID = "+eID)
 		cur.execute("DELETE FROM Employee where EmployeeID = "+eID)
 		db.commit()
 		cur.execute("DELETE FROM Phone WHERE Employee_EmployeeID = "+eID)
 		db.commit() 
 		return redirect(url_for('employeeTable'))
 	
-	return render_template('deleteEmployee.html')
+	return render_template('deleteemployee.html')
 
 #delete user
-@app.route('/deleteUser', methods=['GET', 'POST'])
+@app.route('/deleteuser', methods=['GET', 'POST'])
 @login_required
 @security_check
-def deleteUser():
+def deleteuser():
         if request.method == 'POST':
-                uID = request.form["userID"]
+                uID = request.form["UserID"]
+		cur.execute("DELETE FROM User_has_Calendar WHERE User_UserID = "+uID)
                 cur.execute("DELETE FROM User WHERE UserID = "+uID)
                 db.commit()
                 return redirect(url_for('userTable'))
 
-        return render_template('deleteUser.html')
+        return render_template('deleteuser.html')
 
 #delete calendar task
-app.route('/deleteTask', methods=['GET', 'POST'])
+app.route('/deletetask', methods=['GET', 'POST'])
 @login_required
-def deleteTask():
+def deletetask():
 	if request.method == 'POST':
 		tID = request.form["taskID"]
+		
+		cur.execute("DELETE FROM User_has_Calendar WHERE TaskID = "+tID)
+		db.commit()
+		cur.execute("DELETE FROM Device_has_Calendar WHERE TaskID ="+tID)
+		db.commit()
 		cur.execute("DELETE FROM Calendar WHERE TaskID = "+tID)
-		db.commit()
-		cur.execute("DELETE FROM User_Has_Calendar WHERE TaskID = "+tID)
-		db.commit()
-		cur.execute("DELETE FROM Device_Has_Calendar WHERE TaskID ="+tID)
-		db.commit()
-		return redirect(url_for('calendar'))
+                db.commit()
+		return redirect(url_for('taskTable'))
 	
-	return render_template('deleteTask.html')
+	return render_template('deletetask.html')
 
 #delete device
 app.route('/deleteDevice', methods=['GET', 'POST'])
