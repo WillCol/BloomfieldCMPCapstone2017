@@ -17,33 +17,87 @@
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="../static/css/pageTemplate.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/dataTables.bootstrap.min.css">  
+	<link rel="stylesheet" type="text/css" href="../static/css/hover.css"> 
+	<link rel="stylesheet" href="../static/css/font-awesome.css">
+
+	<link  rel="stylesheet"href="../static/css/jquery.dataTables.css">
+	<link  rel="stylesheet"href="../static/css/dataTables.bootstrap.min.css">
+	
 	<link rel="icon" href="../static/images/favicon.ico">
 	
 	<!-- BODY START -->
 	<body class="w3-light-grey">
 
 		<!-- NAVIGATION -->
-		<ul>
-			<!-- Add: class="active" to active tab -->
-			<li><a href="/">Home</a></li>
-			<li><a href="#myaccount">My Account</a></li>
-			<li><a href="#about">Calendar</a></li>
-			<li><a href="#contact">Contact</a></li>
-			<li id="nav-right"><a href="#logout">Log Out</a></li>
-		</ul>
+		<div id="nav">
+			<ul id="navbar">
+				<!-- Add: class="active" to active tab -->
+				<li><a class="hvr-underline-from-center"  href="/">Home</a></li>
+				<li><a class="hvr-underline-from-center"  href="#myaccount">My Account</a></li>
+				<li><a class="hvr-underline-from-center"  href="calendar.html">Calendar</a></li>
+				<li><a class="hvr-underline-from-center"   href="#contact">Contact</a></li>
+				<li id="nav-right"><a class="hvr-underline-from-center" href="#logout">Log Out</a></li>
+			</ul>
+		</div>
 
 
 		<!-- Page Container -->
-		<div class="w3-content content" style="max-width:1400px; margin:0 auto;" >
+		<div class="content" style="max-width:1400px; margin:0 auto; margin-top:4em;" >
 
+			
 		
+			<div id="top-bar">
+				<a href="addDevice"><button onclick="myFunction()"><i class="fa fa-plus-circle" aria-hidden="true"></i></button></a>
+				<i class="fa fa-trash" aria-hidden="true"></i>
+
+			</div>
+			
+			<div class="row" >
+				<div class="col-md-12" style="padding-top:30px;"> 
+					<table class="table table-bordered table-striped  table-hover"  id="Table">
+						<thead>
+							<tr>
+								<th>{{ dic["def"][0] }}</th>
+								<th>{{ dic["def"][1] }}</th>
+								<th>{{ dic["def"][2] }}</th>
+								<th>{{ dic["def"][3] }}</th>
+								<th>{{ dic["def"][4] }}</th>
+								<th>{{ dic["def"][5] }}</th>
+								<th>{{ dic["def"][6] }}</th>
+								<th>{{ dic["def"][7] }}</th>
+								<th>{{ dic["def"][8] }}</th>
+								<th>{{ dic["def"][9] }}</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% for k in dic %}
+							<tr>
+								<td><a href=editEntry?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>
+								<td>{{ dic[k][1] }}</td>
+								<td>{{ dic[k][2] }}</td>
+								<td>{{ dic[k][3] }}</td>
+								<td>{{ dic[k][4] }}</td>
+								<td>{{ dic[k][5] }}</td>
+								<td>{{ dic[k][6] }}</td>
+								<td>{{ dic[k][7] }}</td>
+								<td>{{ dic[k][8] }}</td>
+								<td>{{ dic[k][9] }}</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
 	  
 		<!-- End Page Container -->
 		</div>
 
 
 		<!-- FOOTER -->
-		<footer class="w3-container colorscheme w3-center w3-margin-top">
+		<footer class="w3-container colorscheme w3-center w3-margin-top" style="padding:1em;">
 			<p>Follow MerCuryo on social media.</p>
 			<i class="fa fa-facebook-official w3-hover-text-indigo w3-large"></i>
 			<i class="fa fa-instagram w3-hover-text-purple w3-large"></i>
@@ -53,16 +107,17 @@
 			<i class="fa fa-linkedin w3-hover-text-indigo w3-large"></i>
 			<p>&copy; MerCuryo 2017</p>
 		</footer>
+		
 	<!-- BODY END -->
 	</body>
 <!-- HTML END -->
 </html>
 
-<script type="text/javascript" src="../static/js/jquery.js"></script>
-<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="../static/js/dataTables.bootstrap.min.js"/></script>
+		<script type="text/javascript" src="../static/js/jquery.js"></script>
+		<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
+		<script type="text/javascript" src="../static/js/dataTables.bootstrap.min.js"/></script>
 
-<script>	
-	$('#Table').dataTable();
-</script>
+		<script>	
+		$('#Table').dataTable();
+		</script>
