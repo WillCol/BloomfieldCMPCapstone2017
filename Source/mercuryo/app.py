@@ -934,6 +934,24 @@ def changePassword():
 	
 	return render_template('changePassword.html')
 
+#Calendar
+@app.route('/calendar', methods=['GET', 'POST'])
+@login_required
+def calendar():
+	
+	cur.execute("select TaskID, DateStart,TaskDesc, TaskStatus from Calendar, Task "
+			+"where Calendar.Task_TaskType = Task.TaskType")
+        dic = {"start": 'beginning'}
+        rowNum = 0
+        for row in cur.fetchall():
+                dic.setdefault(rowNum, [])
+                dic[rowNum].append(row[0])
+                dic[rowNum].append(row[1])
+		dic[rowNum].append(row[2])
+		dic[rowNum].append(row[3])
+                rowNum = rowNum + 1
+
+        return render_template('calendar.html', dic=dic)
 
 	
 # start the server with the 'run()' method

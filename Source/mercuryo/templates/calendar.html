@@ -110,7 +110,15 @@ $('#calendar').fullCalendar({
             $('#fullCalModal').modal();
         },
  
- events: [
+ events: [		
+		{% for k in dic %}
+			{
+            title  : 'Event ID: {{ dic[k][0] }}',
+            start  : '{{ dic[k][1] }}',
+			description: 'Status: {{ dic[k][3] }}, \n Task:  {{ dic[k][2] }}'
+			},
+		{% endfor %}
+		
         {
             title  : 'Event1',
             start  : '2017-03-01',
