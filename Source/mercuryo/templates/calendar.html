@@ -108,15 +108,18 @@ $('#calendar').fullCalendar({
             $('#modalBody').html(event.description);
             $('#eventUrl').attr('href',event.url);
             $('#fullCalModal').modal();
-        },
- 
+			if(event.url){
+			return false;
+			}
+		},
+			
  events: [		
 		{% for k in dic %}
 			{
             title  : 'Task ID: {{ dic[k][0] }}',
             start  : '{{ dic[k][1] }}',
-			description: 'Status: {{ dic[k][3] }}, Task:  {{ dic[k][2] }}'
-			url: 'taskTable?id={{ dic[k][0] }}'
+			description: 'Status: {{ dic[k][3] }} <br> Task:  {{ dic[k][2] }}',
+			url: 'edittask?id={{ dic[k][0] }}'
 			
 			},
 		{% endfor %}
@@ -130,6 +133,7 @@ $('#calendar').fullCalendar({
             title  : 'Event2',
             start  : '2017-03-05',
 			description: 'This event is on 03/05/2017'
+
         },
         {
             title  : 'Event3',
