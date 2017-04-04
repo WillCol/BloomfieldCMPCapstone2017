@@ -860,37 +860,43 @@ def deleteuser():
 
         return render_template('deleteuser.html')
 
-#delete calendar task
-app.route('/deletetask', methods=['GET', 'POST'])
+#delete Calendar Task
+@app.route('/deleteCalendarTask', methods=['GET', 'POST'])
 @login_required
-def deletetask():
-	if request.method == 'POST':
+@security_check
+def deleteCalendarTask():
+        if request.method == 'POST':
 		tID = request.form["taskID"]
-		
-		cur.execute("DELETE FROM User_has_Calendar WHERE TaskID = "+tID)
-		db.commit()
-		cur.execute("DELETE FROM Device_has_Calendar WHERE TaskID ="+tID)
-		db.commit()
-		cur.execute("DELETE FROM Calendar WHERE TaskID = "+tID)
+
+                cur.execute("DELETE FROM User_has_Calendar WHERE Calendar_TaskID = "+tID)
                 db.commit()
-		return redirect(url_for('taskTable'))
-	
-	return render_template('deletetask.html')
+                cur.execute("DELETE FROM Device_has_Calendar WHERE Calendar_TaskID ="+tID)
+                db.commit()
+                cur.execute("DELETE FROM Calendar WHERE TaskID = "+tID)
+                db.commit()
+                return redirect(url_for('taskTable'))
+
+
+        return render_template('deleteCalendarTask.html')
 
 #delete device
-app.route('/deleteDevice', methods=['GET', 'POST'])
+@app.route('/deleteDevice', methods=['GET', 'POST'])
 @login_required
+@security_check
 def deleteDevice():
         if request.method == 'POST':
-                dID = request.form["deviceID"]
+		dID = request.form["deviceID"]
+		cur.execute("DELETE FROM Device_has_Calendar WHERE Device_deviceID = "+dID)
                 cur.execute("DELETE FROM Device WHERE deviceID = "+dID)
                 db.commit()
-                return redirect(url_for('inventory'))
+		return redirect(url_for('Inventory'))
+
 
         return render_template('deleteDevice.html')
 
+
 #delete deviceStatus
-app.route('/deleteDeviceStatus', methods=['GET', 'POST'])
+@app.route('/deleteDeviceStatus', methods=['GET', 'POST'])
 @login_required
 @security_check
 def deleteDeviceStatus():
@@ -903,7 +909,7 @@ def deleteDeviceStatus():
         return render_template('deleteDeviceStatus.html')
 
 #delete TaskType
-app.route('/deleteTaskType', methods=['GET', 'POST'])
+@app.route('/deleteTaskType', methods=['GET', 'POST'])
 @login_required
 @security_check
 def deleteTaskType():
