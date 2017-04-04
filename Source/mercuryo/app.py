@@ -5,12 +5,12 @@ import sys
 #import for login required decorator
 from functools import wraps
 
-dbCon = open("dbconfig.txt","r")
-dbConL = []
-for line in dbCon:
-	dbConL.append(line)
-dbName = dbConL[0]
-print dbName
+#dbCon = open("dbconfig.txt","r")
+#dbConL = []
+#for line in dbCon:
+#	dbConL.append(line)
+#dbName = dbConL[0]
+#print dbName
 
 # creating an instance object of our db connection
 db = MySQLdb.connect(host="localhost",user="root",passwd="root",db="Inventory")
@@ -165,7 +165,7 @@ def userTable():
         labels["def"].append("UserID")
         labels["def"].append("UserName")
         labels["def"].append("Password")
-        labels["def"].append("Employee_EmployeeID")
+        labels["def"].append("Employee_Employee")
         labels["def"].append("Security")
 
         cur.execute("Select * from User")
@@ -611,29 +611,59 @@ def editdevicestatus():
 
 
 #user account page
-@app.route('/account')
+@app.route('/myAccountPage')
 @login_required
 def account():
-	account = {'uName': 'null',  'fName': 'John', 'lName': 'null', 'role': 'null', 'email': 'null'}
+	# account dictionary for employee info
+	account = {'uName': 'null', 'eName': 'null', 'role': 'null', 'email': 'null', 'address' : 'null', 'phone' : 'null'}
 	eID = "null"
 	eName = "null"
 	userName = session['username']
-	cur.execute("Select UserName, EmployeeID from User where UserName = "+userName)
+	account['uName'] = userName
+	cur.execute("select Employee_EmployeeID from User where UserName = \'"+userName+"\'")
 	for column in cur.fetchall():
-		account['uName'] = column[0]
-		eID = column[1]
-	cur.execute("Select EmployeeName, JobTitle, EmployeeEmail from Employee where EmployeeID = "+eID)
+		eID = column[0]
+	
+	cur.execute("Select EmployeeName, JobTitle, EmployeeEmail, EmployeeAddress from Employee where EmployeeID = "+str(eID))
 	for column in cur.fetchall():
-		eName = column[0] 
+		account['eName'] = column[0] 
 		account['role'] = column[1]
 		account['email'] = column[2]
-	eNameS = eName.split(" ")
-	fName = eNameS[0]
-	lName = eNameS[1]
-	account['fName'] = fName
-	account['lName'] = lName
+		account['address'] = column[3]
 	
-	return render_template('account.html', account=account)
+	cur.execute("Select PhoneNum from Phone WHERE Employee_EmployeeID = "+str(eID))
+	for column in cur.fetchall():
+		account['phone'] = column[0]
+	
+	#active dictionary for user tasks
+	active = {'start' : ""}
+	cur.execute("select distinct Calendar_TaskID, TaskDesc, DateComplete from User_has_Calendar, User, Task, Calendar" 
+			+" where User_UserID = UserID and Calendar_TaskID = TaskID and Task_TaskType = TaskType and UserName = \'"+userName+"\'"
+			+" and ActiveTask = 1")
+	rowNum = 0
+	for column in cur.fetchall():
+		active.setdefault(rowNum, [])
+		active[rowNum].append(column[0])
+		active[rowNum].append(column[1])
+		active[rowNum].append(column[2])
+		rowNum = rowNum + 1
+
+	#deactive dictionary for user tasks
+	deactive = {'start' : ""}
+        cur.execute("select distinct Calendar_TaskID, TaskDesc, DateComplete from User_has_Calendar, User, Task, Calendar"
+                        +" where User_UserID = UserID and Calendar_TaskID = TaskID and Task_TaskType = TaskType and UserName = \'"+userName+"\'"
+                        +" and ActiveTask = 0")
+        row = 0
+        for column in cur.fetchall():
+                deactive.setdefault(row, [])
+                deactive[row].append(column[0])
+                deactive[row].append(column[1])
+                deactive[row].append(column[2])
+                row = row + 1
+	
+	
+
+	return render_template('myAccountPage.html', account=account, active=active, deactive=deactive)
 	  
 #add employee
 @app.route('/addemployee', methods=['GET', 'POST'])
@@ -959,7 +989,6 @@ def calendar():
                 rowNum = rowNum + 1
 
         return render_template('calendar.html', dic=dic)
-
 	
 # start the server with the 'run()' method
 if __name__ == '__main__':

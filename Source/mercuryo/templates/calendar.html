@@ -113,9 +113,11 @@ $('#calendar').fullCalendar({
  events: [		
 		{% for k in dic %}
 			{
-            title  : 'Event ID: {{ dic[k][0] }}',
+            title  : 'Task ID: {{ dic[k][0] }}',
             start  : '{{ dic[k][1] }}',
-			description: 'Status: {{ dic[k][3] }}, \n Task:  {{ dic[k][2] }}'
+			description: 'Status: {{ dic[k][3] }}, Task:  {{ dic[k][2] }}'
+			url: 'taskTable?id={{ dic[k][0] }}'
+			
 			},
 		{% endfor %}
 		

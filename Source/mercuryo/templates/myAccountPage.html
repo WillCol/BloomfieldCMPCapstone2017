@@ -47,19 +47,19 @@
 					<div class="w3-display-bottomleft w3-container w3-text-black"></div>
 					
 					<!-- EMPLOYEE NAME -->
-					<h2>Jane Doe</h2>
+					<h2>{{ account['eName'] }}</h2>
 				</div>
 				
 				<div class="w3-container">
 				
 					<!-- EMPLOYEE JOB TITLE -->
-				  <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large"></i>Designer</p>
+				  <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large"></i>{{ account['role'] }}</p>
 					<!-- EMPLOYEE LOCATION OF EMPLOYMENT -->
-				  <p><i class="fa fa-home fa-fw w3-margin-right w3-large"></i>Bloomfield, NJ</p>
+				  <p><i class="fa fa-home fa-fw w3-margin-right w3-large"></i>{{ account['address'] }}</p>
 					<!-- EMPLOYEE PRIMARY E-MAIL -->
-				  <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large"></i>Jane_Doe@gmail.com</p>
+				  <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large"></i>{{ account['email'] }}</p>
 					<!-- EMPLOYEE PRIMARY PHONE NUMBER -->
-				  <p><i class="fa fa-phone fa-fw w3-margin-right w3-large"></i>1224435534</p>
+				  <p><i class="fa fa-phone fa-fw w3-margin-right w3-large"></i>{{ account['phone'] }}</p>
 				  <hr>
 
 				  <br>
@@ -90,48 +90,23 @@
 		</thead>
 			
 		<tbody>
+			{% for k in active %}
 			<tr>
+				
 				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2017</h6>
+					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>{{ active[k][2] }}</h6>
 				</td>
 				
 				<td>
-					<p>Task ID/Name</p>
+					<p>Task ID: {{ active[k][0] }}</p>
 				</td>
 					
 				<td>
-					<p>Job Description/Details/Updates</p>
+					<p>Description: {{ active[k][1] }}</p>
 				</td>
-					
 			</tr>
-			<tr>
-				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Feb 2017</h6>
-				</td>
-				
-				<td>
-					<p>Task ID/Name</p>
-				</td>
-					
-				<td>
-					<p>Job Description/Details/Updates</p>
-				</td>
-					
-			</tr>
-			<tr>
-				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2017</h6>
-				</td>
-				
-				<td>
-					<p>Task ID/Name</p>
-				</td>
-					
-				<td>
-					<p>Job Description/Details/Updates</p>
-				</td>
-					
-			</tr>
+			{% endfor %}
+	
 		</tbody>
 	</table>	
 </div>
@@ -153,48 +128,23 @@
 		</thead>
 			
 		<tbody>
+			{% for k in deactive %}
 			<tr>
+				
 				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2016</h6>
+					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>{{ active[k][2] }}</h6>
 				</td>
 				
 				<td>
-					<p>Task ID/Name</p>
+					<p>Task ID: {{ deactive[k][0] }}</p>
 				</td>
 					
 				<td>
-					<p>Job Description/Details/Updates</p>
+					<p>Description: {{ deactive[k][1] }}</p>
 				</td>
-					
 			</tr>
-			<tr>
-				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Feb 2016</h6>
-				</td>
-				
-				<td>
-					<p>Task ID/Name</p>
-				</td>
-					
-				<td>
-					<p>Job Description/Details/Updates</p>
-				</td>
-					
-			</tr>
-			<tr>
-				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2016</h6>
-				</td>
-				
-				<td>
-					<p>Task ID/Name</p>
-				</td>
-					
-				<td>
-					<p>Job Description/Details/Updates</p>
-				</td>
-					
-			</tr>
+			{% endfor %}
+			
 		</tbody>
 	</table>
 			  
