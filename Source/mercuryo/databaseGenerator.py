@@ -6,9 +6,13 @@ import sys
 con = db.connect(user="root",passwd="root")
 cur = con.cursor()
 
+dbUser = raw_input("Input MySQL Username: ")
+dbPW = raw_input("Input MySQL Password: ")
 dName = raw_input("Input Database Name: ")
 sys.stdout = open('dbconfig.txt', 'w')
 print dName
+print dbUser
+print dbPW
 sys.stdout.close()
 
 cur.execute("SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;")
@@ -36,6 +40,8 @@ cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`Calendar` ("
   +" `DateComplete` DATE NULL DEFAULT NULL,"
   +" `TaskStatus` VARCHAR(45) NOT NULL,"
   +" `Task_TaskType` INT(11) NOT NULL,"
+  +" `ActiveTask` INT(1) NOT NULL DEFAULT '1',"
+  +" `ActualCompletion` DATE NULL DEFAULT NULL"
   +" PRIMARY KEY (`TaskID`),"
   +" UNIQUE INDEX `TaskID_UNIQUE` (`TaskID` ASC),"
   +" INDEX `fk_Calendar_Task1_idx` (`Task_TaskType` ASC),"
