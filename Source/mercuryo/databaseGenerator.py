@@ -1,11 +1,15 @@
 #!/bin/python
 # python program
 import MySQLdb as db
+import sys
 
 con = db.connect(user="root",passwd="root")
 cur = con.cursor()
 
 dName = raw_input("Input Database Name: ")
+sys.stdout = open('dbconfig.txt', 'w')
+print dName
+sys.stdout.close()
 
 cur.execute("SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;")
 cur.execute("SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;")

@@ -1,9 +1,16 @@
 # import the Flask class from the flask module
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 import MySQLdb
-
+import sys
 #import for login required decorator
 from functools import wraps
+
+dbCon = open("dbconfig.txt","r")
+dbConL = []
+for line in dbCon:
+	dbConL.append(line)
+dbName = dbConL[0]
+print dbName
 
 # creating an instance object of our db connection
 db = MySQLdb.connect(host="localhost",user="root",passwd="root",db="Inventory")
@@ -956,4 +963,4 @@ def calendar():
 	
 # start the server with the 'run()' method
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug = False)
+    app.run(host='0.0.0.0', threaded = True, debug = False)
