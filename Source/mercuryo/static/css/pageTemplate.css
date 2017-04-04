@@ -1,19 +1,35 @@
 
 
 html,body,h1,h2,h3,h4,h5,h6, .button {font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Tahoma, Arial, sans-serif;}
-
+html, body{
+	height:100%;
+	
+	
+}
+html{
+	
+  display: flex;
+  flex-direction: column;
+}
+body{
+	min-height: 100%;
+	margin-bottom:-142px;
+}
 .button {
 	padding: .5em;
 	margin-top: 1em;
 	border: hidden;
-	background-color: #e6f2ff;
+	background-color: #e6f2f;
 }
 
 .avatar {
 	margin: 1em;
 }
 
-
+col-md-12{
+	min-height:100px;
+	
+}
 
 table {
     font-family: arial, sans-serif;
@@ -34,22 +50,10 @@ tr:nth-child(even) {
 thead tr th{
 	background-color: #e6f2ff;
 }
-
-#nav-right {
+#nav #nav-right {
 	float: right;
 }
-
-.content {
-	margin-top: 4em;
-}
-
-.scheme-text {color: #e6f2ff}
-
-.colorscheme {color: black;background-color:#e6f2ff}
-
-.w3-display-container{position:relative}
-
-ul {
+#nav ul {
     list-style-type: none;
     margin: 0;
     padding: .01em;
@@ -60,21 +64,50 @@ ul {
     width: 100%;
 }
 
-li {
-    float: left;
+#nav li {
+    float: left; 
 }
 
-li a {
-    display: block;
+#nav li a {
+   
     color: white;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
+	display: inline-block;
+  vertical-align: middle;
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px transparent;
+  position: relative;
+  overflow: hidden;
 }
 
-li a:hover:not(.active) {
+#nav li a:hover:not(.active) {
     background-color: #111;
 }
+
+footer {
+   
+	margin-bottom: 0px;
+	
+}
+
+
+.content {
+	margin-top: 4em;
+	flex:1;
+	height:90%;
+
+}
+
+.scheme-text {color: #e6f2ff}
+
+.colorscheme {color: black;background-color:#e6f2ff}
+
+.w3-display-container{position:relative}
+
+
 
 .active {
     background-color: #e6f2ff;
