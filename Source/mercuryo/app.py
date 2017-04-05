@@ -995,9 +995,9 @@ def changePassword():
 @login_required
 def calendar():
 	
-	cur.execute("select TaskID, DateStart,TaskDesc, TaskStatus from Calendar, Task "
-			+"where Calendar.Task_TaskType = Task.TaskType")
-        dic = {"start": 'beginning'}
+	cur.execute("select TaskID, DateStart, TaskDesc, TaskStatus from Calendar, Task "
+			+"where Calendar.Task_TaskType = Task.TaskType and DateStart != '0000-00-00'")
+        dic = {"start": "beginning"}
         rowNum = 0
         for row in cur.fetchall():
                 dic.setdefault(rowNum, [])
@@ -1006,8 +1006,21 @@ def calendar():
 		dic[rowNum].append(row[2])
 		dic[rowNum].append(row[3])
                 rowNum = rowNum + 1
+	
+	cur.execute("select TaskID, DateComplete, TaskDesc, TaskStatus from Calendar, Task "
+                        +"where Calendar.Task_TaskType = Task.TaskType and DateComplete != '0000-00-00'")
+        dic2 = {"start": "beginning"}
+        num = 0
+        for column in cur.fetchall():
+                dic2.setdefault(num, [])
+                dic2[num].append(column[0])
+                dic2[num].append(column[1])
+                dic2[num].append(column[2])
+                dic2[num].append(column[3])
+                num = num + 1
+	
 
-        return render_template('calendar.html', dic=dic)
+        return render_template('calendar.html', dic=dic, dic2=dic2)
 	
 # start the server with the 'run()' method
 if __name__ == '__main__':
