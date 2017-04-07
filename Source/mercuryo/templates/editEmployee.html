@@ -1,120 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
-			<head>
-				<meta charset="utf-8">
-				<meta http-equiv="X-UA-Compatible" content="IE=edge">
-				<meta name="viewport" content="width=device-width, initial-scale=1">
-				<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-				<meta name="description" content="">
-				<meta name="author" content="">
-				<link rel="icon" href="../../favicon.ico">
 
-			<title></title>
+<!-- MY ACCOUNT PAGE -->
+<!-- COLOR NOT FINAL -->
 
-								<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"> 
-									<link  rel="stylesheet"href="../static/css/editentrycss.css">
-										<link rel="stylesheet" href="../static/css/font-awesome.min.css">
-											<link  rel="stylesheet"href="../static/css/social-buttons.css">
+<<!-- HTML START -->
+<html>
 
-			</head>
+<!-- PAGE TITLE -->
+<title>Edit Employee</title>
 
-											<body>
+<!-- META DATA -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- STYLE SHEETS -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../static/css/pageTemplate.css">
+<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css"> 
+<link rel="stylesheet" type="text/css" href="../static/css/hover.css"> 
+<link rel="stylesheet" href="../static/css/font-awesome.css">
+<link rel="stylesheet" href="../static/css/inputformtemplate.css">
+<!-- BODY START -->
+<body class="w3-light-grey">
 
-												<div id="wrapper">
+<!-- NAVIGATION -->
+<div id="nav">
+<ul id="navbar">
+<!-- Add: class="active" to active tab -->
 
+<li><a class="hvr-underline-from-center"  href="/">Home</a></li>
+<li><a class="hvr-underline-from-center"  href="#myaccount">My Account</a></li>
+<li><a class="hvr-underline-from-center"  href="calendar.html">Calendar</a></li>
+<li><a class="hvr-underline-from-center"   href="#contact">Contact</a></li>
+<li id="nav-right"><a class="hvr-underline-from-center" href="#logout">Log Out</a></li>
+</ul>
+</div>
 
-													<div id="sidebar">
-														<ul>
-															<li id="Logo"><img src="http://placehold.it/119x121"></li>
-
-																<li><a href=""><i class="fa fa-table" aria-hidden="true"></i><p>Inventory</p></a></li>
-
-																<li><a href=""><i class="fa fa-user" aria-hidden="true"></i><p>My account</p></a></li>
-
-																<li><a href=""><i class="fa fa-calendar" aria-hidden="true"></i><p>Calendar</p></a></li>
-
-																<li><a href=""><i class="fa fa-users" aria-hidden="true"></i><p>Users</p></a></li>
-																<li></li>
-																<li><a href=""><i class="fa fa-power-off" aria-hidden="true"></i><p>Logout
-																		</p></a></li>
-
-															</ul>
-														</div>
-														<div id="content">
-
-															<div class="container-fluid" >
-																<div  class="row">
-																	<div id="titleBar" class="col-md-12">
-																		<h1>Edit Employee<h1>
-																			</div>
-																		</div>
-																	</div>
-																	<div id="inputFields">
-																		<div class="container-fluid"style="padding-top:45px">
-																			<div  class="row">
-																				<div class="col-md-6" style="padding-left:80px">
-
-																					<form id="inputInfo" method="POST">
-																						<fieldset>
-																							<label>{{ emp["def"][0] }}</label> <input type="text" name="empID" value="{{ emp["data"][0] }}"><br>
-																							<label>{{ emp["def"][1] }}</label> <input type="text" name="EmployeeName" value="{{ emp["data"][1] }}"><br>
-																							<label>{{ emp["def"][2] }}</label> <input type="text" name="JobTitle" value="{{ emp["data"][2] }}"><br>
-																							<label>{{ emp["def"][3] }}</label> </label> <input type="text" name="EmployeeAddress" value="{{ emp["data"][3] }}"><br>
-																							<label>{{ emp["def"][4] }}</label> <input type="text" name="EmployeeDepartment" value="{{ emp["data"][4] }}"><br>
-																							<label>{{ emp["def"][5] }}</label> <input type="text" name="EmployeeEmail" value="{{ emp["data"][5] }}"><br>
-																							<label>{{ emp["def"][6] }}</label> <input type="text" name="EmployeePhoneNumber" value="{{ emp["data"][6] }}"><br>
-
-																						</fieldset>
-																					
-																					<input type="submit" value="Submit">
-																					</form>
-																				</div>
-																				<div id="inputImage">
-																					<div class="col-md-6" style="padding-top:40px">
-																						<figure>
-																							<img src="http://placehold.it/400x400">
-																							<figcaption><input type="submit" value="Upload Image"></figcaption>
-																						</figure>
-																					</div>
-																				</div>
-																			</div>
-
-																		</div>
-
-																	</div>
-
-														</div>
-																	<div class="container-fluid" style="padding-bottom:40px">
-																		<div id="submit">
-																			<div class="row">
-																				<div id="submitButton" class="col">
-																						
-																				</div>
-																			</div>
-																		</div>
-																	</div>
+<!-- Page Container -->
+<div class="w3-content content" style="max-width:1400px;">
+<div class="row" >
+<div class="col-md-12"> 
 
 
-<!-- Resizes img tag based on image uploaded ================================================== -->
-<script>
-$(document).ready(function(){
-$("figure img").load(function(){
-$(this).parent().width( $(this).width());
-});   
-});
-</script>				
-
-<!-- ================================================== -->
-																																			
 
 
-																																			
+<div id="titleBar" class="col-md-12">
+<h1>Edit Employee</h1>
+
+</div>
+<hr style="color:black width:200px">
+<form id="editEmployee" method="POST">
+
+
+	<fieldset id="fields">
+
+		<label>{{ emp["def"][0] }}</label> 
+		<input type="text" name="empID" value="{{ emp["data"][0] }}"><br>
+
+		<label>{{ emp["def"][1] }}</label> 
+		<input type="text" name="EmployeeName" value="{{ emp["data"][1] }}"><br>
+
+		<label>{{ emp["def"][2] }}</label> 
+		<input type="text" name="JobTitle" value="{{ emp["data"][2] }}"><br>
+
+		<label>{{ emp["def"][3] }}</label> </label> 
+		<input type="text" name="EmployeeAddress" value="{{ emp["data"][3] }}"><br>
+
+		<label>{{ emp["def"][4] }}</label> 
+		<input type="text" name="EmployeePhoneNumber" value="{{ emp["data"][4] }}"><br>
+
+		<label>{{ emp["def"][5] }}</label> 
+		<input type="text" name="EmployeeDepartment" value="{{ emp["data"][5] }}"><br>
+
+		<label>{{ emp["def"][6] }}</label> 
+		<input type="text" name="EmployeeEmail" value="{{ emp["data"][6] }}"><br>
+
+	</fieldset>
+
+<input type="submit" value="Submit" id="submitButton">	
+</form>
+
+
+
+
+
+
+
+
+</div>
+</div>
+
+
+<!-- End Page Container -->
+</div>
+
+
+<!-- FOOTER -->
+<footer class="w3-container colorscheme w3-center w3-margin-top">
+<p>Follow MerCuryo on social media.</p>
+<i class="fa fa-facebook-official w3-hover-text-indigo w3-large"></i>
+<i class="fa fa-instagram w3-hover-text-purple w3-large"></i>
+<i class="fa fa-snapchat w3-hover-text-yellow w3-large"></i>
+<i class="fa fa-pinterest-p w3-hover-text-red w3-large"></i>
+<i class="fa fa-twitter w3-hover-text-light-blue w3-large"></i>
+<i class="fa fa-linkedin w3-hover-text-indigo w3-large"></i>
+<p>&copy; MerCuryo 2017</p>
+</footer>
+<!-- BODY END -->
+</body>
+<!-- HTML END -->
+</html>
 <script type="text/javascript" src="../static/js/jquery.js"></script>
 <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/js/formvalidation.js"></script>
 
 
-			</body>
 
-
-</html>																																			
+</body>
+</html>
