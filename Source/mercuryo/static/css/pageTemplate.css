@@ -68,6 +68,9 @@ thead tr th{
     float: left; 
 }
 
+
+
+
 #nav li a {
    
     color: white;
@@ -81,10 +84,16 @@ thead tr th{
   box-shadow: 0 0 1px transparent;
   position: relative;
   overflow: hidden;
+  
+}
+
+#nav li.active a {
+    background-color: #667299;
 }
 
 #nav li a:hover:not(.active) {
     background-color: #111;
+
 }
 
 footer {
@@ -107,9 +116,3 @@ footer {
 
 .w3-display-container{position:relative}
 
-
-
-.active {
-    background-color: #e6f2ff;
-	color: black;
-}

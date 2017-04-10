@@ -9,7 +9,7 @@
 
 
 	<!-- PAGE TITLE -->
-	<title>Users</title>
+	<title>Administrator</title>
 
 	<!-- META DATA -->
 	<meta charset="UTF-8">
@@ -19,32 +19,50 @@
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="../static/css/pageTemplate.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/dataTables.bootstrap.min.css">  
+	<link rel="stylesheet" type="text/css" href="../static/css/hover.css"> 
+	<link rel="stylesheet" href="../static/css/font-awesome.css">
 
+	<link  rel="stylesheet"href="../static/css/jquery.dataTables.css">
+	<link  rel="stylesheet"href="../static/css/dataTables.bootstrap.min.css">
+	
 	<link rel="icon" href="../static/images/favicon.ico">
 	
 	<!-- BODY START -->
 	<body class="w3-light-grey">
 
 		<!-- NAVIGATION -->
-		<ul>
-			<li><a href="#home">Home</a></li>
-			<li><a href="#myaccount">My Account</a></li>
-			<li><a href="">Calendar</a></li>
-			<li><a href="#contact">Contact</a></li>
-			<li><a class="active" href="#users">Users</a></li>
-			<li id="nav-right"><a href="#logout">Log Out</a></li>
-		</ul>
+		<div id="nav">
+			<ul id="navbar">
+				<!-- Add: class="active" to active tab -->
+				<li><a class="hvr-underline-from-center"  href="inventory.html">Home</a></li>
+				<li><a class="hvr-underline-from-center"  href="myAccountPage.html">My Account</a></li>
+				<li><a class="hvr-underline-from-center"  href="calendar.html">Calendar</a></li>
+				<li class="active"><a class="hvr-underline-from-center"   href="userPage.html">Admin</a></li>
+				<li id="nav-right"><a class="hvr-underline-from-center" href="#logout">Log Out</a></li>
+			</ul>
+		</div>
+
 	
 
 		<!-- Page Container -->
 		<div class="w3-content content" style="max-width:1400px; margin:0 auto; margin-top:4em;">
+		
+		<!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!BUTTONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+		<div align="center" style="margin:1em;">
+					<a  href="userTable.html"><button>User Table</button></a>
+					<a  href="deviceStatusTable.html"><button>Device Status Table</button></a>
+					<a  href="employeeTable.html"><button>Employee Table</button></a>
+					<a  href="taskTable.html"><button>Task Table</button></a>
+		</div>
+		
 		
 			<table align="center">
 		<thead>
 			 <tr>
 				<th rowspan="2">Users</th>
 				<th colspan="3" id="center">Privelages</th>
-				<th rowspan="2">Special Action</th>
 			</tr>
 			<tr>
 				<th class="nosorting">Read</th>
@@ -77,13 +95,6 @@
 						<div class="slider"></div>
 					</label>
 				</td>
-				
-				<td>
-					<div align="center">
-					<button>Edit User Privelages</button>
-					<button>Delete User</button>
-					</div>
-				</td>
 			</tr>
 			
 			<tr>
@@ -108,13 +119,6 @@
 						<input type="checkbox">
 						<div class="slider"></div>
 					</label>
-				</td>
-				
-				<td>
-					<div align="center">
-					<button>Edit User Privelages</button>
-					<button>Delete User</button>
-					</div>
 				</td>
 			</tr>
 			
@@ -141,21 +145,11 @@
 						<div class="slider"></div>
 					</label>
 				</td>
-				
-				<td>
-					<div align="center">
-					<button>Edit User Privelages</button>
-					<button>Delete User</button>
-					</div>
-				</td>
 			</tr>
 		</tbody>
 </table>
 
-		<div align="center" style="margin:1em;">
-					<button>Add New User</button>
-					
-		</div>
+
 	  
 		<!-- End Page Container -->
 		</div>
