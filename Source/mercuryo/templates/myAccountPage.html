@@ -9,37 +9,25 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<!-- STYLE SHEETS -->
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+	<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="../static/css/myAccountPage.css">
 	<link rel="stylesheet" type="text/css" href="../static/css/pageTemplate.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/dataTables.bootstrap.min.css">  
-	<link rel="stylesheet" type="text/css" href="../static/css/hover.css"> 
-	<link rel="stylesheet" href="../static/css/font-awesome.css">
-
-	<link  rel="stylesheet"href="../static/css/jquery.dataTables.css">
-	<link  rel="stylesheet"href="../static/css/dataTables.bootstrap.min.css">
-	
-	<link rel="icon" href="../static/images/favicon.ico">
 
 	<body class="w3-light-grey">
 
-		<!-- NAVIGATION -->
-		<div id="nav">
-			<ul id="navbar">
-				<!-- Add: class="active" to active tab -->
-				<li><a class="hvr-underline-from-center"  href="inventory.html">Home</a></li>
-				<li class="active"><a class="hvr-underline-from-center"  href="myAccountPage.html">My Account</a></li>
-				<li><a class="hvr-underline-from-center"  href="calendar.html">Calendar</a></li>
-				<li><a class="hvr-underline-from-center"   href="userPage.html">Admin</a></li>
-				<li id="nav-right"><a class="hvr-underline-from-center" href="#logout">Log Out</a></li>
-			</ul>
-		</div>
+		<ul>
+		  <li><a href="inventory">Home</a></li>
+		  <li><a class="active" href="myAccountPage">My Account</a></li>
+		  <li><a href="calendar">Calendar</a></li>
+		  <li><a href="#contact">Contact</a></li>
+		  <li id="nav-right"><a href="#logout">Log Out</a></li>
+		</ul>
 
 
 		<!-- Page Container -->
-		<div class="w3-content content" style="max-width:1400px; margin:0 auto; margin-top:5em;" ">
+		<div class="w3-content content" style="max-width:1400px;">
 
 		  <!-- The Grid -->
 		  <div class="w3-row-padding">
@@ -50,13 +38,8 @@
 			  <div class="w3-white w3-text-grey w3-card-4">
 				<div class="w3-display-container" align="center">
 				  
-				  <div style="visibility: hidden">
-					<input id="county" name="county" value="<?php echo($_COOKIE['county']); ?>">
-				  </div>
-				  
-				  
 				  <!-- EDIT ACCOUNT AND CHANGE PASSWORD BUTTONS -->
-				  <button class="button" href="editEmployee.html">Edit Account</button> <a href="edit-password.html"><button class="button">Change Password</button></a>
+				  <button class="button" href="editAccount.html">Edit Account</button> <button class="button">Change Password</button>
 				  
 				  <!-- EMPLOYEE ID PHOTO -->
 				  <img src="../static/images/user-icon.png" style="width:80%" alt="Avatar" class="avatar">
@@ -64,19 +47,19 @@
 					<div class="w3-display-bottomleft w3-container w3-text-black"></div>
 					
 					<!-- EMPLOYEE NAME -->
-					<h2>Jane Doe</h2>
+					<h2>{{ account['eName'] }}</h2>
 				</div>
 				
 				<div class="w3-container">
 				
 					<!-- EMPLOYEE JOB TITLE -->
-				  <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large"></i>Designer</p>
+				  <p><i class="fa fa-briefcase fa-fw w3-margin-right w3-large"></i>{{ account['role'] }}</p>
 					<!-- EMPLOYEE LOCATION OF EMPLOYMENT -->
-				  <p><i class="fa fa-home fa-fw w3-margin-right w3-large"></i>Bloomfield, NJ</p>
+				  <p><i class="fa fa-home fa-fw w3-margin-right w3-large"></i>{{ account['address'] }}</p>
 					<!-- EMPLOYEE PRIMARY E-MAIL -->
-				  <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large"></i>Jane_Doe@gmail.com</p>
+				  <p><i class="fa fa-envelope fa-fw w3-margin-right w3-large"></i>{{ account['email'] }}</p>
 					<!-- EMPLOYEE PRIMARY PHONE NUMBER -->
-				  <p><i class="fa fa-phone fa-fw w3-margin-right w3-large"></i>1224435534</p>
+				  <p><i class="fa fa-phone fa-fw w3-margin-right w3-large"></i>{{ account['phone'] }}</p>
 				  <hr>
 
 				  <br>
@@ -107,48 +90,23 @@
 		</thead>
 			
 		<tbody>
+			{% for k in active %}
 			<tr>
+				
 				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2017</h6>
+					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>{{ active[k][2] }}</h6>
 				</td>
 				
 				<td>
-					<p>Task ID/Name</p>
+					<p>Task ID: {{ active[k][0] }}</p>
 				</td>
 					
 				<td>
-					<p>Job Description/Details/Updates</p>
+					<p>Description: {{ active[k][1] }}</p>
 				</td>
-					
 			</tr>
-			<tr>
-				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Feb 2017</h6>
-				</td>
-				
-				<td>
-					<p>Task ID/Name</p>
-				</td>
-					
-				<td>
-					<p>Job Description/Details/Updates</p>
-				</td>
-					
-			</tr>
-			<tr>
-				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2017</h6>
-				</td>
-				
-				<td>
-					<p>Task ID/Name</p>
-				</td>
-					
-				<td>
-					<p>Job Description/Details/Updates</p>
-				</td>
-					
-			</tr>
+			{% endfor %}
+	
 		</tbody>
 	</table>	
 </div>
@@ -170,48 +128,23 @@
 		</thead>
 			
 		<tbody>
+			{% for k in deactive %}
 			<tr>
+				
 				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Jan 2016</h6>
+					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>{{ deactive[k][2] }}</h6>
 				</td>
 				
 				<td>
-					<p>Task ID/Name</p>
+					<p>Task ID: {{ deactive[k][0] }}</p>
 				</td>
 					
 				<td>
-					<p>Job Description/Details/Updates</p>
+					<p>Description: {{ deactive[k][1] }}</p>
 				</td>
-					
 			</tr>
-			<tr>
-				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Feb 2016</h6>
-				</td>
-				
-				<td>
-					<p>Task ID/Name</p>
-				</td>
-					
-				<td>
-					<p>Job Description/Details/Updates</p>
-				</td>
-					
-			</tr>
-			<tr>
-				<td>
-					<h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>Mar 2016</h6>
-				</td>
-				
-				<td>
-					<p>Task ID/Name</p>
-				</td>
-					
-				<td>
-					<p>Job Description/Details/Updates</p>
-				</td>
-					
-			</tr>
+			{% endfor %}
+			
 		</tbody>
 	</table>
 			  
@@ -229,7 +162,7 @@
 		  <!-- End Page Container -->
 		</div>
 
-		<footer class="w3-container colorscheme w3-center w3-margin-top" style="margin-top:10em;">
+		<footer class="w3-container colorscheme w3-center w3-margin-top">
 		  <p>Follow MerCuryo on social media.</p>
 		  <i class="fa fa-facebook-official w3-hover-text-indigo w3-large"></i>
 		  <i class="fa fa-instagram w3-hover-text-purple w3-large"></i>
