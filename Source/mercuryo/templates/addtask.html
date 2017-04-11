@@ -65,10 +65,18 @@
 <input type="text" name="TaskStatus" value=""><br>
 
 <label>Task Type</label> 
-<input type="text" name="TaskType" value=""><br>
+<select name="TaskType" value="">
+{% for k in taskType %}
+<option style="text-align:center" value="{{ taskType[k][0] }}">{{ taskType[k][0] }}</option>
+{% endfor %}
+</select><br>
 
-<label>Device ID</label> 
-<input type="text" name="DeviceID" value=""><br>
+<label>Device</label> 
+<select name="DeviceID" value="">
+{% for k in device %}
+<option style="text-align:center" value="{{ device[k][0] }}">{{ device[k][0] }}</option>
+{% endfor %}
+</select><br>
 
 <label>Active Task</label>
 <input type="radio" name="activeTask" value="1"><br>	

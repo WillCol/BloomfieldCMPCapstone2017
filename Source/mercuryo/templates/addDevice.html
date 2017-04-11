@@ -65,8 +65,12 @@
 		<label>Category</label> 
 		<input type="text" name="deviceCategory"><br>
 		
-		<label>Status</label> 
-		<input type="text" name="deviceStatus"><br>
+		<label>Device Status</label>
+		<select name="deviceStatus" value="">
+		{% for k in dStatusL %}
+		<option style="text-align:center" value="{{ dStatusL[k][0] }}">{{ dStatusL[k][0] }}</option>
+		{% endfor %}
+		</select><br>
 		
 		<label>Location</label> 
 		<input type="text" name="location"><br>

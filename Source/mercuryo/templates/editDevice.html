@@ -62,9 +62,13 @@
 		<label>{{ labels["def"][2] }}</label> 
 		<input type="text" name="DeviceCategory" value="{{ dev["data"][2] }}"><br>
 
-		<label>{{ labels["def"][3] }}</label> </label> 
-		<input type="text" name="DeviceStatus" value="{{ dev["data"][3] }}"><br>
-
+		<label>{{ labels["def"][3] }}</label> </label>
+		<select name="deviceStatus" value="">
+		{% for k in dStatusL %}
+		<option style="text-align:center" value="{{ dStatusL[k][0] }}">{{ dStatusL[k][0] }}</option>
+		{% endfor %}
+		</select><br>
+		
 		<label>{{ labels["def"][4] }}</label> 
 		<input type="text" name="DeviceLocation" value="{{ dev["data"][4] }}"><br>
 

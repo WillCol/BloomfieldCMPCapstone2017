@@ -65,7 +65,11 @@
 	<input type="text"  name="Security"><br>
 	
 	<label>EmployeeID</label> 
-	<input type="text"  name="EmployeeID"><br>
+	<select name="EmployeeID" value="">
+	{% for k in name %}
+	<option style="text-align:center" value="{{ name[k][0] }}">{{ name[k][0] }}</option>
+	{% endfor %}
+	</select><br>
 
 	<input type="submit" value="Submit" id="submitButton">
 
