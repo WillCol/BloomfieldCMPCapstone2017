@@ -59,7 +59,11 @@
 
 		<label>Date Complete</label> 
 		<input type="text" name="DateCompleted" value="{{ emp["data"][1] }}"><br>
+		
+		<label>Actual Completion Date</label> 
+		<input type="text" name="ActualCompletionDate" value="{{ emp["data"][6] }}"><br>
 
+		
 		<label>Task Status</label> 
 		<input type="text" name="TaskStatus" value="{{ emp["data"][2] }}"><br>
 
@@ -69,7 +73,12 @@
 		<label>Device ID</label> 
 		<input type="text" name="DeviceID" value="{{ emp["data"][4] }}"><br>
 
-
+		<label>Active Task</label>
+		<input type="radio" name="ActiveTask" value="1"><br>	
+	
+		<label>Inactive Task</label>
+		<input type="radio" name="ActiveTask" value="0"><br>	
+	
 	</fieldset>
 
 <input type="submit" value="Submit" id="submitButton">	

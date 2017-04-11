@@ -745,10 +745,10 @@ def addtask():
                 dComp = request.form["DateCompleted"]
                 tStatus = request.form["TaskStatus"]
 		tType = request.form["TaskType"]
-		aTask = request.form["ActiveTask"]
-		acDate = request.form["ActualCompletionDate"]
+		acDate = "0000-00-00"
 		device = request.form["DeviceID"]
-                cur.execute("INSERT INTO Calendar" 
+		aTask = request.form["activeTask"]
+		cur.execute("INSERT INTO Calendar" 
 				#(TaskID, DateStart, DateComplete, TaskStatus, Task_TaskType)"
                                 +" VALUES(\'"+taskID+"\',"+"\'"+dStart+"\',"+"\'"+dComp+"\',"+"\'"+tStatus+"\',"+"\'"+tType+"\',"+"\'"+aTask+"\',"+"\'"+acDate+"\')")
 		db.commit()
@@ -978,17 +978,21 @@ def deleteTaskType():
         return render_template('deleteTaskType.html')
  			
 #change password
-@app.route('/changePassword', methods=['GET', 'POST'])
+@app.route('/editPassword', methods=['GET', 'POST'])
 @login_required
-def changePassword():
+def editPassword():
 	pWord = "null"
-	username = sessions['username']
+	username = session['username']
 	if request.method == 'POST':
-		pWord = request.form("newPassword")
-		cur.execute("Update User set Password = " + pWord + " where UserName = "+username)
+		opWord = request.form["OldPassword"]
+		pWord = request.form["NewPassword"]
+		rpWord = request.form["RetypePassword"]
+
+		if(pWord == rpWord):
+			cur.execute("Update User set Password = \'" + pWord + "\' where UserName = \'"+username +"\' and Password = \'"+pWord+"\'")
 		return redirect(url_for('account'))
 	
-	return render_template('changePassword.html')
+	return render_template('editPassword.html')
 
 #Calendar
 @app.route('/calendar', methods=['GET', 'POST'])
