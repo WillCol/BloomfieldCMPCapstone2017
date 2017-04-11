@@ -912,14 +912,15 @@ def addDevice():
         	go_back = request.form["backDate"]
         	deviceCategory = request.form["deviceCategory"]
 		deviceStatus = request.form["deviceStatus"]
-		deviceID = request.form["deviceID"]
+		#deviceID = request.form["deviceID"]
 
 		cur.execute("select StatusID from DeviceStatus where StatusDesc = \'"+deviceStatus+"\'")
 		for row in cur.fetchall():
 			deviceStatus = row[0]
 		deviceStatus = str(deviceStatus)
-		cur.execute("INSERT INTO Device VALUES("
-					+"\'"+deviceID+"\',"
+		cur.execute("INSERT INTO Device (DeviceName, Description, DeviceCategory, DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
+					+" VALUES("
+					#+"\'"+deviceID+"\',"
 					+"\'"+deviceName+"\',"
 					+"\'"+desc+"\',"
 					+"\'"+deviceCategory+"\',"
