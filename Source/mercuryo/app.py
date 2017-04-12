@@ -68,6 +68,12 @@ def editDevice():
             go_back = request.form["go-backDate"]
             deviceCategory = request.form["deviceCategory"]
             deviceStatus = request.form["deviceStatus"]
+
+	    cur.execute("select StatusID from DeviceStatus where StatusDesc = \'"+deviceStatus+"\'")
+            for row in cur.fetchall():
+            	deviceStatus = row[0]
+            deviceStatus = str(deviceStatus)
+
 	    cur.execute("UPDATE Device SET DeviceName = \'"+deviceName+"\' WHERE DeviceID = "+deviceID)
 	    cur.execute("UPDATE Device SET Description = \'"+desc+"\' WHERE DeviceID = "+deviceID)
             cur.execute("UPDATE Device SET DeviceCategory = \'"+deviceCategory+"\' WHERE DeviceID = "+deviceID)
@@ -115,7 +121,15 @@ def editDevice():
 			dev["data"].append(row[9])
 			dev["data"].append(row[10])
 		
-                return render_template('editDevice.html', dev=dev, labels=labels)
+		rowNum = 0
+        	dStatusL = {"start": ''}
+        	cur.execute("select StatusDesc from DeviceStatus")
+        	for row in cur.fetchall():
+                	dStatusL.setdefault(rowNum, [])
+                	dStatusL[rowNum].append(row[0])
+                	rowNum = rowNum + 1		
+		
+                return render_template('editDevice.html', dev=dev, labels=labels, dStatusL = dStatusL)
 
 # inventory page
 @app.route('/inventory')
@@ -582,6 +596,11 @@ def edittask():
 	devID = 0
         if request.method == "POST":
              
+		cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID ="+tID)
+
+                for row in cur.fetchall():
+                	devID = row[0]
+
                
                 dStart = request.form["DateStarted"]
                 dComp = request.form["DateCompleted"]
@@ -595,6 +614,8 @@ def edittask():
                 for row in cur.fetchall():
                         tType  = row[0]
                 tType = str(tType)
+
+				
 		                
 		cur.execute("UPDATE Calendar SET DateStart = \'"+dStart+"\' WHERE TaskID = "+tID)
 		cur.execute("UPDATE Calendar SET DateComplete = \'"+dComp+"\' WHERE TaskID = "+tID)
@@ -639,15 +660,15 @@ def edittask():
                 	rowNum = rowNum + 1
 
         	rowNum = 0
-        	taskType = {"start": ''}
+        	task = {"start": ''}
         	cur.execute("select TaskDesc from Task")
         	for row in cur.fetchall():
-                	taskType.setdefault(rowNum, [])
-                	taskType[rowNum].append(row[0])
+                	task.setdefault(rowNum, [])
+                	task[rowNum].append(row[0])
                 	rowNum = rowNum + 1
 
 		
-		return render_template('edittask.html', emp=emp, taskType = taskType, device = device)
+		return render_template('edittask.html', emp=emp, task = task, device = device)
 
 #edit tasktype
 @app.route('/edittasktype', methods=['GET', 'POST'])
@@ -782,7 +803,7 @@ def addemployee():
 				+" VALUES (\'"+ePNumber+"\',"+"\'"+str(eID)+"\')")
 		db.commit()
 		return redirect(url_for('employeeTable'))
-	
+		
 	return render_template('addemployee.html')
 
 #add user
@@ -828,7 +849,8 @@ def adduser():
 def addtask():
 	uID = session["userID"]
         if request.method == "POST":
-                taskID = request.form["TaskID"]
+                #taskID = request.form["TaskID"]
+		taskID = 0
                 dStart = request.form["DateStarted"]
                 dComp = request.form["DateCompleted"]
                 tStatus = request.form["TaskStatus"]
@@ -836,11 +858,20 @@ def addtask():
 		acDate = "0000-00-00"
 		device = request.form["DeviceID"]
 		aTask = request.form["activeTask"]
-		cur.execute("INSERT INTO Calendar" 
-				#(TaskID, DateStart, DateComplete, TaskStatus, Task_TaskType)"
-                                +" VALUES(\'"+taskID+"\',"+"\'"+dStart+"\',"+"\'"+dComp+"\',"+"\'"+tStatus+"\',"+"\'"+tType+"\',"+"\'"+aTask+"\',"+"\'"+acDate+"\')")
-		db.commit()
 
+		cur.execute("select TaskType from Task where TaskDesc = \'"+tType+"\'")
+		for row in cur.fetchall():
+			tType = row[0]
+		tType = str(tType)
+	
+		cur.execute("INSERT INTO Calendar (DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion)"
+                                +" VALUES(\'"+dStart+"\',"+"\'"+dComp+"\',"+"\'"+tStatus+"\',"+"\'"+tType+"\',"+"\'"+aTask+"\',"+"\'"+acDate+"\')")
+		db.commit()
+		
+		cur.execute("select TaskID from Calendar order by TaskID DESC limit 1")
+		for row in cur.fetchall():
+			taskID = row[0]
+		taskID = str(taskID)	
 		cur.execute("INSERT INTO User_has_Calendar (User_UserID, Calendar_TaskID)"
 				+" VALUES("
                                 +"\'"+str(uID)+"\',"
@@ -856,8 +887,23 @@ def addtask():
 		db.commit()
 
 		return redirect(url_for('taskTable'))
+	rowNum = 0
+        device = {"start": ''}
+        cur.execute("select DeviceID from Device")
+        for row in cur.fetchall():
+                device.setdefault(rowNum, [])
+                device[rowNum].append(row[0])
+                rowNum = rowNum + 1
 
-	return render_template('addtask.html')
+	rowNum = 0
+        task = {"start": ''}
+        cur.execute("select TaskDesc from Task")
+        for row in cur.fetchall():
+                task.setdefault(rowNum, [])
+                task[rowNum].append(row[0])
+                rowNum = rowNum + 1
+
+	return render_template('addtask.html', task = task, device = device)
 
 
 #add taskType
@@ -866,11 +912,11 @@ def addtask():
 @security_check
 def addtasktype():
 	if request.method == "POST":
-		ttID = request.form["TaskTypeID"]
+		#ttID = request.form["TaskTypeID"]
 		tDesc = request.form["TaskDesc"]
-		cur.execute("INSERT INTO Task ( TaskType, TaskDesc)"
+		cur.execute("INSERT INTO Task (TaskDesc)"
 				+" VALUES("
-				+"\'"+ttID+"\',"
+				#+"\'"+ttID+"\',"
 				+"\'"+tDesc+"\'"
 				+")")
 		db.commit()
@@ -1090,6 +1136,7 @@ def editPassword():
 
 		if(pWord == rpWord):
 			cur.execute("Update User set Password = \'" + pWord + "\' where UserName = \'"+username +"\' and Password = \'"+pWord+"\'")
+			db.commit()
 		return redirect(url_for('account'))
 	
 	return render_template('editPassword.html')

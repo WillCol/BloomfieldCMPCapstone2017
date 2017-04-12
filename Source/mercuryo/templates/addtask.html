@@ -52,8 +52,11 @@
 <hr style="color:black width:200px">
 <form name="addTask"method="POST">
 <fieldset id ="fields">
+
+<!---
 <label>Task ID</label> 
 <input type="text" name="TaskID" value=""><br>
+--->
 
 <label>Date Start</label> 
 <input type="text" name="DateStarted" value=""><br>
@@ -66,8 +69,8 @@
 
 <label>Task Type</label> 
 <select name="TaskType" value="">
-{% for k in taskType %}
-<option style="text-align:center" value="{{ taskType[k][0] }}">{{ taskType[k][0] }}</option>
+{% for k in task %}
+<option style="text-align:center" value="{{ task[k][0] }}">{{ task[k][0] }}</option>
 {% endfor %}
 </select><br>
 
