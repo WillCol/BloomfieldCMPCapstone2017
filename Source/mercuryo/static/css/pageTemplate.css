@@ -110,6 +110,18 @@ footer {
 
 }
 
+
+.fa.fa-plus-circle{
+	font-size:40px;
+	padding-right:20px;
+}
+.fa.fa-trash{
+	font-size:40px;
+	
+}
+a{
+	display:hidden;
+}
 .scheme-text {color: #e6f2ff}
 
 .colorscheme {color: black;background-color:#e6f2ff}
