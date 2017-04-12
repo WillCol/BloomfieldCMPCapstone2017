@@ -40,7 +40,9 @@ def login_required(f):
 def security_check(f):
 	@wraps(f)
 	def wrap(*args, **kwargs):
-		if session['security'] > 1:
+		sCheck = session['security']
+		sSheck = int(sCheck)
+		if sCheck > 1: 
 			return f(*args, **kwargs)
 		else:
 			return redirect(url_for('Inventory'))
@@ -424,15 +426,16 @@ def login():
 	cur.execute("SELECT UserID, UserName, Password, Security FROM User")
 	for column in cur.fetchall():
         	if request.form['username'] == column[1] and request.form['password'] == column [2]:
-			userType = column[2]
+			userType = column[3]
+			print userType
 			userName = column[1]
 			userID = column[0]
 			session['security'] = userType
 			session['logged_in'] = True
 			session['username'] = userName
 			session['userID'] = userID
-			flash('You were just logged in!')
-			flash(session['security'])
+		#	flash('You were just logged in!')
+		#	flash(session[''])
 			return redirect(url_for('Inventory'))
 	
 	error = 'Invalid Credentials. Please, try again.'
@@ -1144,6 +1147,7 @@ def editPassword():
 #userPage
 @app.route('/userPage', methods=['GET', 'POST'])
 @login_required
+@security_check
 def userPage():
 	return render_template('userPage.html')
 
