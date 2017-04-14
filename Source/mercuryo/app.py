@@ -353,7 +353,8 @@ def taskTable():
 	labels["def"].append("ActiveTask")
 	labels["def"].append("DateActualCompletion")
 	labels["def"].append("DeviceID")
-	
+	labels["def"].append("TaskName")
+	labels["def"].append("TaskLocation")	
 	taskList = []
 
         cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID = "+str(uID))
@@ -379,12 +380,15 @@ def taskTable():
                         else:
                                 dic[rowNum].append("no")
                         dic[rowNum].append(row[6])
-			
+			dic[rowNum].append(row[7])
+			dic[rowNum].append(row[8])
                         dID = "null"
                         cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID = "+str(row[0]))
                         for column in cur.fetchall():
 				dID = column[0]
                                 dic[rowNum].append(column[0])
+			
+			
                 rowNum = rowNum + 1
 	return render_template('taskTable.html', dic=dic, labels=labels)
 
@@ -604,7 +608,8 @@ def edittask():
                 for row in cur.fetchall():
                 	devID = row[0]
 
-               
+		nTask = request.form["TaskName"]
+		lTask = request.form["TaskLocation"]               
                 dStart = request.form["DateStarted"]
                 dComp = request.form["DateCompleted"]
                 tStatus = request.form["TaskStatus"]
@@ -612,7 +617,7 @@ def edittask():
 		aTask = request.form["ActiveTask"]
 		acDate = request.form["ActualCompletionDate"]
                 device = request.form["DeviceID"]
-
+		
 		cur.execute("select TaskType from Task where TaskDesc = \'"+tType+"\'")
                 for row in cur.fetchall():
                         tType  = row[0]
@@ -626,7 +631,8 @@ def edittask():
 		cur.execute("UPDATE Calendar SET Task_TaskType = \'"+tType+"\' WHERE TaskID = "+tID)
 		cur.execute("UPDATE Calendar SET ActiveTask = \'"+aTask+"\' WHERE TaskID = "+tID)
 		cur.execute("UPDATE Calendar SET DateActualCompletion = \'"+acDate+"\' WHERE TaskID = "+tID)		
-
+		cur.execute("UPDATE Calendar SET TaskName = \'"+nTask+"\' WHERE TaskID = "+tID)
+		cur.execute("UPDATE Calendar SET TaskLocation = \'"+lTask+"\' WHERE TaskID = "+tID)
                 db.commit()
 		
 		cur.execute("UPDATE Device_has_Calendar SET Device_DeviceID = \'"+device+"\' WHERE Calendar_TaskID = "+str(tID)+" AND Device_DeviceID = "+str(devID))
@@ -637,7 +643,8 @@ def edittask():
         else:
                 tID = request.args['id']
                	emp = {"start": "beginning"}
-                cur.execute("SELECT DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion FROM Calendar WHERE TaskID = "+tID)
+                cur.execute("SELECT DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion, TaskName, TaskLocation"
+				+" FROM Calendar WHERE TaskID = "+tID)
 		
                 for row in cur.fetchall():
                         emp.setdefault("data", [])
@@ -647,6 +654,8 @@ def edittask():
                         emp["data"].append(row[3])
 			emp["data"].append(row[4])
 			emp["data"].append(row[5])
+			emp["data"].append(row[6])
+			emp["data"].append(row[7])
 
                 cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID ="+tID)
 
@@ -861,14 +870,17 @@ def addtask():
 		acDate = "0000-00-00"
 		device = request.form["DeviceID"]
 		aTask = request.form["activeTask"]
+		nTask = request.form["TaskName"]
+		lTask = request.form["TaskLocation"]		
 
 		cur.execute("select TaskType from Task where TaskDesc = \'"+tType+"\'")
 		for row in cur.fetchall():
 			tType = row[0]
 		tType = str(tType)
 	
-		cur.execute("INSERT INTO Calendar (DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion)"
-                                +" VALUES(\'"+dStart+"\',"+"\'"+dComp+"\',"+"\'"+tStatus+"\',"+"\'"+tType+"\',"+"\'"+aTask+"\',"+"\'"+acDate+"\')")
+		cur.execute("INSERT INTO Calendar (DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion, TaskName, TaskLocation)"
+                                +" VALUES(\'"+dStart+"\',"+"\'"+dComp+"\',"+"\'"+tStatus+"\',"+"\'"+tType+"\',"+"\'"+aTask+"\',"+"\'"+acDate+"\',"+
+				"\'"+nTask+"\',"+"\'"+lTask+"\')")
 		db.commit()
 		
 		cur.execute("select TaskID from Calendar order by TaskID DESC limit 1")
@@ -1159,7 +1171,7 @@ def userPage():
 @login_required
 def calendar():
 	
-	cur.execute("select TaskID, DateStart, TaskDesc, TaskStatus from Calendar, Task "
+	cur.execute("select TaskID, DateStart, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task "
 			+"where Calendar.Task_TaskType = Task.TaskType and DateStart != '0000-00-00'")
         dic = {"start": "beginning"}
         rowNum = 0
@@ -1169,9 +1181,11 @@ def calendar():
                 dic[rowNum].append(row[1])
 		dic[rowNum].append(row[2])
 		dic[rowNum].append(row[3])
+		dic[rowNum].append(row[4])
+		dic[rowNum].append(row[5])
                 rowNum = rowNum + 1
 	
-	cur.execute("select TaskID, DateComplete, TaskDesc, TaskStatus from Calendar, Task "
+	cur.execute("select TaskID, DateComplete, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task "
                         +"where Calendar.Task_TaskType = Task.TaskType and DateComplete != '0000-00-00'")
         dic2 = {"start": "beginning"}
         num = 0
@@ -1181,7 +1195,9 @@ def calendar():
                 dic2[num].append(column[1])
                 dic2[num].append(column[2])
                 dic2[num].append(column[3])
-                num = num + 1
+		dic2[num].append(column[4])
+                dic2[num].append(column[5])
+		num = num + 1
 	
 
         return render_template('calendar.html', dic=dic, dic2=dic2)

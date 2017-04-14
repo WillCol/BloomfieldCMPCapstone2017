@@ -98,10 +98,10 @@ $('#calendar').fullCalendar({
  events: [
 	{% for k in dic %}	
 		{
-            title  : 'Task ID : {{ dic[k][0] }}',
+            title  : 'Task Name : {{ dic[k][4] }}',
             start  : '{{ dic[k][1] }}',
 			color : 'blue',
-			description: 'Description : {{ dic[k][2] }} <br> Status : {{ dic[k][3] }}',
+			description: 'Task ID : {{ dic[k][0] }}  <br> Description : {{ dic[k][2] }} <br> Status : {{ dic[k][3] }} <br> Task Location : {{ dic[k][5] }}',
 			url: 'edittask?id={{ dic[k][0] }}'
 			
 			
@@ -109,10 +109,10 @@ $('#calendar').fullCalendar({
 	{% endfor %}	
 	{% for k in dic2 %}	
 		{
-            title  : 'Task ID : {{ dic2[k][0] }}',
+            title  : 'Task Name : {{ dic2[k][4] }}',
             start  : '{{ dic2[k][1] }}',
 			color : 'green',
-			description: 'Description : {{ dic2[k][2] }} <br> Status : {{ dic2[k][3] }}',
+			description: 'Task ID : {{ dic2[k][0] }} <br> Description : {{ dic2[k][2] }} <br> Status : {{ dic2[k][3] }} <br> Task Location : {{ dic2[k][5] }} ',
 			url:'edittask?id={{ dic2[k][0] }}'
 			
 			

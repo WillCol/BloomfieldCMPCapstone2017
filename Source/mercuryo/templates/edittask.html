@@ -54,6 +54,12 @@
 
 	<fieldset id="fields">
 		
+		<label>Task Name</label> 
+		<input type="text" name="TaskName" value="{{ emp["data"][6] }}"><br>
+		
+		<label>Task Location</label> 
+		<input type="text" name="TaskLocation" value="{{ emp["data"][7] }}"><br>
+		
 		<label>Date Start</label> 
 		<input type="text" name="DateStarted" value="{{ emp["data"][0] }}"><br>
 
@@ -61,7 +67,7 @@
 		<input type="text" name="DateCompleted" value="{{ emp["data"][1] }}"><br>
 		
 		<label>Actual Completion Date</label> 
-		<input type="text" name="ActualCompletionDate" value="{{ emp["data"][6] }}"><br>
+		<input type="text" name="ActualCompletionDate" value="{{ emp["data"][5] }}"><br>
 
 		
 		<label>Task Status</label> 
