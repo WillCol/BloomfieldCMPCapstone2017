@@ -55,7 +55,15 @@
 
 <p>Choose a User to be deleted.</p><br>
 
-<label>User ID</label> <input type="text"  name="UserID"><br>
+<label>User Name</label> 
+<select name="username" value="">
+{% for k in user %}
+<option style="text-align:center" value="{{ user[k] }}">{{ user[k] }}</option>
+{% endfor %}
+</select><br>
+
+
+<!---<label>User ID</label> <input type="text"  name="UserID"><br>--->
 
 
 	

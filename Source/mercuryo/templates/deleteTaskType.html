@@ -52,7 +52,16 @@
 
 <form name="deleteTaskType" method="POST">
 <fieldset id="fields">
-<label>Task Type</label> <input type="text"  name="taskType"><br>
+
+<label>Task Type</label> 
+<select name="TaskDesc" value="">
+{% for k in task %}
+<option style="text-align:center" value="{{ task[k] }}">{{ task[k] }}</option>
+{% endfor %}
+</select><br>
+
+
+<!---<label>Task Type</label> <input type="text"  name="taskType"><br>--->
 
 																																											
 </select>

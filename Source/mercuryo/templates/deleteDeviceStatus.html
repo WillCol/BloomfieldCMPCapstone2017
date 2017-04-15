@@ -55,10 +55,18 @@
 <fieldset id="fields">
 																							
 <p>Choose the Device Status to be deleted.</p><br>
-																							
-<label>Device Status ID</label> 
+
+<label>Device Status</label> 
+<select name="DeviceStatus" value="">
+{% for k in dStatus %}
+<option style="text-align:center" value="{{ dStatus[k] }}">{{ dStatus[k] }}</option>
+{% endfor %}
+</select><br>									
+
+									
+<!---<label>Device Status ID</label> 
 <input type="text"  name="statusID"><br>
-																							
+	--->																						
 																							
 																							
 																							

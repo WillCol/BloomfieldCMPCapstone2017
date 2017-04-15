@@ -55,7 +55,14 @@
 	
 	<p>Choose a Task to be deleted.</p><br>
 	
-	<label>Task ID</label> <input type="text"  name="taskID"><br>
+		<label>Task Name</label> 
+		<select name="TaskName" value="">
+		{% for k in taskList %}
+		<option style="text-align:center" value="{{ taskList[k][0] }}">{{ taskList[k][0] }}</option>
+		{% endfor %}
+		</select><br>
+	
+	<!---<label>Task ID</label> <input type="text"  name="taskID"><br>--->
 	
 	
 	

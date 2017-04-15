@@ -54,11 +54,18 @@
 
 <fieldset id="fields">
 																							
-<p>Enter the EmployeeID to be deleted.</p><br>
-																							
-<label>Employee ID</label> 
+<p>Enter the Employee Name to be deleted.</p><br>
+				
+<label>Employee Name</label> 
+<select name="EmployeeName" value="">
+{% for k in emp %}
+<option style="text-align:center" value="{{ emp[k] }}">{{ emp[k] }}</option>
+{% endfor %}
+</select><br>
+				
+<!---<label>Employee ID</label> 
 <input type="text"  name="EmployeeID"><br>
-																							
+	--->																						
 																							
 																							
 																							

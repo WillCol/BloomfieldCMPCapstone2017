@@ -1053,15 +1053,25 @@ def editAccount():
 @security_check
 def deleteemployee():
 	if request.method == 'POST':
-		eID = request.form["EmployeeID"]
+		eName = request.form["EmployeeName"]
+		cur.execute("Select EmployeeID from Employee WHERE EmployeeName = \'"+eName+"\'")
+		for row in cur.fetchall():
+			eID = row[0]
+		eID = str(eID)
+
+		#eID = request.form["EmployeeID"]
 		cur.execute("DELETE FROM User WHERE Employee_EmployeeID = "+eID)
 		cur.execute("DELETE FROM Employee where EmployeeID = "+eID)
 		db.commit()
 		cur.execute("DELETE FROM Phone WHERE Employee_EmployeeID = "+eID)
 		db.commit() 
 		return redirect(url_for('employeeTable'))
-	
-	return render_template('deleteemployee.html')
+	cur.execute("SELECT EmployeeName from Employee")
+	emp = {}
+	for row in cur.fetchall():
+		emp.setdefault(row, "")
+		emp[row] = row[0]	
+	return render_template('deleteemployee.html', emp = emp)
 
 #delete user
 @app.route('/deleteuser', methods=['GET', 'POST'])
@@ -1069,13 +1079,22 @@ def deleteemployee():
 @security_check
 def deleteuser():
         if request.method == 'POST':
-                uID = request.form["UserID"]
+		username = request.form["username"]
+		cur.execute("select UserID from User where UserName = \'"+username+"\'")
+		for row in cur.fetchall():
+			uID = row[0]
+		uID = str(uID)
+                #uID = request.form["UserID"]
 		cur.execute("DELETE FROM User_has_Calendar WHERE User_UserID = "+uID)
                 cur.execute("DELETE FROM User WHERE UserID = "+uID)
                 db.commit()
                 return redirect(url_for('userTable'))
-
-        return render_template('deleteuser.html')
+	cur.execute("select UserName from User")
+	user = {}
+	for row in cur.fetchall():
+		user.setdefault(row, "")
+		user[row] = row[0]
+        return render_template('deleteuser.html', user = user)
 
 #delete Calendar Task
 @app.route('/deleteCalendarTask', methods=['GET', 'POST'])
@@ -1083,8 +1102,12 @@ def deleteuser():
 @security_check
 def deleteCalendarTask():
         if request.method == 'POST':
-		tID = request.form["taskID"]
-
+		tName = request.form["TaskName"]
+		cur.execute("SELECT TaskID from Calendar WHERE TaskName = \'"+tName+"\'")
+		#tID = request.form["taskID"]
+		for row in cur.fetchall():
+			tID = row[0]
+		tID = str(tID)
                 cur.execute("DELETE FROM User_has_Calendar WHERE Calendar_TaskID = "+tID)
                 db.commit()
                 cur.execute("DELETE FROM Device_has_Calendar WHERE Calendar_TaskID ="+tID)
@@ -1092,9 +1115,16 @@ def deleteCalendarTask():
                 cur.execute("DELETE FROM Calendar WHERE TaskID = "+tID)
                 db.commit()
                 return redirect(url_for('taskTable'))
-
-
-        return render_template('deleteCalendarTask.html')
+	
+	username = session['username']
+	
+	cur.execute("select TaskName from Calendar, User_has_Calendar, User where User_UserID = UserID and TaskID = Calendar_TaskID and UserName = \'"+username+"\'") 	
+	taskList = {"start" : ""}
+	for row in cur.fetchall():
+		taskList.setdefault(row, [])
+		taskList[row].append(row[0])
+	
+        return render_template('deleteCalendarTask.html', taskList = taskList)
 
 #delete device
 @app.route('/deleteDevice', methods=['GET', 'POST'])
@@ -1102,14 +1132,25 @@ def deleteCalendarTask():
 @security_check
 def deleteDevice():
         if request.method == 'POST':
-		dID = request.form["deviceID"]
+		sNumber = request.form["SerialNumber"]
+		cur.execute("SELECT DeviceID from Device WHERE SerialNumber = "+str(sNumber))
+		for row in cur.fetchall():
+			dID = row[0]
+
+		#dID = request.form["deviceID"]
+		dID = str(dID)
 		cur.execute("DELETE FROM Device_has_Calendar WHERE Device_deviceID = "+dID)
                 cur.execute("DELETE FROM Device WHERE deviceID = "+dID)
                 db.commit()
 		return redirect(url_for('Inventory'))
 
+	device = {}
+	cur.execute("SELECT SerialNumber from Device")
+	for row in cur.fetchall():
+		device.setdefault(row, "")
+		device[row] = row[0]
 
-        return render_template('deleteDevice.html')
+        return render_template('deleteDevice.html', device = device)
 
 
 #delete deviceStatus
@@ -1118,12 +1159,22 @@ def deleteDevice():
 @security_check
 def deleteDeviceStatus():
         if request.method == 'POST':
-                sID = request.form["statusID"]
-                cur.execute("DELETE FROM DeviceStatus WHERE StatusID = "+sID)
+		status = request.form["DeviceStatus"]
+		cur.execute("SELECT StatusID from DeviceStatus WHERE StatusDesc = \'"+status+"\'")
+		sID = 0
+		for row in cur.fetchall():
+			sID = row[0]
+                cur.execute("DELETE FROM DeviceStatus WHERE StatusID = "+str(sID))
                 db.commit()
                 return redirect(url_for('deviceStatusTable'))
+	
+	cur.execute("SELECT StatusDesc from DeviceStatus")
+	dStatus = {}
+	for row in cur.fetchall():
+		dStatus.setdefault(row, "")
+		dStatus[row] = row[0]
 
-        return render_template('deleteDeviceStatus.html')
+        return render_template('deleteDeviceStatus.html', dStatus = dStatus)
 
 #delete TaskType
 @app.route('/deleteTaskType', methods=['GET', 'POST'])
@@ -1131,12 +1182,18 @@ def deleteDeviceStatus():
 @security_check
 def deleteTaskType():
         if request.method == 'POST':
-                tID = request.form["taskType"]
-                cur.execute("DELETE FROM Task WHERE TaskType = "+tID)
+		tDesc = request.form["TaskDesc"]
+		
+                #tID = request.form["taskType"]
+                cur.execute("DELETE FROM Task WHERE TaskDesc = \'"+tDesc+"\'")
                 db.commit()
                 return redirect(url_for('taskTypeTable'))
-
-        return render_template('deleteTaskType.html')
+	cur.execute("SELECT TaskDesc from Task")
+	task = {}
+	for row in cur.fetchall():
+		task.setdefault(row, "")
+		task[row] = row[0]
+        return render_template('deleteTaskType.html', task = task)
  			
 #change password
 @app.route('/editPassword', methods=['GET', 'POST'])

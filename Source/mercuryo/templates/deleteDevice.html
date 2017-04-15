@@ -54,9 +54,16 @@
 <form name="deleteDevice" method="POST">
 <fieldset id="fields">
 
-<label>Device ID</label> 
-<input type="text"  name="deviceID"><br>
+<label>Device Serial Number</label> 
+<select name="SerialNumber" value="">
+{% for k in device %}
+<option style="text-align:center" value="{{ device[k] }}">{{ device[k] }}</option>
+{% endfor %}
+</select><br>
 
+<!---<label>Device ID</label> 
+<input type="text"  name="deviceID"><br>
+--->
 																																											
 </select>
 
