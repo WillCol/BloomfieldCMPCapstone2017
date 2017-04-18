@@ -103,8 +103,8 @@ def editDevice():
         	labels["def"].append("Status")
         	labels["def"].append("Location")
         	labels["def"].append("Owner")
-        	labels["def"].append("Date of Deployment")
-        	labels["def"].append("Go-back Date")
+        	labels["def"].append("Date of Deployment (YYYY-MM-DD)")
+        	labels["def"].append("Go-back Date (YYYY-MM-DD)")
         	labels["def"].append("IP Address")
         	labels["def"].append("Serial Number")
 
