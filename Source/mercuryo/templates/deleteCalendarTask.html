@@ -29,11 +29,11 @@
 <ul id="navbar">
 <!-- Add: class="active" to active tab -->
 
-<li><a class="hvr-underline-from-center"  href="/">Home</a></li>
-<li><a class="hvr-underline-from-center"  href="#myaccount">My Account</a></li>
-<li><a class="hvr-underline-from-center"  href="calendar.html">Calendar</a></li>
-<li><a class="hvr-underline-from-center"   href="userPage">Admin</a></li>
-<li id="nav-right"><a class="hvr-underline-from-center" href="#logout">Log Out</a></li>
+-<li><a class="hvr-underline-from-center"  href="inventory">Home</a></li>
+ -<li><a class="hvr-underline-from-center"  href="myAccountPage">My Account</a></li>
+ -<li><a class="hvr-underline-from-center"  href="calendar">Calendar</a></li>
+ -<li><a class="hvr-underline-from-center"   href="userPage">Admin</a></li>
+ -<li id="nav-right"><a class="hvr-underline-from-center" href="logout">Log Out</a></li>
 </ul>
 </div>
 
@@ -54,10 +54,15 @@
 <fieldset id="fields">
 	
 	<p>Choose a Task to be deleted.</p><br>
-	
-	<label>Task ID</label> <input type="text"  name="taskID"><br>
-	
-	
+  	
+ 		<label>Task Name</label> 
+ 		<select name="TaskName" value="">
+ 		{% for k in taskList %}
+ 		<option style="text-align:center" value="{{ taskList[k][0] }}">{{ taskList[k][0] }}</option>
+ 		{% endfor %}
+ 		</select><br>
+ 	
+ 
 	
 	
 		
