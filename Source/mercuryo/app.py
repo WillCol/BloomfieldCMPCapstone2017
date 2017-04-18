@@ -95,7 +95,7 @@ def editDevice():
 		devID = request.args["id"]
                 cur.execute("Select * from Device where DeviceID = "+devID)
 
-		labels = {"start": 'beginning'}
+		labels = { }
         	labels.setdefault("def", [])
         	labels["def"].append("Device Name")
         	labels["def"].append("Description")
@@ -108,7 +108,7 @@ def editDevice():
         	labels["def"].append("IP Address")
         	labels["def"].append("Serial Number")
 
-		dev = {"start": 'beginning'}
+		dev = { }
 
 		for row in cur.fetchall():
 			dev.setdefault("data", [])
@@ -124,7 +124,7 @@ def editDevice():
 			dev["data"].append(row[10])
 		
 		rowNum = 0
-        	dStatusL = {"start": ''}
+        	dStatusL = { }
         	cur.execute("select StatusDesc from DeviceStatus")
         	for row in cur.fetchall():
                 	dStatusL.setdefault(rowNum, [])
@@ -137,7 +137,7 @@ def editDevice():
 @app.route('/inventory')
 def Inventory():
 		
-	labels = {"start": 'beginning'}
+	labels = { }
 	labels.setdefault("def", [])
 	labels["def"].append("Device ID")
 	labels["def"].append("Device Name")
@@ -153,7 +153,7 @@ def Inventory():
 
 	cur.execute("Select * from Device")
 
-	dic = {"start": 'beginning'}
+	dic = { }
 	rowNum = 0
 	for row in cur.fetchall():
 		dic.setdefault(rowNum, [])
@@ -178,17 +178,17 @@ def Inventory():
 @security_check
 def userTable():
 
-        labels = {"start": 'beginning'}
+        labels = { }
         labels.setdefault("def", [])
         labels["def"].append("UserID")
         labels["def"].append("UserName")
         labels["def"].append("Password")
-        labels["def"].append("Employee_Employee")
+        labels["def"].append("Employee ID")
         labels["def"].append("Security")
 
         cur.execute("Select * from User")
 
-        dic = {"start": 'beginning'}
+        dic = { }
         rowNum = 0
         for row in cur.fetchall():
                 dic.setdefault(rowNum, [])
@@ -207,20 +207,20 @@ def userTable():
 @security_check
 def employeeTable():
 
-        labels = {"start": 'beginning'}
+        labels = { }
         labels.setdefault("def", [])
-        labels["def"].append("EmployeeID")
-        labels["def"].append("EmployeeName")
-        labels["def"].append("JobTitle")
-        labels["def"].append("EmployeeAddress")
-        labels["def"].append("EmployeeDepartment")
-        labels["def"].append("EmployeeEmail")
-	labels["def"].append("EmployeePhoneNum")
+        labels["def"].append("Employee ID")
+        labels["def"].append("Employee Name")
+        labels["def"].append("Job Title")
+        labels["def"].append("Employee Address")
+        labels["def"].append("Employee Department")
+        labels["def"].append("Employee Email")
+	labels["def"].append("Employee Phone Number")
 
 
         cur.execute("Select * from Employee")
 
-        dic = {"start": 'beginning'}
+        dic = { }
         rowNum = 0
         for row in cur.fetchall():
                 dic.setdefault(rowNum, [])
@@ -245,14 +245,14 @@ def employeeTable():
 @login_required
 def taskTypeTable():
 
-        labels = {"start": 'beginning'}
+        labels = { }
         labels.setdefault("def", [])
-        labels["def"].append("TaskType")
-        labels["def"].append("TaskDesc")
+        labels["def"].append("Task Type")
+        labels["def"].append("Task Description")
 
         cur.execute("Select * from Task")
 
-        dic = {"start": 'beginning'}
+        dic = { }
         rowNum = 0
         for row in cur.fetchall():
                 dic.setdefault(rowNum, [])
@@ -267,14 +267,14 @@ def taskTypeTable():
 @login_required
 def deviceStatusTable():
 
-        labels = {"start": 'beginning'}
+        labels = { }
         labels.setdefault("def", [])
-        labels["def"].append("StatusID")
-        labels["def"].append("StatusDesc")
+        labels["def"].append("Status ID")
+        labels["def"].append("Status Description")
 
         cur.execute("Select * from DeviceStatus")
 
-        dic = {"start": 'beginning'}
+        dic = { }
         rowNum = 0
         for row in cur.fetchall():
                 dic.setdefault(rowNum, [])
@@ -288,19 +288,19 @@ def deviceStatusTable():
 @app.route('/adminTaskTable')
 @login_required
 def adminTaskTable():
-	labels = {"start": ""}
+	labels = { }
         labels.setdefault("def", [])
-        labels["def"].append("TaskID")
-        labels["def"].append("DateStarted")
-        labels["def"].append("DateCompleted")
-        labels["def"].append("TaskStatus")
-        labels["def"].append("TaskType")
-        labels["def"].append("ActiveTask")
-        labels["def"].append("DateActualCompletion")
-        labels["def"].append("DeviceID")
-	labels["def"].append("UserID")
+        labels["def"].append("Task ID")
+        labels["def"].append("Date Started")
+        labels["def"].append("Date Completed")
+        labels["def"].append("Task Status")
+        labels["def"].append("Task Type")
+        labels["def"].append("Active Task")
+        labels["def"].append("Actual Completion Date")
+        labels["def"].append("Device ID")
+	labels["def"].append("User ID")
     
-	dic = {"start": ''}
+	dic = { }
         rowNum = 0
         cur.execute("SELECT * FROM Calendar")
         for row in cur.fetchall():
@@ -343,18 +343,18 @@ def dropDownTestPage():
 def taskTable():
 	uID = session['userID']
 
-        labels = {"start": ""}
+        labels = { }
         labels.setdefault("def", [])
-        labels["def"].append("TaskID")
-        labels["def"].append("DateStarted")
-        labels["def"].append("DateCompleted")
-        labels["def"].append("TaskStatus")
-        labels["def"].append("TaskType")
-	labels["def"].append("ActiveTask")
-	labels["def"].append("DateActualCompletion")
-	labels["def"].append("DeviceID")
-	labels["def"].append("TaskName")
-	labels["def"].append("TaskLocation")	
+        labels["def"].append("Task ID")
+        labels["def"].append("Date Started")
+        labels["def"].append("Date Completed")
+        labels["def"].append("Task Status")
+        labels["def"].append("Task Type")
+	labels["def"].append("Active Task")
+	labels["def"].append("Actual Completion Date")
+	labels["def"].append("Device ID")
+	labels["def"].append("Task Name")
+	labels["def"].append("Task Location")	
 	taskList = []
 
         cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID = "+str(uID))
@@ -362,7 +362,7 @@ def taskTable():
 		taskList.append(row[0])
 		
 	
-        dic = {"start": ''}
+        dic = { }
         rowNum = 0
         for tasks in taskList:
 		taskCheck = rowNum
@@ -472,7 +472,7 @@ def generic():
 
                 cur.execute("Select * from Calendar where TaskID = "+taskID)
 
-                task  = {"start" : "beginning"}
+                task  = { }
                 task.setdefault("def", [])
                 task["def"].append("Task ID")
                 task["def"].append("Date Started")
@@ -523,15 +523,15 @@ def editEmployee():
 	else:
 		
 		eID = request.args["id"]
-                emp = {"start" : "beginning"}
+                emp = { }
                 emp.setdefault("def", [])
-                emp["def"].append("EmployeeID")
-                emp["def"].append("EmployeeName")
-                emp["def"].append("JobTitle")
-                emp["def"].append("EmployeeAddress")
-                emp["def"].append("EmployeeDepartment")
-		emp["def"].append("EmployeeEmail")
-		emp["def"].append("EmployeePhoneNumber")
+                emp["def"].append("Employee ID")
+                emp["def"].append("Employee Name")
+                emp["def"].append("Job Title")
+                emp["def"].append("Employee Address")
+                emp["def"].append("Employee Department")
+		emp["def"].append("Employee Email")
+		emp["def"].append("Employee Phone Number")
 
                 cur.execute("SELECT * FROM Employee WHERE EmployeeID = "+eID)
 
@@ -570,7 +570,7 @@ def editUser():
                 return redirect(url_for('userTable'))
 	else:
 		uID = request.args['id']
-                emp = {"start" : "beginning"}
+                emp = { }
                 emp.setdefault("def", [])
 		emp["def"].append("User ID")
                 emp["def"].append("Username")
@@ -641,7 +641,7 @@ def edittask():
                 return redirect(url_for('taskTable'))
         else:
                 tID = request.args['id']
-               	emp = {"start": "beginning"}
+               	emp = { }
                 cur.execute("SELECT DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion, TaskName, TaskLocation"
 				+" FROM Calendar WHERE TaskID = "+tID)
 		
@@ -663,7 +663,7 @@ def edittask():
 			devID = row[0] 
                 
 		rowNum = 0
-	        device = {"start": ''}
+	        device = { }
         	cur.execute("select DeviceID from Device")
         	for row in cur.fetchall():
                 	device.setdefault(rowNum, [])
@@ -671,7 +671,7 @@ def edittask():
                 	rowNum = rowNum + 1
 
         	rowNum = 0
-        	task = {"start": ''}
+        	task = { }
         	cur.execute("select TaskDesc from Task")
         	for row in cur.fetchall():
                 	task.setdefault(rowNum, [])
@@ -695,7 +695,7 @@ def edittasktype():
                 return redirect(url_for('taskTypeTable'))
 	else:
                 ttID = request.args['id']
-                emp = {"start" : "beginning"}
+                emp = { }
              
                 cur.execute("SELECT TaskDesc FROM Task WHERE TaskType = "+ttID)
            
@@ -720,7 +720,7 @@ def editdevicestatus():
                 return redirect(url_for('deviceStatusTable'))
 	else:
 		dID = request.args['id']
-		emp = {"start" : "beginning"}
+		emp = { }
 		emp.setdefault("def", [])
                 emp["def"].append("Status Description")
 
@@ -759,7 +759,7 @@ def account():
 		account['phone'] = column[0]
 	
 	#active dictionary for user tasks
-	active = {'start' : ""}
+	active = { }
 	cur.execute("select distinct Calendar_TaskID, TaskDesc, DateComplete from User_has_Calendar, User, Task, Calendar" 
 			+" where User_UserID = UserID and Calendar_TaskID = TaskID and Task_TaskType = TaskType and UserName = \'"+userName+"\'"
 			+" and ActiveTask = 1")
@@ -844,7 +844,7 @@ def adduser():
 		return redirect(url_for('userTable'))
 	
 	rowNum = 0
-        name = {"start": ''}
+        name = { }
         cur.execute("select EmployeeName from Employee")
         for row in cur.fetchall():
         	name.setdefault(rowNum, [])
@@ -902,7 +902,7 @@ def addtask():
 
 		return redirect(url_for('taskTable'))
 	rowNum = 0
-        device = {"start": ''}
+        device = { }
         cur.execute("select DeviceID from Device")
         for row in cur.fetchall():
                 device.setdefault(rowNum, [])
@@ -910,7 +910,7 @@ def addtask():
                 rowNum = rowNum + 1
 
 	rowNum = 0
-        task = {"start": ''}
+        task = { }
         cur.execute("select TaskDesc from Task")
         for row in cur.fetchall():
                 task.setdefault(rowNum, [])
@@ -996,7 +996,7 @@ def addDevice():
 		
         	return redirect(url_for("Inventory"))
 	rowNum = 0
-	dStatusL = {"start": ''}
+	dStatusL = { }
 	cur.execute("select StatusDesc from DeviceStatus")
 	for row in cur.fetchall():
 		dStatusL.setdefault(rowNum, [])
@@ -1226,11 +1226,12 @@ def userPage():
 @app.route('/calendar', methods=['GET', 'POST'])
 @login_required
 def calendar():
-	
+	dev = 0
 	cur.execute("select TaskID, DateStart, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task "
 			+"where Calendar.Task_TaskType = Task.TaskType and DateStart != '0000-00-00'")
         dic = {"start": "beginning"}
         rowNum = 0
+	
         for row in cur.fetchall():
                 dic.setdefault(rowNum, [])
                 dic[rowNum].append(row[0])
@@ -1239,12 +1240,22 @@ def calendar():
 		dic[rowNum].append(row[3])
 		dic[rowNum].append(row[4])
 		dic[rowNum].append(row[5])
+		cur.execute("Select Device_DeviceID from Device_has_Calendar WHERE Calendar_TaskID = \'"+str(row[0])+"\'")
+		if cur.rowcount == 0:
+			dev = 0
+		else:
+			for col in cur.fetchall():	
+				dev = col[0]
+		cur.execute("select SerialNumber from Device where DeviceID = \'"+str(dev)+"\'")
+		for col in cur.fetchall():	
+			dic[rowNum].append(col[0])
                 rowNum = rowNum + 1
-	
+			
 	cur.execute("select TaskID, DateComplete, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task "
                         +"where Calendar.Task_TaskType = Task.TaskType and DateComplete != '0000-00-00'")
-        dic2 = {"start": "beginning"}
+        dic2 = { }
         num = 0
+	devID = 0
         for column in cur.fetchall():
                 dic2.setdefault(num, [])
                 dic2[num].append(column[0])
@@ -1253,8 +1264,16 @@ def calendar():
                 dic2[num].append(column[3])
 		dic2[num].append(column[4])
                 dic2[num].append(column[5])
+		cur.execute("Select Device_DeviceID from Device_has_Calendar WHERE Calendar_TaskID = \'"+str(column[0])+"\'")
+                if cur.rowcount == 0:
+                        devID = 0
+                else:
+			for col in cur.fetchall():
+                       		devID = col[0]
+                cur.execute("select SerialNumber from Device where DeviceID = \'"+str(devID)+"\'")
+		for rows in cur.fetchall():
+                        dic2[num].append(rows[0])
 		num = num + 1
-	
 
         return render_template('calendar.html', dic=dic, dic2=dic2)
 	

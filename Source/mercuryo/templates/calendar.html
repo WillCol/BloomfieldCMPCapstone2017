@@ -62,7 +62,7 @@
             <div id="modalBody" class="modal-body"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <a id="eventUrl" target="_blank" style="color:white"><button class="btn btn-primary">Event Page</button></a>
+                <a id="eventUrl" target="_blank" style="color:white"><button class="btn btn-primary">Edit Task</button></a>
             </div>
         </div>
     </div>
@@ -100,8 +100,8 @@ $('#calendar').fullCalendar({
 		{
             title  : 'Task Name : {{ dic[k][4] }}',
             start  : '{{ dic[k][1] }}',
-			color : 'blue',
-			description: 'Task ID : {{ dic[k][0] }}  <br> Description : {{ dic[k][2] }} <br> Status : {{ dic[k][3] }} <br> Task Location : {{ dic[k][5] }}',
+			color : 'green',
+			description: 'Task ID : {{ dic[k][0] }}  <br> Description : {{ dic[k][2] }} <br> Status : {{ dic[k][3] }} <br> Task Location : {{ dic[k][5] }} <br> Device SerialNumber : {{ dic[k][6] }}',
 			url: 'edittask?id={{ dic[k][0] }}'
 			
 			
@@ -111,8 +111,8 @@ $('#calendar').fullCalendar({
 		{
             title  : 'Task Name : {{ dic2[k][4] }}',
             start  : '{{ dic2[k][1] }}',
-			color : 'green',
-			description: 'Task ID : {{ dic2[k][0] }} <br> Description : {{ dic2[k][2] }} <br> Status : {{ dic2[k][3] }} <br> Task Location : {{ dic2[k][5] }} ',
+			color : 'red',
+			description: 'Task ID : {{ dic2[k][0] }} <br> Description : {{ dic2[k][2] }} <br> Status : {{ dic2[k][3] }} <br> Task Location : {{ dic2[k][5] }} <br> Device SerialNumber : {{ dic2[k][6] }}',
 			url:'edittask?id={{ dic2[k][0] }}'
 			
 			
