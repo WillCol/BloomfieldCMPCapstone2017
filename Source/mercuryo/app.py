@@ -106,7 +106,7 @@ def editDevice():
         	labels["def"].append("Location")
         	labels["def"].append("Owner")
         	labels["def"].append("Date of Deployment (YYYY-MM-DD)")
-        	labels["def"].append("Go-back Date (YYYY-MM-DD)")
+        	labels["def"].append("Go-back Date(YYYY-MM-DD)")
         	labels["def"].append("IP Address")
         	labels["def"].append("Serial Number")
 
@@ -514,7 +514,6 @@ def editEmployee():
 		cur.execute("UPDATE Employee SET EmployeeAddress = \'"+eAddress+"\' WHERE EmployeeID = "+eID)
 		cur.execute("UPDATE Employee SET EmployeeDepartment = \'"+eDepartment+"\' WHERE EmployeeID = "+eID)
 		cur.execute("UPDATE Employee SET EmployeeEmail = \'"+email+"\' WHERE EmployeeID = "+eID)
-		cur.execute("UPDATE Employee SET EmployeeName = \'"+eName+"\' WHERE EmployeeID = "+eID)
 
                 db.commit()
 
@@ -546,7 +545,7 @@ def editEmployee():
                         emp["data"].append(row[4])
 			emp["data"].append(row[5])
 		pNumber = {'pNum' : 'null'}
-		cur.execute("SELECT PhoneNum from Phone WHERE Employee_EmployeeID = "+eID)
+		cur.execute("SELECT PhoneNum from Phone WHERE Employee_EmployeeID = "+eID+" LIMIT 1")
 		for column in cur.fetchall():
 			emp["data"].append(column[0])
 		 	empPhone = column[0]
