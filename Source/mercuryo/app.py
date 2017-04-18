@@ -59,16 +59,16 @@ def home():
 def editDevice():
         if request.method == 'POST':
             deviceID = request.args["id"]
-	    dLocation = request.form["location"]
-            sNumber = request.form["serialNumber"]
-            deviceName = request.form["computer"]
-            IP = request.form["IP"]
+	    dLocation = request.form["DeviceLocation"]
+            sNumber = request.form["SerialNumber"]
+            deviceName = request.form["DeviceName"]
+            IP = request.form["IPAddress"]
             IPInt = int(IP)
-            owner = request.form["owner"]
-  	    desc = request.form["Desc"]
-            DoD = request.form["dateOfDeployment"]
-            go_back = request.form["go-backDate"]
-            deviceCategory = request.form["deviceCategory"]
+            owner = request.form["DeviceOwner"]
+  	    desc = request.form["Description"]
+            DoD = request.form["DateOfDeployment"]
+            go_back = request.form["GoBackDate"]
+            deviceCategory = request.form["DeviceCategory"]
             deviceStatus = request.form["deviceStatus"]
 
 	    cur.execute("select StatusID from DeviceStatus where StatusDesc = \'"+deviceStatus+"\'")
@@ -560,7 +560,6 @@ def editUser():
                 uName = request.form["UserName"]
                 pWord = request.form["Password"]
                 sec = request.form["Security"]
-                eID = request.form["EmployeeID"]
 		
         	cur.execute("UPDATE User SET UserName = \'"+uName+"\' WHERE UserID = "+uID)
          	cur.execute("UPDATE User SET Password = \'"+pWord+"\' WHERE UserID = "+uID)
