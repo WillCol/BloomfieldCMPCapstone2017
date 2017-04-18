@@ -5,17 +5,19 @@ import sys
 #import for login required decorator
 from functools import wraps
 
-#dbCon = open("dbconfig.txt","r")
-#dbConL = []
-#for line in dbCon:
-#	dbConL.append(line)
-#dbName = dbConL[0]
-#dbUser = dbConL[1]
-#dbPW = dbConL[2]
-#print dbName
+dbCon = open("dbconfig.txt","r")
+dbConL = []
+for line in dbCon:
+	dbConL.append(line)
+dbName = dbConL[0]
+dbUser = dbConL[1]
+dbPW = dbConL[2]
+print dbName
+print dbPW
+print dbUser
 
 # creating an instance object of our db connection
-db = MySQLdb.connect(host="localhost",user="root",passwd="root",db="Inventory")
+db = MySQLdb.connect(host="localhost",user=dbUser.rstrip(),passwd=dbPW.rstrip(),db=dbName.rstrip())
 cur = db.cursor()
 
 # create the application object
