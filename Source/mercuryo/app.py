@@ -1202,13 +1202,16 @@ def deleteTaskType():
 def editPassword():
 	pWord = "null"
 	username = session['username']
+	print(username)
 	if request.method == 'POST':
 		opWord = request.form["OldPassword"]
 		pWord = request.form["NewPassword"]
 		rpWord = request.form["RetypePassword"]
-
+		print(opWord)
+		print(rpWord)
 		if(pWord == rpWord):
-			cur.execute("Update User set Password = \'" + pWord + "\' where UserName = \'"+username +"\' and Password = \'"+pWord+"\'")
+			print("test")
+			cur.execute("Update User set Password = \'" + pWord + "\' where UserName = \'"+username+"\'")
 			db.commit()
 		return redirect(url_for('account'))
 	
