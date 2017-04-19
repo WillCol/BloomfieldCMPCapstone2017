@@ -7,7 +7,7 @@
 <html>
 
 <!-- PAGE TITLE -->
-<title>Edit Device</title>
+<title>Add Device Status</title>
 
 <!-- META DATA -->
 <meta charset="UTF-8">
@@ -45,61 +45,23 @@
 
 
 
-<div id="titleBar" class="col-md-12">
-<h1>Edit Device</h1>
+<h1>Add Device Category</h1>
 
 </div>
-<hr style="color:black width:200px">
-<form id="editDevice" method="POST">
+
+<form name="adddevicecategory" method="POST">
 	<fieldset id="fields">
+	
+		<label>Device Category Name</label> 
+		<input type="text" name="CategoryName"><br>
 
-		<label>{{ labels["def"][0] }}</label> 
-		<input type="text" name="DeviceName" value="{{ dev["data"][0] }}"><br>
-
-		<label>{{ labels["def"][1] }}</label> 
-		<input type="text" name="Description" value="{{ dev["data"][1] }}"><br>
-
-		<label>{{ labels["def"][2] }}</label> 
-		
-		<select name="DeviceCategory" value="">
-		{% for k in cat %}
-		<option style="text-align:center" value="{{ cat[k][0] }}">{{ cat[k][0] }}</option>
-		{% endfor %}
-		</select><br>
-		
-		<!---<input type="text" name="DeviceCategory" value="{{ dev["data"][2] }}"><br>
-		--->
-		<label>{{ labels["def"][3] }}</label> </label>
-		<select name="deviceStatus" value="">
-		{% for k in dStatusL %}
-		<option style="text-align:center" value="{{ dStatusL[k][0] }}">{{ dStatusL[k][0] }}</option>
-		{% endfor %}
-		</select><br>
-		
-		<label>{{ labels["def"][4] }}</label> 
-		<input type="text" name="DeviceLocation" value="{{ dev["data"][4] }}"><br>
-
-		<label>{{ labels["def"][5] }}</label> 
-		<input type="text" name="DeviceOwner" value="{{ dev["data"][5] }}"><br>
-
-		<label>{{ labels["def"][6] }}</label> 
-		<input type="text" name="DateOfDeployment" value="{{ dev["data"][6] }}"><br>
-
-		<label>{{ labels["def"][7] }}</label> 
-		<input type="text" name="GoBackDate" value="{{ dev["data"][7] }}"><br>
-
-		<label>{{ labels["def"][8] }}</label> 
-		<input type="text" name="IPAddress" value="{{ dev["data"][8] }}"><br>
-
-		<label>{{ labels["def"][9] }}</label> 
-		<input type="text" name="SerialNumber" value="{{ dev["data"][9] }}"><br>
-
-	</fieldset>
-
-<input type="submit" value="Submit" id="submitButton">	
+		<label>Device Category Description</label> 
+		<input type="text" name="CategoryDesc" ><br>
+	
+	
+	<fieldset>
+<input type="submit" value="Submit" id="submitButton">
 </form>
-
-
 
 
 
@@ -132,6 +94,7 @@
 <script type="text/javascript" src="../static/js/jquery.js"></script>
 <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../static/js/formvalidation.js"></script>
+<script type="text/javascript" src="../static/js/jquery.validate.min.js"></script>
 
 
 

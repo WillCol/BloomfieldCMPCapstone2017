@@ -60,8 +60,13 @@
 		<input type="text" name="Desc"><br>
 
 		<label>Category</label> 
-		<input type="text" name="deviceCategory"><br>
-		
+		<select name="deviceCategory" value="">
+		{% for k in cat %}
+		<option style="text-align:center" value="{{ cat[k][0] }}">{{ cat[k][0] }}</option>
+		{% endfor %}
+		</select><br>
+		<!---<input type="text" name="deviceCategory"><br>
+		--->
 		<label>Device Status</label>
 		<select name="deviceStatus" value="">
 		{% for k in dStatusL %}

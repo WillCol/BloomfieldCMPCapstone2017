@@ -78,9 +78,14 @@ def editDevice():
             	deviceStatus = row[0]
             deviceStatus = str(deviceStatus)
 
+	    cur.execute("select CategoryID from DeviceCategory where CategoryName = \'"+deviceCategory+"\'")
+            for row in cur.fetchall():
+                deviceCategory = row[0]
+            deviceCategory = str(deviceCategory)
+
 	    cur.execute("UPDATE Device SET DeviceName = \'"+deviceName+"\' WHERE DeviceID = "+deviceID)
 	    cur.execute("UPDATE Device SET Description = \'"+desc+"\' WHERE DeviceID = "+deviceID)
-            cur.execute("UPDATE Device SET DeviceCategory = \'"+deviceCategory+"\' WHERE DeviceID = "+deviceID)
+            cur.execute("UPDATE Device SET DeviceCategory_CategoryID = \'"+deviceCategory+"\' WHERE DeviceID = "+deviceID)
 	    cur.execute("UPDATE Device SET DeviceStatus_StatusID = \'"+deviceStatus+"\' WHERE DeviceID = "+deviceID)
 	    cur.execute("UPDATE Device SET DeviceLocation = \'"+dLocation+"\' WHERE DeviceID = "+deviceID)
 	    cur.execute("UPDATE Device SET DeviceOwner = \'"+owner+"\' WHERE DeviceID = "+deviceID)
@@ -133,7 +138,15 @@ def editDevice():
                 	dStatusL[rowNum].append(row[0])
                 	rowNum = rowNum + 1		
 		
-                return render_template('editDevice.html', dev=dev, labels=labels, dStatusL = dStatusL)
+		num = 0
+                cat = { }
+                cur.execute("select CategoryName from DeviceCategory")
+                for row in cur.fetchall():
+                        cat.setdefault(num, [])
+                        cat[num].append(row[0])
+                        num = num + 1
+
+                return render_template('editDevice.html', dev=dev, labels=labels, dStatusL = dStatusL, cat=cat)
 
 # inventory page
 @app.route('/inventory')
@@ -162,7 +175,9 @@ def Inventory():
 		dic[rowNum].append(row[0])
 		dic[rowNum].append(row[1])
 		dic[rowNum].append(row[2])
-		dic[rowNum].append(row[3])
+		cur.execute("SELECT CategoryName from DeviceCategory WHERE CategoryID = \'"+str(row[3])+"\'")
+		for col in cur.fetchall():
+			dic[rowNum].append(col[0])
 		dic[rowNum].append(row[4])
 		dic[rowNum].append(row[5])
 		dic[rowNum].append(row[6])
@@ -241,6 +256,31 @@ def employeeTable():
                 rowNum = rowNum + 1
 
         return render_template('employeeTable.html', dic=dic, labels=labels)
+
+#DeviceCategory table
+@app.route('/deviceCategoryTable')
+@login_required
+def deviceCategoryTable():
+
+        labels = { }
+        labels.setdefault("def", [])
+	labels["def"].append("Device Category ID")
+        labels["def"].append("Device Category Name")
+        labels["def"].append("Device Category  Description")
+
+        cur.execute("Select * from DeviceCategory")
+        dic = { }
+        rowNum = 0
+        for row in cur.fetchall():
+                dic.setdefault(rowNum, [])
+                dic[rowNum].append(row[0])
+                dic[rowNum].append(row[1])
+		dic[rowNum].append(row[2])
+                rowNum = rowNum + 1
+
+        return render_template('deviceCategoryTable.html', dic=dic, labels=labels)
+
+
 
 #taskType table
 @app.route('/taskTypeTable')
@@ -706,6 +746,37 @@ def edittasktype():
                        
                 return render_template('edittasktype.html', emp=emp)
 
+#edit device category
+@app.route('/editDeviceCategory', methods=['GET', 'POST'])
+@login_required
+@security_check
+def editDeviceCategory():
+        if request.method == "POST":
+                dID = request.args['id']
+                cDesc = request.form["CategoryDesc"]
+		cName = request.form["CategoryName"]
+                cur.execute("UPDATE DeviceCategory SET CategoryDesc = \'"+cDesc+"\' WHERE CategoryID = "+dID)
+		cur.execute("UPDATE DeviceCategory SET CategoryName = \'"+cName+"\' WHERE CategoryID = "+dID)
+
+                db.commit()
+                return redirect(url_for('deviceCategoryTable'))
+        else:
+                dID = request.args['id']
+                emp = { }
+                emp.setdefault("def", [])
+                emp["def"].append("Device Category Name")
+		emp["def"].append("Device Category Description")
+
+                cur.execute("SELECT CategoryName, CategoryDesc FROM DeviceCategory WHERE CategoryID = "+dID)
+
+                for row in cur.fetchall():
+                        emp.setdefault("data", [])
+                        emp["data"].append(row[0])
+			emp["data"].append(row[1])
+
+                return render_template('editDeviceCategory.html', emp=emp)
+
+
 #edit device status
 @app.route('/editdevicestatus', methods=['GET', 'POST'])
 @login_required	
@@ -956,6 +1027,23 @@ def adddevicestatus():
         return render_template('adddevicestatus.html')
 	
 		
+#add deviceCategory
+@app.route('/addDeviceCategory', methods=['GET', 'POST'])
+@login_required
+@security_check
+def addDeviceCategory():
+        if request.method == "POST":
+                cDesc = request.form["CategoryDesc"]
+		cName = request.form["CategoryName"]
+                cur.execute("INSERT INTO DeviceCategory (CategoryDesc, CategoryName)"
+                                +" VALUES("
+                                +"\'"+cDesc+"\'"
+				+",\'"+cName+"\'"
+                                +")")
+                db.commit()
+                return redirect(url_for('deviceCategoryTable'))
+
+        return render_template('addDeviceCategory.html')
 
 #new device page
 @app.route('/addDevice', methods=["GET", "POST"])
@@ -979,7 +1067,12 @@ def addDevice():
 		for row in cur.fetchall():
 			deviceStatus = row[0]
 		deviceStatus = str(deviceStatus)
-		cur.execute("INSERT INTO Device (DeviceName, Description, DeviceCategory, DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
+
+		cur.execute("select CategoryID from DeviceCategory where CategoryName = \'"+deviceCategory+"\'")
+                for row in cur.fetchall():
+                        deviceCategory = row[0]
+                deviceCategory = str(deviceCategory)
+		cur.execute("INSERT INTO Device (DeviceName, Description, DeviceCategory_CategoryID, DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
 					+" VALUES("
 					#+"\'"+deviceID+"\',"
 					+"\'"+deviceName+"\',"
@@ -1003,8 +1096,15 @@ def addDevice():
 		dStatusL.setdefault(rowNum, [])
 		dStatusL[rowNum].append(row[0])
 		rowNum = rowNum + 1
+	num = 0
+        cat = { }
+        cur.execute("select CategoryName from DeviceCategory")
+        for row in cur.fetchall():
+        	cat.setdefault(num, [])
+        	cat[num].append(row[0])
+        	num = num + 1
 		
-	return render_template('addDevice.html', dStatusL = dStatusL)		
+	return render_template('addDevice.html', dStatusL = dStatusL, cat=cat)		
 
 #edit account
 @app.route('/editAccount', methods=['GET', 'POST'])
@@ -1151,6 +1251,28 @@ def deleteDevice():
 		device[row] = row[0]
 
         return render_template('deleteDevice.html', device = device)
+#delete deviceCategory
+@app.route('/deleteDeviceCategory', methods=['GET', 'POST'])
+@login_required
+@security_check
+def deleteDeviceCategory():
+        if request.method == 'POST':
+                cName = request.form["DeviceCategory"]
+                cur.execute("SELECT CategoryID from DeviceCategory WHERE CategoryName = \'"+cName+"\'")
+                sID = 0
+                for row in cur.fetchall():
+                        sID = row[0]
+                cur.execute("DELETE FROM DeviceCategory WHERE CategoryID = "+str(sID))
+                db.commit()
+                return redirect(url_for('deviceCategoryTable'))
+
+        cur.execute("SELECT CategoryName from DeviceCategory")
+        category = {}
+        for row in cur.fetchall():
+                category.setdefault(row, "")
+                category[row] = row[0]
+
+        return render_template('deleteDeviceCategory.html', category = category)
 
 
 #delete deviceStatus
