@@ -1,4 +1,8 @@
 
+/* dark blue: #667299
+	light blue: #e6f2ff
+ */
+
 
 html,body,h1,h2,h3,h4,h5,h6, .button {font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Tahoma, Arial, sans-serif;}
 html, body{
@@ -17,7 +21,7 @@ body{
 }
 .button {
 	padding: .5em;
-	margin-top: 1em;
+	margin: 1em;
 	border: hidden;
 	background-color: #e6f2f;
 }
@@ -29,6 +33,15 @@ body{
 col-md-12{
 	min-height:100px;
 	
+}
+
+#logo {
+	width: 300px;
+	margin: 0 auto;
+}
+
+input[type=text]:focus {
+    background-color: #e6f2f;
 }
 
 table {

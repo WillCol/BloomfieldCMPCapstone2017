@@ -1,8 +1,13 @@
+/* dark blue: #667299
+	light blue: #e6f2ff
+ */
+
 
 html{
 	height:100%;
 	
-	background-color: #0086b3;
+	background-color: #667299;
+	
 }
 body{ 
 background-color:transparent!important;
@@ -10,22 +15,36 @@ background-color:transparent!important;
 
  } 
  
+ hr {
+	 border-top: 1px solid black;
+	 border-style: inset;
+ }
  
+ input[type="text"], input[type="password"], textarea {
+
+  background-color : white; 
+}
  
 #Sign-In{ 	
 		margin:0 auto; 
 
 		margin-top:5em; 
 		border:1px solid #a1a1a1; 
+		border: none;
 		padding: 1em; 
-
-		width:500px; 
-		border-radius:20px; 
-		box-shadow: 7px 7px 6px; 
-		height:auto; 
-		background-color:white;
+		background-color: white;
 		
-		font-size:20px;} 
+		width:500px; 
+		border-radius:0px; 
+		box-shadow: 2px 2px 2px;
+		height:auto; 
+	
+		
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&1+0,1+45,0.7+76,0+100 */
+
+
+		
+		font-size:20px; } 
 		
 p{		
 		font-size: .75em;
