@@ -21,6 +21,7 @@
 <link rel="stylesheet" type="text/css" href="../static/css/hover.css"> 
 <link rel="stylesheet" href="../static/css/font-awesome.css">
 <link rel="stylesheet" href="../static/css/inputformtemplate.css">
+
 <!-- BODY START -->
 <body class="w3-light-grey">
 
@@ -57,10 +58,10 @@
 <label>Task ID</label> 
 <input type="text" name="TaskID" value=""><br>
 --->
-
+<div>
 <label>Task Name</label> 
 <input type="text" name="TaskName" value=""><br>
-
+</div>
 <label>Task Location</label> 
 <input type="text" name="TaskLocation" value=""><br>
 
@@ -88,13 +89,14 @@
 {% endfor %}
 </select><br>
 
-<label>Active Task</label>
-<input class="required" type="radio" name="activeTask" value="1"><br>	
-	
-<label>Inactive Task</label>
-<input type="radio" name="activeTask" value="0"><br>	
-	
-	
+<div id="radio">
+<label class="radioButton">Active Task <input type="radio" class="required" name="activeTask" value="1"></label>
+<label class="radioButton">Inactive Task <input type="radio"  name="activeTask" value="0"></label>
+    </div>
+
+
+
+
 	
 
 
@@ -109,8 +111,10 @@
 
 </div>
 </div>
+</div>
+</div>
 
-
+</div>
 <!-- End Page Container -->
 </div>
 
@@ -134,6 +138,7 @@
 <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../static/js/formvalidation.js"></script>
 <script type="text/javascript" src="../static/js/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
 
 </body>
 </html>
