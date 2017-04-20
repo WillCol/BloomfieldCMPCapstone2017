@@ -1,8 +1,9 @@
 
 $(function() {
+  
  
  $("form[name='addDevice']").validate({
-    
+ 
 			rules: {
 			  computer: "required",
 			  Desc: "required",
@@ -10,20 +11,27 @@ $(function() {
 			 location: "required",
 			 deviceStatus:"required",
 			 owner:"required",
-			 dateOfDeployment:"required",
-			 backDate:"required",
+			 dateOfDeployment:{
+				 date:true,
+				 required:true
+			 },
+			 backDate:{
+				 date:true,
+				 required:true
+			 },
 			 IP:"required",
 			 serialNumber:"required",		  
 			},
-		   
 			messages: {
 			computer: "Please enter a Device Name",
 			  Desc: "Please enter a Description",
 			 deviceCategory:"Please enter a Device Category",
 			 location: "Please enter a Device Location",
 			 owner:"Please enter a  Device Owner",
-			 dateOfDeployment:"Please enter a Date of Deployment",
-			 backDate:"Please enter a Go-Back Date",
+			 dateOfDeployment:{required:"Please enter a valid Date of Deployment",
+			 date:"Not a valid Date"},
+			 backDate:{required:"Please enter a valid Date of Deployment",
+			 date:"Not a valid Date"},
 			 IP:"Please enter an IP Address",
 			 serialNumber:"Please enter a Serial Number",
 			 deviceStatus:"Please enter a valid Device Status"
@@ -56,7 +64,7 @@ $(function() {
 	
 
 	$("form[name='addUser']").validate({
-    
+     
 			rules: {
 			  UserID: "required",
 			  UserName: "required",
@@ -87,25 +95,48 @@ $(function() {
 	});
 	
 	$("form[name='addTask']").validate({
-    
-			rules: {
-			  DateStart: "required",
-			  DateComplete: "required",
+  
+  
+
+			
+rules: {
+			  TaskName: "required",
+			  TaskLocation: "required",
+			  DateStarted:{
+				 date:true,
+				 required:true
+			 },
+			  DateCompleted:{
+				 date:true,
+				 required:true
+			 },
 			  TaskStatus: "required",
 			  Task_TaskType:"required",
 			},
 			// Specify validation error messages
 			messages: {
-			 DateStart: "Please enter a Start Date",
-			  DateComplete: "Please enter a Completion Date",
+			  TaskName: "Please enter a Task Name",
+			  TaskLocation: "Please enter a Task Location",
+			  DateStarted:{required: "Please enter a Start Date", date:"Not a valid Date"},
+			  DateCompleted: "Please enter a Completion Date",
 			  TaskStatus: "Please enter a TaskStatus",
 			  Task_TaskType:"Please enter a Task Type",
+			  activeTask:"One of these fields are required"
 			},
+		
 			// Make sure the form is submitted to the destination defined
 			// in the "action" attribute of the form when valid
 			submitHandler: function(form) {
 			  form.submit();
-			}
+			},
+errorPlacement:
+    function(error, element){
+        if(element.is(":radio")){ 
+            error.appendTo('#radio');
+    }else{ 
+            error.insertAfter(element); 
+         }
+	},
 	});
  
 	$("form[name='addtasktype']").validate({
@@ -124,18 +155,24 @@ $(function() {
 			submitHandler: function(form) {
 			  form.submit();
 			}
+		
+
 	});
  	
  
  $("form[name='addEmployee']").validate({
 
 			rules: {
-			  EmployeeName: "required",
+			  EmployeeName: {
+				 lettersonly:true,
+				 required:true
+			 },
 			  JobTitle: "required",
 			  EmployeeAddress: "required",
 			  EmployeeDepartment: "required",
-			  EmployeePhoneNumber:{phoneUs: true,
-			  required: true
+			  EmployeePhoneNumber:{
+				 required: true,
+				phoneUS: true
 			  },
 			  EmployeeEmail: {
 				required: true,
@@ -145,14 +182,17 @@ $(function() {
 			},
 		   
 			messages: {
-			  EmployeeName: "Please enter a Employee Name",
+			  EmployeeName:{ required:"Please enter a Employee Name",
+			  lettersonly: "Must contain letters only"
+			  },
 			  JobTitle: "Please enter a Job Title",
 			  EmployeeAddress: "Please enter a Employee Address",
 			  EmployeeDepartment: "Please enter a Employee Department",
 			  EmployeeEmail: "Please enter a valid Employee Email",
-			  EmployeePhoneNumber: "Please enter a valid Phone Number"
-			  
+			  EmployeePhoneNumber:{required: "Please enter a valid Phone Number",
+			  phoneUS: "Not a valid Phone Number"},
 			},
+			
 			// Make sure the form is submitted to the destination defined
 			// in the "action" attribute of the form when valid
 			submitHandler: function(form) {
@@ -161,29 +201,38 @@ $(function() {
 	 });
  $("form[name='editDevice']").validate({
     
-			rules: {
+			    
+		rules: {
 			  computer: "required",
 			  Desc: "required",
 			 deviceCategory:"required",
 			 location: "required",
+			 deviceStatus:"required",
 			 owner:"required",
-			 dateOfDeployment:"required",
-			 backDate:"required",
+			 dateOfDeployment:{
+				 date:true,
+				 required:true
+			 },
+			 backDate:{
+				 date:true,
+				 required:true
+			 },
 			 IP:"required",
 			 serialNumber:"required",		  
 			},
-		   
 			messages: {
 			computer: "Please enter a Device Name",
-			  Desc: "Please enter a Desc",
+			  Desc: "Please enter a Description",
 			 deviceCategory:"Please enter a Device Category",
 			 location: "Please enter a Device Location",
 			 owner:"Please enter a  Device Owner",
-			 dateOfDeployment:"Please enter a Date of Deployment",
-			 backDate:"Please enter a Go-Back Date",
+			 dateOfDeployment:{required:"Please enter a valid Date of Deployment",
+			 date:"Not a valid Date"},
+			 backDate:{required:"Please enter a valid Date of Deployment",
+			 date:"Not a valid Date"},
 			 IP:"Please enter an IP Address",
 			 serialNumber:"Please enter a Serial Number",
-			   
+			 deviceStatus:"Please enter a valid Device Status"
 			  
 			},
 			// Make sure the form is submitted to the destination defined
@@ -192,6 +241,7 @@ $(function() {
 			  form.submit();
 			}
 	 });
+	 
   
   $("form[name='editDeviceStatus']").validate
 	  ({
@@ -244,25 +294,41 @@ $(function() {
 	});
 	
 	$("form[name='editTask']").validate({
-    
-			rules: {
-			  DateStart: "required",
-			  DateComplete: "required",
+   errorElement:'div',
+			
+rules: {
+			  TaskName: "required",
+			  TaskLocation: "required",
+			  DateStarted: "required",
+			  DateCompleted: "required",
+			  
 			  TaskStatus: "required",
 			  Task_TaskType:"required",
 			},
 			// Specify validation error messages
 			messages: {
-			 DateStart: "Please enter a Start Date",
-			  DateComplete: "Please enter a Completion Date",
+			  TaskName: "Please enter a Task Name",
+			  TaskLocation: "Please enter a Task Location",
+			  DateStarted: "Please enter a Start Date",
+			  DateCompleted: "Please enter a Completion Date",
 			  TaskStatus: "Please enter a TaskStatus",
 			  Task_TaskType:"Please enter a Task Type",
+			  activeTask:"One of these fields are required"
 			},
+		
 			// Make sure the form is submitted to the destination defined
 			// in the "action" attribute of the form when valid
 			submitHandler: function(form) {
 			  form.submit();
-			}
+			},
+	errorPlacement:
+    function(error, element){
+        if(element.is(":radio")){ 
+            error.appendTo('#radio');
+    }else{ 
+            error.insertAfter(element); 
+         }
+	},
 	});
  
 	$("form[name='editTaskType']").validate({
@@ -287,7 +353,10 @@ $(function() {
  $("form[name='editEmployee']").validate({
 
 			rules: {
-			  EmployeeName: "required",
+			  EmployeeName:{
+				 lettersonly:true,
+				 required:true
+			 },
 			  JobTitle: "required",
 			  EmployeeAddress: "required",
 			  EmployeeDepartment: "required",
@@ -299,7 +368,9 @@ $(function() {
 			},
 		   
 			messages: {
-			  EmployeeName: "Please enter a Employee Name",
+			  EmployeeName:{ required:"Please enter a Employee Name",
+			  lettersonly: "Must contain letters only"
+			  },
 			  JobTitle: "Please enter a Job Title",
 			  EmployeeAddress: "Please enter a Employee Address",
 			  EmployeeDepartment: "Please enter a Employee Department",
@@ -439,4 +510,18 @@ $(function() {
 			  form.submit();
 			}
 	 });
+
+jQuery.validator.addMethod("lettersonly", function(value, element) {
+  return this.optional(element) || /^[a-z -]+$/i.test(value);
+}, "Letters only please");
+ 
+	 jQuery.validator.addMethod("phoneUS", function(phone_number, element) {
+    phone_number = phone_number.replace(/\s+/g, "");
+    return this.optional(element) || phone_number.length > 9 &&
+        phone_number.match(/^(\+?1-?)?(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+});
+ 
+ jQuery.validator.addMethod("date", function(date, element) {
+               return this.optional(element) || date.match(/^\d{4}-((0\d)|(1[012]))-(([012]\d)|3[01])$/);
+            },"Please enter a valid date");
  });

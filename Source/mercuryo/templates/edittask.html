@@ -86,13 +86,10 @@
 		<option style="text-align:center" value="{{ device[k][0] }}">{{ device[k][0] }}</option>
 		{% endfor %}
 		</select><br>
-
-		<label>Active Task</label>
-		<input type="radio" name="ActiveTask" value="1"><br>	
-	
-		<label>Inactive Task</label>
-		<input type="radio" name="ActiveTask" value="0"><br>	
-	
+<div id="radio">
+<label class="radioButton">Active Task <input type="radio" class="required" name="activeTask" value="1"></label>
+<label class="radioButton">Inactive Task <input type="radio"  name="activeTask" value="0"></label>
+    </div>
 	</fieldset>
 
 <input type="submit" value="Submit" id="submitButton">	
