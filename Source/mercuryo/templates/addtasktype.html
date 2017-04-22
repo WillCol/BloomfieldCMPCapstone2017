@@ -53,7 +53,11 @@
 <form name="addtasktype" method="POST">
 <fieldset id="fields">
 <!---<label>Task Type ID</label> <input type="text" name="TaskTypeID" value=""><br>--->
+<label>Task Name</label> <input type="text" name="TaskName" value=""><br>
 <label>Task Description</label> <input type="text" name="TaskDesc" value=""><br>
+{% if error %}
+<p class="error"><Strong>Error:</strong></p> {{ error }}
+{% endif %}
 
 	
 

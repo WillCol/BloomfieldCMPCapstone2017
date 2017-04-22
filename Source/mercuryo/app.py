@@ -53,7 +53,7 @@ def security_check(f):
 # use decorators to link the function to a url
 @app.route('/')
 def home():
-    return redirect(url_for('login'))  # return a string
+    return redirect(url_for('Inventory'))  # return a string
 
 # edit Device page
 @app.route('/editDevice', methods=["GET", "POST"])
@@ -150,6 +150,7 @@ def editDevice():
 
 # inventory page
 @app.route('/inventory')
+@login_required
 def Inventory():
 		
 	labels = { }
@@ -300,6 +301,7 @@ def taskTypeTable():
                 dic.setdefault(rowNum, [])
                 dic[rowNum].append(row[0])
                 dic[rowNum].append(row[1])
+		dic[rowNum].append(row[2])
                 rowNum = rowNum + 1
 
         return render_template('taskTypeTable.html', dic=dic, labels=labels)
@@ -322,6 +324,7 @@ def deviceStatusTable():
                 dic.setdefault(rowNum, [])
                 dic[rowNum].append(row[0])
                 dic[rowNum].append(row[1])
+		dic[rowNum].append(row[2])
                 rowNum = rowNum + 1
 
         return render_template('deviceStatusTable.html', dic=dic, labels=labels)
@@ -654,7 +657,7 @@ def edittask():
                 dComp = request.form["DateCompleted"]
                 tStatus = request.form["TaskStatus"]
                 tType = request.form["TaskType"]
-		aTask = request.form["ActiveTask"]
+		aTask = request.form["ActiveTask"]		
 		acDate = request.form["ActualCompletionDate"]
                 device = request.form["DeviceID"]
 		
@@ -723,26 +726,57 @@ def edittask():
 		return render_template('edittask.html', emp=emp, task = task, device = device)
 
 #edit tasktype
-@app.route('/edittasktype', methods=['GET', 'POST'])
+@app.route('/edittasktype/<int:id>', methods=['GET', 'POST'])
 @login_required
 @security_check
 def edittasktype():
 	
         if request.method == "POST":
 		ttID = request.args['id']
+		tName = request.form["TaskName"]
                 tDesc = request.form["TaskDesc"]
-                cur.execute("UPDATE Task SET TaskDesc = \'"+tDesc+"\' WHERE TaskType = "+ttID)
-                db.commit()
-                return redirect(url_for('taskTypeTable'))
+		testN = "null"
+		testD = "null"
+		cur.execute("SELECT TaskTypeName FROM Task WHERE TaskTypeName = \'"+tName+"\'")
+		for row in cur.fetchall():
+			testN = row[0]
+                cur.execute("SELECT TaskDesc FROM Task WHERE TaskDesc = \'"+tDesc+"\'")
+                for col in cur.fetchall():   
+			testD = row[0]
+		if(testN == tName):
+			
+			error = "Task type with that name already exists."
+			emp = { }
+
+                	cur.execute("SELECT TaskTypeName, TaskDesc FROM Task WHERE TaskType = "+ttID)
+
+	                for row in cur.fetchall():
+        	                emp.setdefault("data", [])
+                	        emp["data"].append(row[0])
+                        	emp["data"].append(row[1])
+
+			return ), error=error)
+	
+		elif(testD == dName):
+		
+			error = "Task type with that description already exists."
+			return render_template('edittasktype.html', error=error)
+	
+		else:
+		 	cur.execute("UPDATE Task SET TaskTypeName = \'"+tName+"\' WHERE TaskType = "+ttID)
+                	cur.execute("UPDATE Task SET TaskDesc = \'"+tDesc+"\' WHERE TaskType = "+ttID)
+                	db.commit()
+                	return redirect(url_for('taskTypeTable'))
 	else:
                 ttID = request.args['id']
                 emp = { }
              
-                cur.execute("SELECT TaskDesc FROM Task WHERE TaskType = "+ttID)
+                cur.execute("SELECT TaskTypeName, TaskDesc FROM Task WHERE TaskType = "+ttID)
            
                 for row in cur.fetchall():
                         emp.setdefault("data", [])
                         emp["data"].append(row[0])
+			emp["data"].append(row[1])
                        
                 return render_template('edittasktype.html', emp=emp)
 
@@ -973,6 +1007,7 @@ def addtask():
 		db.commit()
 
 		return redirect(url_for('taskTable'))
+
 	rowNum = 0
         device = { }
         cur.execute("select DeviceID from Device")
@@ -998,15 +1033,34 @@ def addtask():
 @security_check
 def addtasktype():
 	if request.method == "POST":
-		#ttID = request.form["TaskTypeID"]
+		tName = request.form["TaskName"]
 		tDesc = request.form["TaskDesc"]
-		cur.execute("INSERT INTO Task (TaskDesc)"
-				+" VALUES("
-				#+"\'"+ttID+"\',"
-				+"\'"+tDesc+"\'"
-				+")")
-		db.commit()
-		return redirect(url_for('taskTypeTable'))
+		testN = "null"
+		testD = "null"
+		cur.execute("SELECT TaskTypeName FROM Task WHERE TaskTypeName = \'"+tName+"\'")
+		for row in cur.fetchall():
+			testN = row[0]
+		cur.execute("SELECT TaskDesc FROM Task WHERE TaskDesc = \'"+tDesc+"\'")
+		for col in cur.fetchall():
+			testD = col[0]
+		if(testN == tName): 
+
+                        error = "Task type with that name already exists."
+                        return render_template('addtasktype.html', error=error)
+
+		elif(testD == tDesc):
+
+			error = "Task type with that description already exists"
+                        return render_template('addtasktype.html', error=error)
+		else:
+
+			cur.execute("INSERT INTO Task (TaskTypeName, TaskDesc)"
+					+" VALUES("
+					+"\'"+tName+"\',"
+					+"\'"+tDesc+"\'"
+					+")")
+			db.commit()
+			return redirect(url_for('taskTypeTable'))
 	
 	return render_template('addtasktype.html')
 
@@ -1016,6 +1070,7 @@ def addtasktype():
 @security_check
 def adddevicestatus():
 	if request.method == "POST":
+		#sName = request.form["
                 sDesc = request.form["StatusDesc"]
                 cur.execute("INSERT INTO DeviceStatus (StatusDesc)"
                                 +" VALUES("
@@ -1245,7 +1300,7 @@ def deleteDevice():
 		return redirect(url_for('Inventory'))
 
 	device = {}
-	cur.execute("SELECT SerialNumber from Device")
+	cur.execute("SELECT DeviceName from Device")
 	for row in cur.fetchall():
 		device.setdefault(row, "")
 		device[row] = row[0]
@@ -1262,6 +1317,7 @@ def deleteDeviceCategory():
                 sID = 0
                 for row in cur.fetchall():
                         sID = row[0]
+		cur.execute("UPDATE Device SET DeviceCategory_CategoryID = NULL WHERE DeviceCategory_CategoryID = \'"+str(sID)+"\'")
                 cur.execute("DELETE FROM DeviceCategory WHERE CategoryID = "+str(sID))
                 db.commit()
                 return redirect(url_for('deviceCategoryTable'))
@@ -1282,15 +1338,16 @@ def deleteDeviceCategory():
 def deleteDeviceStatus():
         if request.method == 'POST':
 		status = request.form["DeviceStatus"]
-		cur.execute("SELECT StatusID from DeviceStatus WHERE StatusDesc = \'"+status+"\'")
+		cur.execute("SELECT StatusID from DeviceStatus WHERE StatusName = \'"+status+"\'")
 		sID = 0
 		for row in cur.fetchall():
 			sID = row[0]
+		cur.execute("UPDATE Device SET DeviceStatus_StatusID = NULL WHERE DeviceStatus_StatusID = \'"+str(sID)+"\'")
                 cur.execute("DELETE FROM DeviceStatus WHERE StatusID = "+str(sID))
                 db.commit()
                 return redirect(url_for('deviceStatusTable'))
 	
-	cur.execute("SELECT StatusDesc from DeviceStatus")
+	cur.execute("SELECT StatusName from DeviceStatus")
 	dStatus = {}
 	for row in cur.fetchall():
 		dStatus.setdefault(row, "")
@@ -1304,13 +1361,17 @@ def deleteDeviceStatus():
 @security_check
 def deleteTaskType():
         if request.method == 'POST':
-		tDesc = request.form["TaskDesc"]
-		
+		tName = request.form["TaskDesc"]
+		sID = 0
                 #tID = request.form["taskType"]
-                cur.execute("DELETE FROM Task WHERE TaskDesc = \'"+tDesc+"\'")
+		cur.execute("SELECT TaskType FROM Task WHERE TaskTypeName = \'"+tName+"\'")
+		for row in cur.fetchall():
+			sID = row[0]
+		cur.execute("UPDATE Calendar SET Task_TaskType = NULL WHERE Task_TaskType - \'"+str(sID)+"\'")  
+                cur.execute("DELETE FROM Task WHERE TaskType = \'"+str(sID)+"\'")
                 db.commit()
                 return redirect(url_for('taskTypeTable'))
-	cur.execute("SELECT TaskDesc from Task")
+	cur.execute("SELECT TaskTypeName from Task")
 	task = {}
 	for row in cur.fetchall():
 		task.setdefault(row, "")
@@ -1322,6 +1383,7 @@ def deleteTaskType():
 @login_required
 def editPassword():
 	pWord = "null"
+	pCheck = "null"
 	username = session['username']
 	print(username)
 	if request.method == 'POST':
@@ -1330,12 +1392,22 @@ def editPassword():
 		rpWord = request.form["RetypePassword"]
 		print(opWord)
 		print(rpWord)
-		if(pWord == rpWord):
-			print("test")
-			cur.execute("Update User set Password = \'" + pWord + "\' where UserName = \'"+username+"\'")
-			db.commit()
-		return redirect(url_for('account'))
-	
+		cur.execute("Select Password from User where UserName = \'"+username+"\'")
+		for row in cur.fetchall():
+			pCheck = row[0]
+		if(opWord == pCheck):	
+			if(pWord == rpWord):
+				print("test")
+				cur.execute("Update User set Password = \'" + pWord + "\' where UserName = \'"+username+"\'")
+				db.commit()
+				return redirect(url_for('account'))
+			else:
+				error2 = "New passwords do not match."
+				return render_template('editPassword.html', error2=error2)
+		else:
+			error1 = "Old Password does not match "
+			return render_template('editPassword.html', error1=error1)
+				
 	return render_template('editPassword.html')
 
 #userPage
