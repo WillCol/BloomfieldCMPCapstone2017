@@ -89,6 +89,10 @@
 {% endfor %}
 </select><br>
 
+{% if error %}
+<p class="error"><Strong>Error:</strong></p> {{ error }}
+{% endif %}
+
 <div id="radio">
 <label class="radioButton">Active Task <input type="radio" class="required" name="activeTask" value="1"></label>
 <label class="radioButton">Inactive Task <input type="radio"  name="activeTask" value="0"></label>

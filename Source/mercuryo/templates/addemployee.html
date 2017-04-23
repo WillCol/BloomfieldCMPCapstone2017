@@ -72,6 +72,10 @@
 	
 		<label>Employee Phone Number</label> 
 		<input type="text"  name="EmployeePhoneNumber"><br>
+		
+		{% if error %}
+		<p class="error"><Strong>Error:</strong></p> {{ error }}
+		{% endif %}
 	</fieldset>
 <input type="submit" value="Submit" id="submitButton">	
 </form>

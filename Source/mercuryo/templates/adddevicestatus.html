@@ -52,8 +52,16 @@
 <form name="adddevicestatus" method="POST">
 	<fieldset id="fields">
 	
+		<label>Status Name</label> 
+		<input type="text" name="StatusName" ><br>
+
 		<label>Status Description</label> 
 		<input type="text" name="StatusDesc" ><br>
+		
+		{% if error %}
+		<p class="error"><Strong>Error:</strong></p> {{ error }}
+		{% endif %}
+
 
 		
 	

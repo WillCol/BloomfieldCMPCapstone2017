@@ -64,16 +64,19 @@
 	<label>Security</label> 
 	<input type="text"  name="Security"><br>
 	
-	<label>EmployeeID</label> 
+	<label>Employee</label> 
 	<select name="EmployeeID" value="">
 	{% for k in name %}
 	<option style="text-align:center" value="{{ name[k][0] }}">{{ name[k][0] }}</option>
 	{% endfor %}
 	</select><br>
-
-	<input type="submit" value="Submit" id="submitButton">
+	
+	{% if error %}
+	<p class="error"><Strong>Error:</strong></p> {{ error }}
+	{% endif %}
 
 	</fieldset>
+<input type="submit" value="Submit" id="submitButton">
 </form>
 
 

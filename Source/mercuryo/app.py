@@ -53,7 +53,7 @@ def security_check(f):
 # use decorators to link the function to a url
 @app.route('/')
 def home():
-    return redirect(url_for('Inventory'))  # return a string
+    return redirect(url_for('login'))  # return a string
 
 # edit Device page
 @app.route('/editDevice', methods=["GET", "POST"])
@@ -179,7 +179,9 @@ def Inventory():
 		cur.execute("SELECT CategoryName from DeviceCategory WHERE CategoryID = \'"+str(row[3])+"\'")
 		for col in cur.fetchall():
 			dic[rowNum].append(col[0])
-		dic[rowNum].append(row[4])
+                cur.execute("SELECT StatusName from DeviceStatus WHERE StatusID = \'"+str(row[4])+"\'")
+                for col in cur.fetchall():
+                        dic[rowNum].append(col[0])
 		dic[rowNum].append(row[5])
 		dic[rowNum].append(row[6])
 		dic[rowNum].append(row[7])
@@ -371,14 +373,14 @@ def adminTaskTable():
 		
 
 #dropDownTestPage
-@app.route('/dropDownTestPage', methods=["GET", "POST"])
-@login_required
-def dropDownTestPage():
-	if request.method == 'POST':
-		taskType = request.form["taskType"]
-		return "taskType = "+taskType
-	else:
-		return render_template('dropDownTestPage.html')
+#@app.route('/dropDownTestPage', methods=["GET", "POST"])
+#@login_required
+#def dropDownTestPage():
+#	if request.method == 'POST':
+#		taskType = request.form["taskType"]
+#		return "taskType = "+taskType
+#	else:
+#		return render_template('dropDownTestPage.html')
 
 
 
@@ -440,20 +442,20 @@ def taskTable():
 
 
 # search page
-@app.route('/search', methods=['GET', 'POST'])
-@login_required
-def search():
-	result = ""
-	taskID = None
-	userID = None
-	if request.method == 'POST':
-		if request.form['submit'] == 'Search Tasks':
-			taskID = request.form['TaskID']
-			cur.execute("SELECT User_UserID FROM User_has_Calendar WHERE Calendar_TaskID=\'"+taskID+"\'")
-			for column in cur.fetchall():
-				#converts values of column[0] to string
-				string = "%d" % column[0]
-				result = result+", "+string
+#@app.route('/search', methods=['GET', 'POST'])
+#@login_required
+#def search():
+#	result = ""
+#	taskID = None
+#	userID = None
+#	if request.method == 'POST':
+#		if request.form['submit'] == 'Search Tasks':
+#			taskID = request.form['TaskID']
+#			cur.execute("SELECT User_UserID FROM User_has_Calendar WHERE Calendar_TaskID=\'"+taskID+"\'")
+#			for column in cur.fetchall():
+#				#converts values of column[0] to string
+#				string = "%d" % column[0]
+#				result = result+", "+string
 #		elif request.form['submit'] == 'Search Users':
 #			userID = request.form['UserID']
 #			cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID=\'"+userID+"\'")
@@ -461,9 +463,9 @@ def search():
 #				string = "d" % column[0]
 #				result = result+", "+string
 #		else:
-			result = 'Invalid entry.'
+#			result = 'Invalid entry.'
 
-	return render_template('search.html', result=result)
+#	return render_template('search.html', result=result)
 
 # route for handling the login page logic
 @app.route('/login', methods=['GET', 'POST'])
@@ -471,6 +473,10 @@ def login():
     sec = 'null'
     error = None
     userType = None
+
+    if 'logged_in' in session:
+	return redirect(url_for('Inventory'))
+
     if request.method == 'POST':
 	cur.execute("SELECT UserID, UserName, Password, Security FROM User")
 	for column in cur.fetchall():
@@ -500,41 +506,41 @@ def logout():
 	return redirect(url_for('login'))
 
 # generic page for adding tasks
-@app.route('/generic', methods=['GET', 'POST'])
-@login_required
-def generic():
+#@app.route('/generic', methods=['GET', 'POST'])
+#@login_required
+#def generic():
         #if request.method == 'GET':
-        taskID = request.args["id"]
-        if request.method == 'POST':
-                taskID = request.form["taskID"]
-                dateStart = request.form["dateStart"]
-                dateComplete = request.form["dateComplete"]
-                taskStatus = request.form["taskStatus"]
-                taskType = request.form["taskType"]
+ #       taskID = request.args["id"]
+  #      if request.method == 'POST':
+   #             taskID = request.form["taskID"]
+#                dateStart = request.form["dateStart"]
+  #              dateComplete = request.form["dateComplete"]
+   #             taskStatus = request.form["taskStatus"]
+   #             taskType = request.form["taskType"]
 
-                return "Request sucessfully submited!!"
-        else:
+ #               return "Request sucessfully submited!!"
+  #      else:
 
-                cur.execute("Select * from Calendar where TaskID = "+taskID)
+   #             cur.execute("Select * from Calendar where TaskID = "+taskID)
+#
+  #              task  = { }
+ #               task.setdefault("def", [])
+    #            task["def"].append("Task ID")
+   #             task["def"].append("Date Started")
+     #           task["def"].append("Date Completed")
+      #          task["def"].append("Task Status")
+     #           task["def"].append("Task Type")
 
-                task  = { }
-                task.setdefault("def", [])
-                task["def"].append("Task ID")
-                task["def"].append("Date Started")
-                task["def"].append("Date Completed")
-                task["def"].append("Task Status")
-                task["def"].append("Task Type")
-
-                rowNum = 0
-                for row in cur.fetchall():
-                        task.setdefault(rowNum, [])
-                        task[rowNum].append(row[0])
-                        task[rowNum].append(row[1])
-                        task[rowNum].append(row[2])
-                        task[rowNum].append(row[3])
-                        task[rowNum].append(row[4])
-                        rowNum = rowNum + 1
-                return render_template('generic.html', task=task)
+      #          rowNum = 0
+       #         for row in cur.fetchall():
+        #                task.setdefault(rowNum, [])
+         #               task[rowNum].append(row[0])
+          #              task[rowNum].append(row[1])
+           #             task[rowNum].append(row[2])
+            #            task[rowNum].append(row[3])
+             #           task[rowNum].append(row[4])
+              #          rowNum = rowNum + 1
+              #  return render_template('generic.html', task=task)
 
 #edit employee
 @app.route('/editEmployee', methods=['GET', 'POST'])
@@ -889,18 +895,48 @@ def addemployee():
 		eDepartment = request.form["EmployeeDepartment"]
 		email = request.form["EmployeeEmail"]
 	    	
-		cur.execute("INSERT INTO Employee (EmployeeName, JobTitle, EmployeeAddress, EmployeeDepartment, EmployeeEmail)"
-				+" VALUES (\'"+eName+"\',\'"+jTitle+"\',\'"+eAddress+"\',\'"+eDepartment+"\',\'"+email+"\'"+")")
-		db.commit()
+		emailCheck = "null"
+		nCheck = "null"
+		phnCheck = "null"
 		
-		cur.execute("select EmployeeID from Employee where EmployeeEmail = \'"+email+"\'")
-		eID = "null"	
+		cur.execute("SELECT EmployeeName FROM Employee WHERE EmployeeName = \'"+eName+"\'")
 		for row in cur.fetchall():
-			eID = row[0]
-		cur.execute("INSERT INTO Phone (PhoneNum, Employee_EmployeeID)"
+			nCheck = row[0]
+		
+                cur.execute("SELECT EmployeeEmail FROM Employee WHERE EmployeeEmail = \'"+email+"\'")
+                for row in cur.fetchall():
+                        emailCheck = row[0]
+
+                cur.execute("SELECT PhoneNum FROM Phone WHERE PhoneNum = \'"+ePNumber+"\'")
+                for row in cur.fetchall():
+			phnCheck = row[0]
+		phnCheck = str(phnCheck)
+		
+		if(nCheck == eName):
+			error = "Employee with that name already exists."
+			return render_template('addemployee.html', error=error)
+	
+                if(emailCheck == email):
+                        error = "Employee with that email address already exists."
+                        return render_template('addemployee.html', error=error)
+
+                if(phnCheck == str(ePNumber)):
+                        error = "Employee with that phone number already exists."
+                        return render_template('addemployee.html', error=error)
+
+		else:
+			cur.execute("INSERT INTO Employee (EmployeeName, JobTitle, EmployeeAddress, EmployeeDepartment, EmployeeEmail)"
+				+" VALUES (\'"+eName+"\',\'"+jTitle+"\',\'"+eAddress+"\',\'"+eDepartment+"\',\'"+email+"\'"+")")
+			db.commit()
+		
+			cur.execute("select EmployeeID from Employee where EmployeeEmail = \'"+email+"\'")
+			eID = "null"	
+			for row in cur.fetchall():
+				eID = row[0]
+			cur.execute("INSERT INTO Phone (PhoneNum, Employee_EmployeeID)"
 				+" VALUES (\'"+ePNumber+"\',"+"\'"+str(eID)+"\')")
-		db.commit()
-		return redirect(url_for('employeeTable'))
+			db.commit()
+			return redirect(url_for('employeeTable'))
 		
 	return render_template('addemployee.html')
 
@@ -917,18 +953,38 @@ def adduser():
 		
 		cur.execute("select EmployeeID from Employee where EmployeeName = \'"+eID+"\'")
          	for row in cur.fetchall():
-        	       	eID = row[0]
+			eID = row[0]
             	eID = str(eID)
+
+		nCheck = "null"
+		eCheck = 0
+		cur.execute("SELECT UserName FROM User WHERE UserName = \'"+uName+"\'")
+		for row in cur.fetchall():
+			nCheck = row[0]
 		
-		cur.execute("INSERT INTO User (UserName, Password, Employee_EmployeeID, Security)"
+                cur.execute("SELECT Employee_EmployeeID FROM User WHERE Employee_EmployeeID = \'"+eID+"\'")
+                for row in cur.fetchall():
+                        eCheck = row[0]
+		eCheck = str(eCheck)
+	
+		if(nCheck == uName):
+			error = "Account with that username already exists."
+			return render_template('adduser.html', error=error)
+
+                elif(eCheck == eID):
+                        error = "Account for selected employee already exists."
+                        return render_template('adduser.html', error=error)
+		
+		else:
+			cur.execute("INSERT INTO User (UserName, Password, Employee_EmployeeID, Security)"
 				+" VALUES("
 				+"\'"+uName+"\',"
 				+"\'"+pWord+"\',"
 				+"\'"+eID+"\',"
 				+"\'"+sec+"\'"
 				+")")
-		db.commit()
-		return redirect(url_for('userTable'))
+			db.commit()
+			return redirect(url_for('userTable'))
 	
 	rowNum = 0
         name = { }
@@ -959,39 +1015,57 @@ def addtask():
 		nTask = request.form["TaskName"]
 		lTask = request.form["TaskLocation"]		
 
-		cur.execute("select TaskType from Task where TaskDesc = \'"+tType+"\'")
+		cur.execute("select TaskType from Task where TaskTypeName = \'"+tType+"\'")
 		for row in cur.fetchall():
 			tType = row[0]
 		tType = str(tType)
+
+                cur.execute("select DeviceID from Device where DeviceName = \'"+device+"\'")
+                for row in cur.fetchall():
+                        device = row[0]
+                device = str(device)
+
+		
+		nCheck = "null"
 	
-		cur.execute("INSERT INTO Calendar (DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion, TaskName, TaskLocation)"
+		cur.execute("SELECT TaskName FROM Calendar WHERE TaskName = \'"+nTask+"\'")
+		for row in cur.fetchall():
+			nCheck = row[0]
+
+		if(nCheck == nTask):
+			error = "Task with than name already exists."
+			return render_template('addtask.html', error=error)
+
+		else:
+	
+			cur.execute("INSERT INTO Calendar (DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion, TaskName, TaskLocation)"
                                 +" VALUES(\'"+dStart+"\',"+"\'"+dComp+"\',"+"\'"+tStatus+"\',"+"\'"+tType+"\',"+"\'"+aTask+"\',"+"\'"+acDate+"\',"+
 				"\'"+nTask+"\',"+"\'"+lTask+"\')")
-		db.commit()
+			db.commit()
 		
-		cur.execute("select TaskID from Calendar order by TaskID DESC limit 1")
-		for row in cur.fetchall():
-			taskID = row[0]
-		taskID = str(taskID)	
-		cur.execute("INSERT INTO User_has_Calendar (User_UserID, Calendar_TaskID)"
+			cur.execute("select TaskID from Calendar order by TaskID DESC limit 1")
+			for row in cur.fetchall():
+				taskID = row[0]
+			taskID = str(taskID)	
+			cur.execute("INSERT INTO User_has_Calendar (User_UserID, Calendar_TaskID)"
 				+" VALUES("
                                 +"\'"+str(uID)+"\',"
                                 +"\'"+taskID+"\'"
 				+")")
-                db.commit()
+			db.commit()
 		
-		cur.execute("INSERT INTO Device_has_Calendar (Device_DeviceID, Calendar_TaskID)"
+			cur.execute("INSERT INTO Device_has_Calendar (Device_DeviceID, Calendar_TaskID)"
 				+" VALUES("
                                 +"\'"+device+"\',"
                                 +"\'"+taskID+"\'"
                                 +")")
-		db.commit()
+			db.commit()
 
-		return redirect(url_for('taskTable'))
+			return redirect(url_for('taskTable'))
 
 	rowNum = 0
         device = { }
-        cur.execute("select DeviceID from Device")
+        cur.execute("select DeviceName from Device")
         for row in cur.fetchall():
                 device.setdefault(rowNum, [])
                 device[rowNum].append(row[0])
@@ -999,7 +1073,7 @@ def addtask():
 
 	rowNum = 0
         task = { }
-        cur.execute("select TaskDesc from Task")
+        cur.execute("select TaskTypeName from Task")
         for row in cur.fetchall():
                 task.setdefault(rowNum, [])
                 task[rowNum].append(row[0])
@@ -1051,14 +1125,37 @@ def addtasktype():
 @security_check
 def adddevicestatus():
 	if request.method == "POST":
-		#sName = request.form["
+		sName = request.form["StatusName"]
                 sDesc = request.form["StatusDesc"]
-                cur.execute("INSERT INTO DeviceStatus (StatusDesc)"
+		
+		nCheck = "null"
+		dCheck = "null"
+
+		cur.execute("SELECT StatusName FROM DeviceStatus WHERE StatusName = \'"+sName+"\'")
+		for row in cur.fetchall():
+			nCheck = row[0]
+		
+                cur.execute("SELECT StatusDesc FROM DeviceStatus WHERE StatusDesc = \'"+sDesc+"\'")
+                for row in cur.fetchall():
+                        dCheck = row[0]
+
+		if(nCheck == sName):
+			error = "Device status with that name already exists."
+			return render_template('adddevicestatus.html', error=error)
+
+                elif(dCheck == sDesc):
+                        error = "Device status with that description already exists."
+                        return render_template('adddevicestatus.html', error=error)
+
+
+		else:
+               		cur.execute("INSERT INTO DeviceStatus (StatusName, StatusDesc)"
                                 +" VALUES("
-                                +"\'"+sDesc+"\'"
+                                +"\'"+sName+"\'"
+                                +",\'"+sDesc+"\'"
                                 +")")
-                db.commit()
-                return redirect(url_for('deviceStatusTable'))
+                	db.commit()
+                	return redirect(url_for('deviceStatusTable'))
 
         return render_template('adddevicestatus.html')
 	
@@ -1312,7 +1409,7 @@ def deleteCalendarTask():
 def deleteDevice():
         if request.method == 'POST':
 		sNumber = request.form["SerialNumber"]
-		cur.execute("SELECT DeviceID from Device WHERE SerialNumber = "+str(sNumber))
+		cur.execute("SELECT DeviceID from Device WHERE DeviceName = "+str(sNumber))
 		for row in cur.fetchall():
 			dID = row[0]
 
