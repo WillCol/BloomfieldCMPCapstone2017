@@ -91,6 +91,10 @@
 
 		<label>Serial Number</label> 
 		<input type="text" name="serialNumber"><br>
+		
+		{% if error %}
+		<p class="error"><Strong>Error:</strong></p> {{ error }}
+		{% endif %}
 
 		
 

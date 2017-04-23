@@ -7,7 +7,7 @@
 <html>
 
 <!-- PAGE TITLE -->
-<title>Add Device Status</title>
+<title>Add Device Category</title>
 
 <!-- META DATA -->
 <meta charset="UTF-8">
@@ -57,6 +57,10 @@
 
 		<label>Device Category Description</label> 
 		<input type="text" name="CategoryDesc" ><br>
+		
+		{% if error %}
+		<p class="error"><Strong>Error:</strong></p> {{ error }}
+		{% endif %}
 	
 	
 	<fieldset>

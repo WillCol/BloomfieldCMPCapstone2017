@@ -726,7 +726,7 @@ def edittask():
 		return render_template('edittask.html', emp=emp, task = task, device = device)
 
 #edit tasktype
-@app.route('/edittasktype/<int:id>', methods=['GET', 'POST'])
+@app.route('/edittasktype', methods=['GET', 'POST'])
 @login_required
 @security_check
 def edittasktype():
@@ -743,30 +743,11 @@ def edittasktype():
                 cur.execute("SELECT TaskDesc FROM Task WHERE TaskDesc = \'"+tDesc+"\'")
                 for col in cur.fetchall():   
 			testD = row[0]
-		if(testN == tName):
-			
-			error = "Task type with that name already exists."
-			emp = { }
-
-                	cur.execute("SELECT TaskTypeName, TaskDesc FROM Task WHERE TaskType = "+ttID)
-
-	                for row in cur.fetchall():
-        	                emp.setdefault("data", [])
-                	        emp["data"].append(row[0])
-                        	emp["data"].append(row[1])
-
-			return ), error=error)
-	
-		elif(testD == dName):
 		
-			error = "Task type with that description already exists."
-			return render_template('edittasktype.html', error=error)
-	
-		else:
-		 	cur.execute("UPDATE Task SET TaskTypeName = \'"+tName+"\' WHERE TaskType = "+ttID)
-                	cur.execute("UPDATE Task SET TaskDesc = \'"+tDesc+"\' WHERE TaskType = "+ttID)
-                	db.commit()
-                	return redirect(url_for('taskTypeTable'))
+		cur.execute("UPDATE Task SET TaskTypeName = \'"+tName+"\' WHERE TaskType = "+ttID)
+                cur.execute("UPDATE Task SET TaskDesc = \'"+tDesc+"\' WHERE TaskType = "+ttID)
+                db.commit()
+                return redirect(url_for('taskTypeTable'))
 	else:
                 ttID = request.args['id']
                 emp = { }
@@ -1090,13 +1071,34 @@ def addDeviceCategory():
         if request.method == "POST":
                 cDesc = request.form["CategoryDesc"]
 		cName = request.form["CategoryName"]
-                cur.execute("INSERT INTO DeviceCategory (CategoryDesc, CategoryName)"
+		
+		nCheck = "null"
+		dCheck = "null"
+
+		cur.execute("SELECT CategoryName from DeviceCategory WHERE CategoryName = \'"+cName+"\'")
+		for row in cur.fetchall():
+			nCheck = row[0]
+		
+                cur.execute("SELECT CategoryDesc from DeviceCategory WHERE CategoryDesc = \'"+cDesc+"\'")
+                for row in cur.fetchall():
+                        dCheck = row[0]
+
+		if(nCheck == cName):
+			error = "Device category with that name already exists."
+			return render_template('addDeviceCategory.html', error=error)
+              
+		elif(dCheck == cDesc):
+                        error = "Device category with that description already exists."
+                        return render_template('addDeviceCategory.html', error=error)
+
+		else:
+                	cur.execute("INSERT INTO DeviceCategory (CategoryDesc, CategoryName)"
                                 +" VALUES("
                                 +"\'"+cDesc+"\'"
 				+",\'"+cName+"\'"
                                 +")")
-                db.commit()
-                return redirect(url_for('deviceCategoryTable'))
+                	db.commit()
+                	return redirect(url_for('deviceCategoryTable'))
 
         return render_template('addDeviceCategory.html')
 
@@ -1118,6 +1120,10 @@ def addDevice():
 		deviceStatus = request.form["deviceStatus"]
 		#deviceID = request.form["deviceID"]
 
+		nCheck = "null"
+		serCheck = "null"
+		strSerNum = str(sNumber)
+
 		cur.execute("select StatusID from DeviceStatus where StatusDesc = \'"+deviceStatus+"\'")
 		for row in cur.fetchall():
 			deviceStatus = row[0]
@@ -1127,23 +1133,41 @@ def addDevice():
                 for row in cur.fetchall():
                         deviceCategory = row[0]
                 deviceCategory = str(deviceCategory)
-		cur.execute("INSERT INTO Device (DeviceName, Description, DeviceCategory_CategoryID, DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
-					+" VALUES("
-					#+"\'"+deviceID+"\',"
-					+"\'"+deviceName+"\',"
-					+"\'"+desc+"\',"
-					+"\'"+deviceCategory+"\',"
-					+"\'"+deviceStatus+"\',"
-					+"\'"+dLocation+"\',"
-					+"\'"+owner+"\',"
-					+"\'"+DoD+"\',"
-					+"\'"+go_back+"\',"
-					+"\'"+IP+"\',"
-					+"\'"+sNumber+"\'"
-					+")")		
-		db.commit()
+
+		cur.execute("SELECT DeviceName from Device WHERE DeviceName = \'"+deviceName+"\'")
+		for col in cur.fetchall():
+			nCheck = col[0]
 		
-        	return redirect(url_for("Inventory"))
+                cur.execute("SELECT SerialNumber from Device WHERE SerialNumber = \'"+sNumber+"\'")
+                for col in cur.fetchall():
+                        serCheck = col[0]
+		
+		if(nCheck == deviceName):
+			error = "Device with that name already exists."
+			return render_template('addDevice.html', error=error)
+		
+		elif(serCheck == strSerNum):
+			error = "Device with that serial number already exists."
+			return render_template('addDevice.html', error=error)
+		
+		else:
+			cur.execute("INSERT INTO Device (DeviceName, Description, DeviceCategory_CategoryID, DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
+						+" VALUES("
+						#+"\'"+deviceID+"\',"
+						+"\'"+deviceName+"\',"
+						+"\'"+desc+"\',"
+						+"\'"+deviceCategory+"\',"
+						+"\'"+deviceStatus+"\',"
+						+"\'"+dLocation+"\',"
+						+"\'"+owner+"\',"
+						+"\'"+DoD+"\',"
+						+"\'"+go_back+"\',"
+						+"\'"+IP+"\',"
+						+"\'"+sNumber+"\'"
+						+")")		
+			db.commit()
+		
+        		return redirect(url_for("Inventory"))
 	rowNum = 0
 	dStatusL = { }
 	cur.execute("select StatusDesc from DeviceStatus")
