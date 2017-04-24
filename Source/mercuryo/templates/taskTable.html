@@ -1,117 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-					<!-- PAGE TITLE -->
-	<title>Task Table</title>
+<head>
+<!-- PAGE TITLE -->
+<title>Task Table</title>
 
-	<!-- META DATA -->
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- META DATA -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<!-- STYLE SHEETS -->
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/pageTemplate.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/dataTables.bootstrap.min.css">  
-	<link rel="stylesheet" type="text/css" href="../static/css/hover.css"> 
-	<link rel="stylesheet" href="../static/css/font-awesome.css">
+<!-- STYLE SHEETS -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../static/css/pageTemplate.css">
+<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../static/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../static/css/hover.css">
+<link rel="stylesheet" href="../static/css/font-awesome.css">
+<link  rel="stylesheet"href="../static/css/jquery.dataTables.css">
+<link  rel="stylesheet"href="../static/css/dataTables.bootstrap.min.css">
+<link rel="icon" href="../static/images/favicon.ico">
 
-	<link  rel="stylesheet"href="../static/css/jquery.dataTables.css">
-	<link  rel="stylesheet"href="../static/css/dataTables.bootstrap.min.css">
-	
-	<link rel="icon" href="../static/images/favicon.ico">
-	
-	<!-- BODY START -->
-	<body class="w3-light-grey">
+<!-- BODY START -->
+<body class="w3-light-grey">
 
-		<!-- NAVIGATION -->
-		<div id="nav">
-			<ul id="navbar">
-				<!-- Add: class="active" to active tab -->
-				<li><a class="hvr-underline-from-center"  href="inventory">Home</a></li>
-				<li><a class="hvr-underline-from-center"  href="myAccountPage">My Account</a></li>
-				<li><a class="hvr-underline-from-center"  href="calendar">Calendar</a></li>
-				<li class="active"><a class="hvr-underline-from-center"   href="userPage">Admin</a></li>
-				<li id="nav-right"><a class="hvr-underline-from-center" href="logout">Log Out</a></li>
-			</ul>
-		</div>
-														<div class="wrapper">
+<!-- NAVIGATION -->
+<nav class="navbar navbar-default">
+  <div id="nav" class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+  </div>
+  <div id="navbar" class="navbar-collapse collapse">
+    <ul class="nav navbar-nav">
+      <li><a class="hvr-underline-from-center"  href="inventory">Home</a></li>
+      <li><a class="hvr-underline-from-center"  href="myAccountPage">My Account</a></li>
+      <li><a class="hvr-underline-from-center"  href="calendar">Calendar</a></li>
+      <li><a class="hvr-underline-from-center"   href="userPage">Admin</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a class="hvr-underline-from-center" href="logout">Log Out</a></li>
+    </ul>
+  </div>
+  <!--/.nav-collapse --> 
+  
+</nav>
+<div class="wrapper">
+  <div class="content" style="max-width:1400px; margin:0 auto; margin-top:5em;" >
+    <div id="top-bar"> <a href="addtask">
+      <button onclick="myFunction()"><i class="fa fa-plus-circle" aria-hidden="true"></i></button>
+      </a> <a href="deleteCalendarTask"><i class="fa fa-trash" aria-hidden="true"></i></a> </div>
+    <div class="row" >
+      <div class="col-md-12" style="padding-top:30px;">
+        <table class="table table-bordered table-striped  table-hover"  id="Table">
+          <thead>
+            <tr>
+              <th>{{ labels["def"][0] }}</th>
+              <th>{{ labels["def"][8] }}</th>
+              <th>{{ labels["def"][9] }}</th>
+              <th>{{ labels["def"][1] }}</th>
+              <th>{{ labels["def"][2] }}</th>
+              <th>{{ labels["def"][3] }}</th>
+              <th>{{ labels["def"][4] }}</th>
+              <th>{{ labels["def"][5] }}</th>
+              <th>{{ labels["def"][6] }}</th>
+              <th>{{ labels["def"][7] }}</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+          {% for k in dic %}
+          <tr>
+            <td><a href=edittask?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>
+            <td>{{ dic[k][7] }}</td>
+            <td>{{ dic[k][8] }}</td>
+            <td>{{ dic[k][1] }}</td>
+            <td>{{ dic[k][2] }}</td>
+            <td>{{ dic[k][3] }}</td>
+            <td>{{ dic[k][4] }}</td>
+            <td>{{ dic[k][5] }}</td>
+            <td>{{ dic[k][6] }}</td>
+            <td>{{ dic[k][9] }}</td>
+          </tr>
+          {% endfor %}
+            </tbody>
+          
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="footer">
+  <p>Follow MerCuryo on social media.</p>
+  <i class="fa fa-facebook-official w3-hover-text-indigo w3-large"></i> <i class="fa fa-instagram w3-hover-text-purple w3-large"></i> <i class="fa fa-snapchat w3-hover-text-yellow w3-large"></i> <i class="fa fa-pinterest-p w3-hover-text-red w3-large"></i> <i class="fa fa-twitter w3-hover-text-light-blue w3-large"></i> <i class="fa fa-linkedin w3-hover-text-indigo w3-large"></i>
+  <p>&copy; MerCuryo 2017</p>
+</div>
+</body>
+</html>
 
+<!-- ================================================== -->
 
-
-																<div class="content" style="max-width:1400px; margin:0 auto; margin-top:5em;" >
-																	<div id="top-bar">
-																		<a href="addtask"><button onclick="myFunction()"><i class="fa fa-plus-circle" aria-hidden="true"></i></button></a>
-																		<a href="deleteCalendarTask"><i class="fa fa-trash" aria-hidden="true"></i></a>
-
-																	</div>
-
-																	<div class="row" >
-																		<div class="col-md-12" style="padding-top:30px;"> 
-																			
-																			
-																			
-																			
-																			<table class="table table-bordered table-striped  table-hover"  id="Table">
-																				<thead>
-																					<tr>
-																						<th>{{ labels["def"][0] }}</th>
-																						<th>{{ labels["def"][8] }}</th>
-																						<th>{{ labels["def"][9] }}</th>
-																						<th>{{ labels["def"][1] }}</th>
-																						<th>{{ labels["def"][2] }}</th>
-																						<th>{{ labels["def"][3] }}</th>
-																						<th>{{ labels["def"][4] }}</th>
-																						<th>{{ labels["def"][5] }}</th>
-																						<th>{{ labels["def"][6] }}</th>
-																						<th>{{ labels["def"][7] }}</th>
-																					</tr>
-																				</thead>
-																				
-																				<tbody>
-																				{% for k in dic %}
-																					<tr>
-																						<td><a href=edittask?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>
-																						<td>{{ dic[k][7] }}</td>
-																						<td>{{ dic[k][8] }}</td>
-																						<td>{{ dic[k][1] }}</td>
-																						<td>{{ dic[k][2] }}</td>
-																						<td>{{ dic[k][3] }}</td>
-																						<td>{{ dic[k][4] }}</td>
-																						<td>{{ dic[k][5] }}</td>
-																						<td>{{ dic[k][6] }}</td>
-																						<td>{{ dic[k][9] }}</td>
-																						
-																					</tr>
-																				{% endfor %}
-																			</tbody>
-
-																			</table>
-																		</div>
-																	</div>
-																</div>
-															</div>
-
-
-
-														</body>
-													</html>
-
-
-
-
-
-													<!-- ================================================== -->
-													
-													<script type="text/javascript" src="../static/js/jquery.js"></script>
-													<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
-													<script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
-													<script type="text/javascript" src="../static/js/dataTables.bootstrap.min.js"/></script>
-												
-												<script>	
+<script type="text/javascript" src="../static/js/jquery.js"></script>
+<script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../static/js/dataTables.bootstrap.min.js"/></script>
+<script type="text/javascript" src="../static/js/basicFunctions.js"></script>
+<script>	
 												$('#Table').dataTable();
 												</script>
-											</body>
-										</html>
-										
+</body>
+</html>

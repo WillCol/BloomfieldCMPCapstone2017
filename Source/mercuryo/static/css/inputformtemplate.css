@@ -1,13 +1,13 @@
 
 #fields input{
-	min-width:200px;
+	
 	position:relative;
 	margin-right:20px;
 width:310px;
 	
 }
 #fields select{
-	min-width:200px;
+	
 	position:relative;
 	margin-right:20px;
 width:310px;
@@ -105,18 +105,12 @@ label.error{
 
 }
 
-@media screen and (max-width:950px){
-	label.error{
-	position:static;
-	padding-bottom:30px;
 
-	}
-}
-@media screen and (max-width:600px){
+@media screen and (max-width:750px){
 	label.error{
 	padding-bottom:30px;
 	text-align:center;
-
+	position:static;
 	}
 	label{
 	width:110px;
