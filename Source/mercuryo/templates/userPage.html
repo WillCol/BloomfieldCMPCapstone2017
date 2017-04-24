@@ -3,91 +3,98 @@
 <!-- MY ACCOUNT PAGE -->
 <!-- COLOR NOT FINAL -->
 
-<<!-- HTML START -->
+<!-- HTML START -->
 <html>
 
+<!-- PAGE TITLE -->
+<title>Administrator</title>
 
+<!-- META DATA -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<!-- PAGE TITLE -->
-	<title>Administrator</title>
+<!-- STYLE SHEETS -->
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="../static/css/pageTemplate.css">
+<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../static/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../static/css/hover.css">
+<link rel="stylesheet" href="../static/css/font-awesome.css">
+<link  rel="stylesheet"href="../static/css/jquery.dataTables.css">
+<link  rel="stylesheet"href="../static/css/dataTables.bootstrap.min.css">
+<link rel="icon" href="../static/images/favicon.ico">
 
-	<!-- META DATA -->
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- BODY START -->
+<body class="w3-light-grey">
 
-	<!-- STYLE SHEETS -->
-	<link rel="stylesheet" href="https://www.w3schools.com/w3css/3/w3.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/pageTemplate.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="../static/css/dataTables.bootstrap.min.css">  
-	<link rel="stylesheet" type="text/css" href="../static/css/hover.css"> 
-	<link rel="stylesheet" href="../static/css/font-awesome.css">
+<!-- NAVIGATION -->
+<nav class="navbar navbar-default">
+  <div id="nav" class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+  </div>
+  <div id="navbar" class="navbar-collapse collapse">
+    <ul class="nav navbar-nav">
+      <li><a class="hvr-underline-from-center"  href="inventory">Home</a></li>
+      <li><a class="hvr-underline-from-center"  href="myAccountPage">My Account</a></li>
+      <li><a class="hvr-underline-from-center"  href="calendar">Calendar</a></li>
+      <li><a class="hvr-underline-from-center"   href="userPage">Admin</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a class="hvr-underline-from-center" href="logout">Log Out</a></li>
+    </ul>
+  </div>
+  <!--/.nav-collapse --> 
+  
+</nav>
 
-	<link  rel="stylesheet"href="../static/css/jquery.dataTables.css">
-	<link  rel="stylesheet"href="../static/css/dataTables.bootstrap.min.css">
+<!-- Page Container -->
+<div class="w3-content content" style="max-width:1400px; margin:0 auto; margin-top:4em;"> 
+  
+  <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!BUTTONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+  <div style="margin:1em;" align="center" > 
 	
-	<link rel="icon" href="../static/images/favicon.ico">
+	<a  href="userTable">
+    <button class="button">User Table</button>
+    </a> </br>
+    
+	<a  href="deviceStatusTable">
+    <button class="button">Device Status Table</button>
+    </a> </br>
+    
+	<a  href="deviceCategoryTable">
+	<button class="button">Device Category Table</button>
+	</a> </br>
 	
-	<!-- BODY START -->
-	<body class="w3-light-grey">
+	<a  href="employeeTable">
+    <button class="button">Employee Table</button>
+    </a> </br>
+    <a  href="taskTable">
+    <button class="button">Task Table</button>
+    </a> </br>
+    
+	<a  href="taskTypeTable">
+    <button class="button">Task Type Table</button>
+    </a> </div>
+  
+  <!-- End Page Container --> 
+</div>
 
-		<!-- NAVIGATION -->
-		<div id="nav">
-			<ul id="navbar">
-				<!-- Add: class="active" to active tab -->
-				<li><a class="hvr-underline-from-center"  href="inventory">Home</a></li>
-				<li><a class="hvr-underline-from-center"  href="myAccountPage">My Account</a></li>
-				<li><a class="hvr-underline-from-center"  href="calendar">Calendar</a></li>
-				<li class="active"><a class="hvr-underline-from-center"   href="userPage">Admin</a></li>
-				<li id="nav-right"><a class="hvr-underline-from-center" href="logout">Log Out</a></li>
-			</ul>
-		</div>
-
-	
-
-		<!-- Page Container -->
-		<div class="w3-content content" style="max-width:1400px; margin:0 auto; margin-top:4em;">
-		
-		<!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!BUTTONS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-		<div style="margin:1em;" align="center" >
-					<a  href="userTable"><button class="button">User Table</button></a> </br>
-					<a  href="deviceStatusTable"><button class="button">Device Status Table</button></a> </br>
-					<a  href="deviceCategoryTable"><button class="button">Device Category Table</button></a> </br>
-					<a  href="employeeTable"><button class="button">Employee Table</button></a> </br>
-					<a  href="taskTable"><button class="button">Task Table</button></a> </br>
-					<a  href="taskTypeTable"><button class="button">Task Type Table</button></a>
-		</div>
-		
-		
-
-
-	  
-		<!-- End Page Container -->
-		</div>
-
-
-		<!-- FOOTER -->
-		<footer class="w3-container colorscheme w3-center w3-margin-top">
-			<p>Follow MerCuryo on social media.</p>
-			<i class="fa fa-facebook-official w3-hover-text-indigo w3-large"></i>
-			<i class="fa fa-instagram w3-hover-text-purple w3-large"></i>
-			<i class="fa fa-snapchat w3-hover-text-yellow w3-large"></i>
-			<i class="fa fa-pinterest-p w3-hover-text-red w3-large"></i>
-			<i class="fa fa-twitter w3-hover-text-light-blue w3-large"></i>
-			<i class="fa fa-linkedin w3-hover-text-indigo w3-large"></i>
-			<p>&copy; MerCuryo 2017</p>
-		</footer>
-	<!-- BODY END -->
-	</body>
+<!-- FOOTER -->
+<div class="footer">
+  <p>Follow MerCuryo on social media.</p>
+  <i class="fa fa-facebook-official w3-hover-text-indigo w3-large"></i> <i class="fa fa-instagram w3-hover-text-purple w3-large"></i> <i class="fa fa-snapchat w3-hover-text-yellow w3-large"></i> <i class="fa fa-pinterest-p w3-hover-text-red w3-large"></i> <i class="fa fa-twitter w3-hover-text-light-blue w3-large"></i> <i class="fa fa-linkedin w3-hover-text-indigo w3-large"></i>
+  <p>&copy; MerCuryo 2017</p>
+</div>
+<!-- BODY END -->
+</body>
 <!-- HTML END -->
 </html>
-
 <script type="text/javascript" src="../static/js/jquery.js"></script>
 <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../static/js/dataTables.bootstrap.min.js"/></script>
-
+<script type="text/javascript" src="../static/js/basicFunctions.js"></script>
 <script>	
 	$('#Table').dataTable();
 </script>

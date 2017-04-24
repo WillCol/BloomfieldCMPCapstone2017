@@ -5,25 +5,43 @@
 
 
 html,body,h1,h2,h3,h4,h5,h6, .button {font-family: "Lucida Grande", "Lucida Sans Unicode", Helvetica, Tahoma, Arial, sans-serif;}
-html, body{
-	height:100%;
-	
-	
+
+html {
+  height: 100%;
+  box-sizing: border-box;
 }
-html{
-	
-  display: flex;
-  flex-direction: column;
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
 }
-body{
-	min-height: 100%;
-	margin-bottom:-142px;
+
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
+  min-height: 100%;
 }
-.button {
-	padding: .5em;
-	margin: 1em;
-	border: hidden;
-	background-color: #e6f2f;
+
+.content {
+  margin: 0 auto;
+  
+  max-width: 640px;
+  width: 94%;
+  padding-bottom:6rem;
+}
+
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  background-color:#e6f2ff;
+  text-align: center;
+ margin-top:2rem;
 }
 
 .avatar {
@@ -71,19 +89,35 @@ thead tr th{
     margin: 0;
     padding: .01em;
     overflow: hidden;
-    background-color: #333;
+    background-color: #333!important;
     position: absolute;
     top: 0;
     width: 100%;
+	display: table;
 }
 
 #nav li {
     float: left; 
 }
-
-
-
-
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+    border-color: #333!important;
+}
+button.navbar-toggle{
+	
+}
+.navbar-default .navbar-toggle {
+    border-color: none;
+}
+div#nav{
+	background-color:#333;
+}
+div#navbar{
+	background-color:#333;
+}
+.navbar-default .navbar-nav>li>a {
+    color: white!important;
+	text-align:middle;
+}
 #nav li a {
    
     color: white;
@@ -108,21 +142,27 @@ thead tr th{
     background-color: #111;
 
 }
-
-footer {
-   
-	margin-bottom: 0px;
+.navbar-default .navbar-toggle {
+    border-color: #333!important; 
+}
+li#log {
+	float:right!important;
+	color:white;
+	padding-right:20px;
+	vertical-align: middle;
+	display: inline-block;
+	padding-top:14.5px;
+}
+@media screen and (max-width:613px){
+	li#log {
+	padding-right:3px;
+	
 	
 }
-
-
-.content {
-	margin-top: 4em;
-	flex:1;
-	height:90%;
-
+	
+	
+	
 }
-
 
 .fa.fa-plus-circle{
 	font-size:40px;
