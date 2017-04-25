@@ -37,7 +37,7 @@
       <li><a class="hvr-underline-from-center"   href="userPage">Admin</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-	<li id="log">Logged In: John Smith</li>
+	<li id="log">Logged In: {{ uName }}</li>
       <li><a class="hvr-underline-from-center" href="logout">Log Out</a></li>
     </ul>
   </div>
@@ -53,8 +53,12 @@
     </div>
     <form name="adddevicestatus" method="POST">
       <fieldset id="fields">
+	  <label>Status Name</label>
+	  <input type="text" name="StatusName" >
+	  <br>
       <label>Status Description</label>
       <input type="text" name="StatusDesc" >
+	  <br>
 		
 		{% if error %}
 		<p class="error"><Strong>Error:</strong></p> {{ error }}

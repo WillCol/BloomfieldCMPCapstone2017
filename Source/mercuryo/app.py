@@ -100,6 +100,7 @@ def editDevice():
         
 	else:
 		devID = request.args["id"]
+		uName = session['username']
                 cur.execute("Select * from Device where DeviceID = "+devID)
 
 		labels = { }
@@ -146,12 +147,13 @@ def editDevice():
                         cat[num].append(row[0])
                         num = num + 1
 
-                return render_template('editDevice.html', dev=dev, labels=labels, dStatusL = dStatusL, cat=cat)
+                return render_template('editDevice.html', dev=dev, labels=labels, dStatusL = dStatusL, cat=cat, uName=uName)
 
 # inventory page
 @app.route('/inventory')
 @login_required
 def Inventory():
+	uName = session['username']
 		
 	labels = { }
 	labels.setdefault("def", [])
@@ -190,14 +192,15 @@ def Inventory():
 		dic[rowNum].append(row[10])
 		rowNum = rowNum + 1	
 
-        return render_template('inventory.html', dic=dic, labels=labels)
+        return render_template('inventory.html', dic=dic, labels=labels, uName=uName)
 
 #user table
 @app.route('/userTable')
 @login_required
 @security_check
 def userTable():
-
+	uName = session['username']
+	
         labels = { }
         labels.setdefault("def", [])
         labels["def"].append("UserID")
@@ -219,13 +222,14 @@ def userTable():
                 dic[rowNum].append(row[4])
                 rowNum = rowNum + 1
 
-        return render_template('userTable.html', dic=dic, labels=labels)
+        return render_template('userTable.html', dic=dic, labels=labels, uName=uName)
 
 #employee table
 @app.route('/employeeTable')
 @login_required
 @security_check
 def employeeTable():
+	uName = session['username']
 
         labels = { }
         labels.setdefault("def", [])
@@ -258,12 +262,14 @@ def employeeTable():
 		dic[rowNum].append(pNum) 
                 rowNum = rowNum + 1
 
-        return render_template('employeeTable.html', dic=dic, labels=labels)
+        return render_template('employeeTable.html', dic=dic, labels=labels, uName=uName)
 
 #DeviceCategory table
 @app.route('/deviceCategoryTable')
 @login_required
+@security_check
 def deviceCategoryTable():
+	uName = session['username']
 
         labels = { }
         labels.setdefault("def", [])
@@ -281,14 +287,16 @@ def deviceCategoryTable():
 		dic[rowNum].append(row[2])
                 rowNum = rowNum + 1
 
-        return render_template('deviceCategoryTable.html', dic=dic, labels=labels)
+        return render_template('deviceCategoryTable.html', dic=dic, labels=labels, uName=uName)
 
 
 
 #taskType table
 @app.route('/taskTypeTable')
 @login_required
+@security_check
 def taskTypeTable():
+	uName = session['username']
 
         labels = { }
         labels.setdefault("def", [])
@@ -306,12 +314,14 @@ def taskTypeTable():
 		dic[rowNum].append(row[2])
                 rowNum = rowNum + 1
 
-        return render_template('taskTypeTable.html', dic=dic, labels=labels)
+        return render_template('taskTypeTable.html', dic=dic, labels=labels, uName=uName)
 
 #deviceStatus table
 @app.route('/deviceStatusTable')
 @login_required
+@security_check
 def deviceStatusTable():
+	uName = session['username']
 
         labels = { }
         labels.setdefault("def", [])
@@ -329,15 +339,20 @@ def deviceStatusTable():
 		dic[rowNum].append(row[2])
                 rowNum = rowNum + 1
 
-        return render_template('deviceStatusTable.html', dic=dic, labels=labels)
+        return render_template('deviceStatusTable.html', dic=dic, labels=labels, uName=uName)
 
 #admin task table
 @app.route('/adminTaskTable')
 @login_required
+@security_check
 def adminTaskTable():
+	uName = session['username']
+	
 	labels = { }
         labels.setdefault("def", [])
         labels["def"].append("Task ID")
+        labels["def"].append("Task Name")
+        labels["def"].append("Task Location")
         labels["def"].append("Date Started")
         labels["def"].append("Date Completed")
         labels["def"].append("Task Status")
@@ -363,13 +378,20 @@ def adminTaskTable():
                 else:
                         dic[rowNum].append("no")
                 dic[rowNum].append(row[6])
+                dic[rowNum].append(row[7])
+                dic[rowNum].append(row[8])
+
 		dID = "null"
                 cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID = "+str(row[0]))
                 for column in cur.fetchall():
                 	dID = column[0]
-                dic[rowNum].append(column[0])
+                	dic[rowNum].append(column[0])
+                cur.execute("SELECT User_UserID FROM User_has_Calendar WHERE Calendar_TaskID = "+str(row[0]))
+                for column in cur.fetchall():
+                        dID = column[0]
+                	dic[rowNum].append(column[0])
                 rowNum = rowNum + 1
-        return render_template('taskTable.html', dic=dic, labels=labels)
+        return render_template('taskTable.html', dic=dic, labels=labels, uName=uName)
 		
 
 #dropDownTestPage
@@ -385,59 +407,59 @@ def adminTaskTable():
 
 
 #task table
-@app.route('/taskTable')
-@login_required
-def taskTable():
-	uID = session['userID']
-
-        labels = { }
-        labels.setdefault("def", [])
-        labels["def"].append("Task ID")
-        labels["def"].append("Date Started")
-        labels["def"].append("Date Completed")
-        labels["def"].append("Task Status")
-        labels["def"].append("Task Type")
-	labels["def"].append("Active Task")
-	labels["def"].append("Actual Completion Date")
-	labels["def"].append("Device ID")
-	labels["def"].append("Task Name")
-	labels["def"].append("Task Location")	
-	taskList = []
-
-        cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID = "+str(uID))
-	for row in cur.fetchall():
-		taskList.append(row[0])
-		
-	
-        dic = { }
-        rowNum = 0
-        for tasks in taskList:
-		taskCheck = rowNum
-		cur.execute("SELECT * FROM Calendar where TaskID = "+str(taskList[taskCheck]))
-		for row in cur.fetchall():
-			dic.setdefault(rowNum, [])
-                        dic[rowNum].append(row[0])
-                        dic[rowNum].append(row[1])
-                        dic[rowNum].append(row[2])
-                        dic[rowNum].append(row[3])
-                        dic[rowNum].append(row[4])
-	
-			if row[5] == 1:
-                                dic[rowNum].append("yes")
-                        else:
-                                dic[rowNum].append("no")
-                        dic[rowNum].append(row[6])
-			dic[rowNum].append(row[7])
-			dic[rowNum].append(row[8])
-                        dID = "null"
-                        cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID = "+str(row[0]))
-                        for column in cur.fetchall():
-				dID = column[0]
-                                dic[rowNum].append(column[0])
-			
-			
-                rowNum = rowNum + 1
-	return render_template('taskTable.html', dic=dic, labels=labels)
+#@app.route('/taskTable')
+#@login_required
+#def taskTable():
+#	uID = session['userID']
+#
+#        labels = { }
+#        labels.setdefault("def", [])
+#        labels["def"].append("Task ID")
+#        labels["def"].append("Date Started")
+#        labels["def"].append("Date Completed")
+#        labels["def"].append("Task Status")
+#        labels["def"].append("Task Type")
+#	labels["def"].append("Active Task")
+#	labels["def"].append("Actual Completion Date")
+#	labels["def"].append("Device ID")
+#	labels["def"].append("Task Name")
+#	labels["def"].append("Task Location")	
+#	taskList = []
+#
+#        cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID = "+str(uID))
+#	for row in cur.fetchall():
+#		taskList.append(row[0])
+#		
+#	
+#       dic = { }
+#        rowNum = 0
+#        for tasks in taskList:
+#		taskCheck = rowNum
+#		cur.execute("SELECT * FROM Calendar where TaskID = "+str(taskList[taskCheck]))
+#		for row in cur.fetchall():
+#			dic.setdefault(rowNum, [])
+#                        dic[rowNum].append(row[0])
+#                        dic[rowNum].append(row[1])
+#                        dic[rowNum].append(row[2])
+#                        dic[rowNum].append(row[3])
+#                        dic[rowNum].append(row[4])
+#	
+#			if row[5] == 1:
+#                                dic[rowNum].append("yes")
+#                        else:
+#                                dic[rowNum].append("no")
+#                        dic[rowNum].append(row[6])
+#			dic[rowNum].append(row[7])
+#			dic[rowNum].append(row[8])
+#                        dID = "null"
+#                        cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID = "+str(row[0]))
+#                        for column in cur.fetchall():
+#				dID = column[0]
+#                                dic[rowNum].append(column[0])
+#			
+#			
+#                rowNum = rowNum + 1
+#	return render_template('taskTable.html', dic=dic, labels=labels)
 
 
 
@@ -571,7 +593,7 @@ def editEmployee():
                 db.commit()
                 return redirect(url_for('employeeTable'))
 	else:
-		
+		uName = session['username']
 		eID = request.args["id"]
                 emp = { }
                 emp.setdefault("def", [])
@@ -598,7 +620,7 @@ def editEmployee():
 		for column in cur.fetchall():
 			emp["data"].append(column[0])
 		 	empPhone = column[0]
-                return render_template('editEmployee.html', emp=emp)
+                return render_template('editEmployee.html', emp=emp, uName=uName)
 
 #edit user
 @app.route('/editUser', methods=['GET', 'POST']) 
@@ -620,6 +642,7 @@ def editUser():
                 return redirect(url_for('userTable'))
 	else:
 		uID = request.args['id']
+		uName = session['username']
                 emp = { }
                 emp.setdefault("def", [])
 		emp["def"].append("User ID")
@@ -640,7 +663,7 @@ def editUser():
                         emp["data"].append(row[3])
 			emp["data"].append(row[4])
           
-                return render_template('editUser.html', emp=emp)
+                return render_template('editUser.html', emp=emp, uName=uName)
 
 #edit task
 @app.route('/edittask', methods=['GET', 'POST'])
@@ -691,6 +714,7 @@ def edittask():
                 return redirect(url_for('taskTable'))
         else:
                 tID = request.args['id']
+		uName = session['username']
                	emp = { }
                 cur.execute("SELECT DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion, TaskName, TaskLocation"
 				+" FROM Calendar WHERE TaskID = "+tID)
@@ -729,7 +753,7 @@ def edittask():
                 	rowNum = rowNum + 1
 
 		
-		return render_template('edittask.html', emp=emp, task = task, device = device)
+		return render_template('edittask.html', emp=emp, task = task, device = device, uName=uName)
 
 #edit tasktype
 @app.route('/edittasktype', methods=['GET', 'POST'])
@@ -756,6 +780,7 @@ def edittasktype():
                 return redirect(url_for('taskTypeTable'))
 	else:
                 ttID = request.args['id']
+		uName = session['username']
                 emp = { }
              
                 cur.execute("SELECT TaskTypeName, TaskDesc FROM Task WHERE TaskType = "+ttID)
@@ -765,7 +790,7 @@ def edittasktype():
                         emp["data"].append(row[0])
 			emp["data"].append(row[1])
                        
-                return render_template('edittasktype.html', emp=emp)
+                return render_template('edittasktype.html', emp=emp, uName=uName)
 
 #edit device category
 @app.route('/editDeviceCategory', methods=['GET', 'POST'])
@@ -783,6 +808,7 @@ def editDeviceCategory():
                 return redirect(url_for('deviceCategoryTable'))
         else:
                 dID = request.args['id']
+		uName = session['username']
                 emp = { }
                 emp.setdefault("def", [])
                 emp["def"].append("Device Category Name")
@@ -795,7 +821,7 @@ def editDeviceCategory():
                         emp["data"].append(row[0])
 			emp["data"].append(row[1])
 
-                return render_template('editDeviceCategory.html', emp=emp)
+                return render_template('editDeviceCategory.html', emp=emp, uName=uName)
 
 
 #edit device status
@@ -805,25 +831,30 @@ def editDeviceCategory():
 def editdevicestatus():
         if request.method == "POST":
 		dID = request.args['id']
+		sName = request.form["StatusName"]
                 sDesc = request.form["StatusDesc"]
-
+	
+                cur.execute("UPDATE DeviceStatus SET StatusName = \'"+sName+"\' WHERE StatusID = "+dID)
 		cur.execute("UPDATE DeviceStatus SET StatusDesc = \'"+sDesc+"\' WHERE StatusID = "+dID)
-                
+     
                 db.commit()
                 return redirect(url_for('deviceStatusTable'))
 	else:
 		dID = request.args['id']
+		uName = session['username']
 		emp = { }
 		emp.setdefault("def", [])
-                emp["def"].append("Status Description")
-
-                cur.execute("SELECT StatusDesc FROM DeviceStatus WHERE StatusID = "+dID)
+                emp["def"].append("Status Name")
+                emp["def"].append("Status Description")	
+	
+                cur.execute("SELECT StatusName, StatusDesc FROM DeviceStatus WHERE StatusID = "+dID)
 
                 for row in cur.fetchall():
                         emp.setdefault("data", [])
                         emp["data"].append(row[0])
+			emp["data"].append(row[1])
             
-                return render_template('editdevicestatus.html', emp=emp)
+                return render_template('editdevicestatus.html', emp=emp, uName=uName)
 
 
 #user account page
@@ -835,6 +866,7 @@ def account():
 	eID = "null"
 	eName = "null"
 	userName = session['username']
+	uName = session['username']
 	account['uName'] = userName
 	cur.execute("select Employee_EmployeeID from User where UserName = \'"+userName+"\'")
 	for column in cur.fetchall():
@@ -879,13 +911,14 @@ def account():
 	
 	
 
-	return render_template('myAccountPage.html', account=account, active=active, deactive=deactive)
+	return render_template('myAccountPage.html', account=account, active=active, deactive=deactive, uName=uName)
 	  
 #add employee
 @app.route('/addemployee', methods=['GET', 'POST'])
 @login_required
 @security_check
 def addemployee():
+	uName = session['username']
 	if request.method == "POST":
 		
 		eName = request.form["EmployeeName"]
@@ -914,15 +947,15 @@ def addemployee():
 		
 		if(nCheck == eName):
 			error = "Employee with that name already exists."
-			return render_template('addemployee.html', error=error)
+			return render_template('addemployee.html', error=error, uName=uName)
 	
                 if(emailCheck == email):
                         error = "Employee with that email address already exists."
-                        return render_template('addemployee.html', error=error)
+                        return render_template('addemployee.html', error=error, uName=uName)
 
                 if(phnCheck == str(ePNumber)):
                         error = "Employee with that phone number already exists."
-                        return render_template('addemployee.html', error=error)
+                        return render_template('addemployee.html', error=error, uName=uName)
 
 		else:
 			cur.execute("INSERT INTO Employee (EmployeeName, JobTitle, EmployeeAddress, EmployeeDepartment, EmployeeEmail)"
@@ -937,16 +970,18 @@ def addemployee():
 				+" VALUES (\'"+ePNumber+"\',"+"\'"+str(eID)+"\')")
 			db.commit()
 			return redirect(url_for('employeeTable'))
-		
-	return render_template('addemployee.html')
+	
+	uName = session['username']
+	return render_template('addemployee.html', uName=uName)
 
 #add user
 @app.route('/adduser', methods=['GET', 'POST'])
 @login_required
 @security_check
 def adduser():
+	uName = session['username']
 	if request.method == "POST":
-		uName = request.form["UserName"]
+		usName = request.form["UserName"]
 		pWord = request.form["Password"]
 		sec = request.form["Security"]
 		eID = request.form["EmployeeID"]
@@ -958,7 +993,7 @@ def adduser():
 
 		nCheck = "null"
 		eCheck = 0
-		cur.execute("SELECT UserName FROM User WHERE UserName = \'"+uName+"\'")
+		cur.execute("SELECT UserName FROM User WHERE UserName = \'"+usName+"\'")
 		for row in cur.fetchall():
 			nCheck = row[0]
 		
@@ -967,18 +1002,18 @@ def adduser():
                         eCheck = row[0]
 		eCheck = str(eCheck)
 	
-		if(nCheck == uName):
+		if(nCheck == usName):
 			error = "Account with that username already exists."
-			return render_template('adduser.html', error=error)
+			return render_template('adduser.html', error=error, uName=uName)
 
                 elif(eCheck == eID):
                         error = "Account for selected employee already exists."
-                        return render_template('adduser.html', error=error)
+                        return render_template('adduser.html', error=error, uName=uName)
 		
 		else:
 			cur.execute("INSERT INTO User (UserName, Password, Employee_EmployeeID, Security)"
 				+" VALUES("
-				+"\'"+uName+"\',"
+				+"\'"+usName+"\',"
 				+"\'"+pWord+"\',"
 				+"\'"+eID+"\',"
 				+"\'"+sec+"\'"
@@ -986,6 +1021,7 @@ def adduser():
 			db.commit()
 			return redirect(url_for('userTable'))
 	
+	uName = session['username']
 	rowNum = 0
         name = { }
         cur.execute("select EmployeeName from Employee")
@@ -994,14 +1030,14 @@ def adduser():
         	name[rowNum].append(row[0])
         	rowNum = rowNum + 1
 	
-	return render_template('adduser.html', name = name)
+	return render_template('adduser.html', name = name, uName=uName)
 
 #add task
 @app.route('/addtask', methods=['GET', 'POST'])
 @login_required
-@security_check
 def addtask():
-	uID = session["userID"]
+	uID = session['userID']
+	uName = session['username']
         if request.method == "POST":
                 #taskID = request.form["TaskID"]
 		taskID = 0
@@ -1034,7 +1070,7 @@ def addtask():
 
 		if(nCheck == nTask):
 			error = "Task with than name already exists."
-			return render_template('addtask.html', error=error)
+			return render_template('addtask.html', error=error, uName=uName)
 
 		else:
 	
@@ -1061,8 +1097,9 @@ def addtask():
                                 +")")
 			db.commit()
 
-			return redirect(url_for('taskTable'))
-
+			return redirect(url_for('calendar'))
+	
+	uName = session['username']
 	rowNum = 0
         device = { }
         cur.execute("select DeviceName from Device")
@@ -1079,7 +1116,109 @@ def addtask():
                 task[rowNum].append(row[0])
                 rowNum = rowNum + 1
 
-	return render_template('addtask.html', task = task, device = device)
+	return render_template('addtask.html', task = task, device = device, uName=uName)
+
+
+
+#admin add task
+@app.route('/adminaddtask', methods=['GET', 'POST'])
+@login_required
+@security_check
+def adminaddtask():
+	uName = session['username']
+        if request.method == "POST":
+                #taskID = request.form["TaskID"]
+                taskID = 0
+		username = request.form["UserName"]
+                dStart = request.form["DateStarted"]
+                dComp = request.form["DateCompleted"]
+                tStatus = request.form["TaskStatus"]
+                tType = request.form["TaskType"]
+                acDate = "0000-00-00"
+                device = request.form["DeviceID"]
+                aTask = request.form["activeTask"]
+                nTask = request.form["TaskName"]
+                lTask = request.form["TaskLocation"]
+
+                cur.execute("select TaskType from Task where TaskTypeName = \'"+tType+"\'")
+                for row in cur.fetchall():
+                        tType = row[0]
+                tType = str(tType)
+
+                cur.execute("select DeviceID from Device where DeviceName = \'"+device+"\'")
+                for row in cur.fetchall():
+                        device = row[0]
+                device = str(device)
+
+                cur.execute("select UserID from User where UserName = \'"+username+"\'")
+                for row in cur.fetchall():
+                        username = row[0]
+                username = str(username)
+
+
+                nCheck = "null"
+
+                cur.execute("SELECT TaskName FROM Calendar WHERE TaskName = \'"+nTask+"\'")
+                for row in cur.fetchall():
+                        nCheck = row[0]
+
+                if(nCheck == nTask):
+                        error = "Task with than name already exists."
+                        return render_template('adminaddtask.html', error=error, uName=uName)
+
+                else:
+          
+                        cur.execute("INSERT INTO Calendar (DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion, TaskName, TaskLocation)"
+                                +" VALUES(\'"+dStart+"\',"+"\'"+dComp+"\',"+"\'"+tStatus+"\',"+"\'"+tType+"\',"+"\'"+aTask+"\',"+"\'"+acDate+"\',"+
+                                "\'"+nTask+"\',"+"\'"+lTask+"\')")
+                        db.commit()
+
+                        cur.execute("select TaskID from Calendar order by TaskID DESC limit 1")
+                        for row in cur.fetchall():
+                                taskID = row[0]
+                        taskID = str(taskID)
+                        cur.execute("INSERT INTO User_has_Calendar (User_UserID, Calendar_TaskID)"
+                                +" VALUES("
+                                +"\'"+username+"\',"
+                                +"\'"+taskID+"\'"
+                                +")")
+                        db.commit()
+
+                        cur.execute("INSERT INTO Device_has_Calendar (Device_DeviceID, Calendar_TaskID)"
+                                +" VALUES("
+                                +"\'"+device+"\',"
+                                +"\'"+taskID+"\'"
+                                +")")
+                        db.commit()
+
+                        return redirect(url_for('adminTaskTable'))
+
+        uName = session['username']
+        rowNum = 0
+        device = { }
+        cur.execute("select DeviceName from Device")
+        for row in cur.fetchall():
+                device.setdefault(rowNum, [])
+                device[rowNum].append(row[0])
+                rowNum = rowNum + 1
+
+        rowNum = 0
+        users = { }
+        cur.execute("select UserName from User")
+        for row in cur.fetchall():
+                users.setdefault(rowNum, [])
+                users[rowNum].append(row[0])
+                rowNum = rowNum + 1
+
+        rowNum = 0
+        task = { }
+        cur.execute("select TaskTypeName from Task")
+        for row in cur.fetchall():
+                task.setdefault(rowNum, [])
+                task[rowNum].append(row[0])
+                rowNum = rowNum + 1
+
+        return render_template('adminaddtask.html', task = task, device = device, uName=uName, users=users)
 
 
 #add taskType
@@ -1087,6 +1226,7 @@ def addtask():
 @login_required
 @security_check
 def addtasktype():
+	uName = session['username']
 	if request.method == "POST":
 		tName = request.form["TaskName"]
 		tDesc = request.form["TaskDesc"]
@@ -1101,12 +1241,12 @@ def addtasktype():
 		if(testN == tName): 
 
                         error = "Task type with that name already exists."
-                        return render_template('addtasktype.html', error=error)
+                        return render_template('addtasktype.html', error=error, uName=uName)
 
 		elif(testD == tDesc):
 
 			error = "Task type with that description already exists"
-                        return render_template('addtasktype.html', error=error)
+                        return render_template('addtasktype.html', error=error, uName=uName)
 		else:
 
 			cur.execute("INSERT INTO Task (TaskTypeName, TaskDesc)"
@@ -1117,13 +1257,15 @@ def addtasktype():
 			db.commit()
 			return redirect(url_for('taskTypeTable'))
 	
-	return render_template('addtasktype.html')
+	uName = session['username']
+	return render_template('addtasktype.html', uName=uName)
 
 #add deviceStatus
 @app.route('/adddevicestatus', methods=['GET', 'POST'])
 @login_required
 @security_check
 def adddevicestatus():
+	uName = session['username']
 	if request.method == "POST":
 		sName = request.form["StatusName"]
                 sDesc = request.form["StatusDesc"]
@@ -1141,11 +1283,11 @@ def adddevicestatus():
 
 		if(nCheck == sName):
 			error = "Device status with that name already exists."
-			return render_template('adddevicestatus.html', error=error)
+			return render_template('adddevicestatus.html', error=error, uName=uName)
 
                 elif(dCheck == sDesc):
                         error = "Device status with that description already exists."
-                        return render_template('adddevicestatus.html', error=error)
+                        return render_template('adddevicestatus.html', error=error, uName=uName)
 
 
 		else:
@@ -1156,8 +1298,9 @@ def adddevicestatus():
                                 +")")
                 	db.commit()
                 	return redirect(url_for('deviceStatusTable'))
-
-        return render_template('adddevicestatus.html')
+	
+	uName = session['username']
+        return render_template('adddevicestatus.html', uName=uName)
 	
 		
 #add deviceCategory
@@ -1165,6 +1308,7 @@ def adddevicestatus():
 @login_required
 @security_check
 def addDeviceCategory():
+	uName = session['username']
         if request.method == "POST":
                 cDesc = request.form["CategoryDesc"]
 		cName = request.form["CategoryName"]
@@ -1182,11 +1326,11 @@ def addDeviceCategory():
 
 		if(nCheck == cName):
 			error = "Device category with that name already exists."
-			return render_template('addDeviceCategory.html', error=error)
+			return render_template('addDeviceCategory.html', error=error, uName=uName)
               
 		elif(dCheck == cDesc):
                         error = "Device category with that description already exists."
-                        return render_template('addDeviceCategory.html', error=error)
+                        return render_template('addDeviceCategory.html', error=error, uName=uName)
 
 		else:
                 	cur.execute("INSERT INTO DeviceCategory (CategoryDesc, CategoryName)"
@@ -1197,12 +1341,14 @@ def addDeviceCategory():
                 	db.commit()
                 	return redirect(url_for('deviceCategoryTable'))
 
-        return render_template('addDeviceCategory.html')
+	uName = session['username']
+        return render_template('addDeviceCategory.html', uName=uName)
 
 #new device page
 @app.route('/addDevice', methods=["GET", "POST"])
 @login_required
 def addDevice():
+	uName = session['username']
 	if request.method == 'POST':
 	
 		dLocation = request.form["location"]
@@ -1241,11 +1387,11 @@ def addDevice():
 		
 		if(nCheck == deviceName):
 			error = "Device with that name already exists."
-			return render_template('addDevice.html', error=error)
+			return render_template('addDevice.html', error=error, uName=uName)
 		
 		elif(serCheck == strSerNum):
 			error = "Device with that serial number already exists."
-			return render_template('addDevice.html', error=error)
+			return render_template('addDevice.html', error=error, uName=uName)
 		
 		else:
 			cur.execute("INSERT INTO Device (DeviceName, Description, DeviceCategory_CategoryID, DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
@@ -1265,6 +1411,8 @@ def addDevice():
 			db.commit()
 		
         		return redirect(url_for("Inventory"))
+	
+	uName = session['username']
 	rowNum = 0
 	dStatusL = { }
 	cur.execute("select StatusDesc from DeviceStatus")
@@ -1280,48 +1428,48 @@ def addDevice():
         	cat[num].append(row[0])
         	num = num + 1
 		
-	return render_template('addDevice.html', dStatusL = dStatusL, cat=cat)		
+	return render_template('addDevice.html', dStatusL = dStatusL, cat=cat, uName=uName)		
 
 #edit account
-@app.route('/editAccount', methods=['GET', 'POST'])
-@login_required
-def editAccount():
-        account = {'uName': 'null',  'fName': 'John', 'lName': 'null', 'role': 'null', 'email': 'null'}
-        eID = "null"
-        eName = "null"
-        userName = session['username']
-        cur.execute("Select UserName, EmployeeID from User where UserName = "+userName)
-        for column in cur.fetchall():
-                account['uName'] = column[0]
-                eID = column[1]
-        cur.execute("Select EmployeeName, JobTitle, EmployeeEmail from Employee where EmployeeID = "+eID)
-        for column in cur.fetchall():
-                eName = column[0]
-                account['role'] = column[1]
-                account['email'] = column[2]
-        eNameS = eName.split(" ")
-        fName = eNameS[0]
-        lName = eNameS[1]
-        account['fName'] = fName
-        account['lName'] = lName
-	if request.method == 'POST':
-		account['fName'] = request.form("fName")
-		account['lName'] = request.form("lname")
-		account['role'] = request.form("role")
-		account['email'] = request.form("email")
-		firstName = account['fName']
-		lastName = account['lName']
-		role = account['role']
-		email = account['email']
-		fullName = firstName + " " + lastName
-		cur.execute("Update Employee "
-				+ "set EmployeeName = \'"+fullName+"\',"
-				+ " JobtTitle = \'" +role+"\',"
-				+ " EmployeeEmail = \'"+email+"\' where EmployeeID = \'"+eID+"\'")
-		db.commit()
-		return redirect(url_for('account'))
-	
-	return render_template('editAccount.html', account=account)
+#@app.route('/editAccount', methods=['GET', 'POST'])
+#@login_required
+#def editAccount():
+#        account = {'uName': 'null',  'fName': 'John', 'lName': 'null', 'role': 'null', 'email': 'null'}
+#        eID = "null"
+#        eName = "null"
+#        userName = session['username']
+#        cur.execute("Select UserName, EmployeeID from User where UserName = "+userName)
+#        for column in cur.fetchall():
+#                account['uName'] = column[0]
+#                eID = column[1]
+#        cur.execute("Select EmployeeName, JobTitle, EmployeeEmail from Employee where EmployeeID = "+eID)
+#        for column in cur.fetchall():
+#                eName = column[0]
+#                account['role'] = column[1]
+#                account['email'] = column[2]
+#        eNameS = eName.split(" ")
+#        fName = eNameS[0]
+#        lName = eNameS[1]
+#        account['fName'] = fName
+#        account['lName'] = lName
+#	if request.method == 'POST':
+#		account['fName'] = request.form("fName")
+#		account['lName'] = request.form("lname")
+#		account['role'] = request.form("role")
+#		account['email'] = request.form("email")
+#		firstName = account['fName']
+#		lastName = account['lName']
+#		role = account['role']
+#		email = account['email']
+#		fullName = firstName + " " + lastName
+#		cur.execute("Update Employee "
+#				+ "set EmployeeName = \'"+fullName+"\',"
+#				+ " JobtTitle = \'" +role+"\',"
+#				+ " EmployeeEmail = \'"+email+"\' where EmployeeID = \'"+eID+"\'")
+#		db.commit()
+#		return redirect(url_for('account'))
+#	
+#	return render_template('editAccount.html', account=account)
 
 #delete employee
 @app.route('/deleteemployee', methods=['GET', 'POST'])
@@ -1342,12 +1490,14 @@ def deleteemployee():
 		cur.execute("DELETE FROM Phone WHERE Employee_EmployeeID = "+eID)
 		db.commit() 
 		return redirect(url_for('employeeTable'))
+
+	uName = session['username']
 	cur.execute("SELECT EmployeeName from Employee")
 	emp = {}
 	for row in cur.fetchall():
 		emp.setdefault(row, "")
 		emp[row] = row[0]	
-	return render_template('deleteemployee.html', emp = emp)
+	return render_template('deleteemployee.html', emp = emp, uName=uName)
 
 #delete user
 @app.route('/deleteuser', methods=['GET', 'POST'])
@@ -1365,17 +1515,18 @@ def deleteuser():
                 cur.execute("DELETE FROM User WHERE UserID = "+uID)
                 db.commit()
                 return redirect(url_for('userTable'))
+
+	uName = session['username']
 	cur.execute("select UserName from User")
 	user = {}
 	for row in cur.fetchall():
 		user.setdefault(row, "")
 		user[row] = row[0]
-        return render_template('deleteuser.html', user = user)
+        return render_template('deleteuser.html', user = user, uName=uName)
 
-#delete Calendar Task
+#regular delete Calendar Task
 @app.route('/deleteCalendarTask', methods=['GET', 'POST'])
 @login_required
-@security_check
 def deleteCalendarTask():
         if request.method == 'POST':
 		tName = request.form["TaskName"]
@@ -1390,17 +1541,52 @@ def deleteCalendarTask():
                 db.commit()
                 cur.execute("DELETE FROM Calendar WHERE TaskID = "+tID)
                 db.commit()
-                return redirect(url_for('taskTable'))
+                return redirect(url_for('calendar'))
 	
 	username = session['username']
+	uName = session['username']
 	
 	cur.execute("select TaskName from Calendar, User_has_Calendar, User where User_UserID = UserID and TaskID = Calendar_TaskID and UserName = \'"+username+"\'") 	
-	taskList = {"start" : ""}
+	#cur.execute("SELECT TaskName from Calendar")
+	taskList = {}
 	for row in cur.fetchall():
-		taskList.setdefault(row, [])
-		taskList[row].append(row[0])
+		taskList.setdefault(row, "")
+		taskList[row] = row[0]
 	
-        return render_template('deleteCalendarTask.html', taskList = taskList)
+        return render_template('deleteCalendarTask.html', taskList = taskList, uName=uName)
+
+#admin delete Calendar Task
+@app.route('/admindeleteCalendarTask', methods=['GET', 'POST'])
+@login_required
+@security_check
+def admindeleteCalendarTask():
+        if request.method == 'POST':
+                tName = request.form["TaskName"]
+                cur.execute("SELECT TaskID from Calendar WHERE TaskName = \'"+tName+"\'")
+                #tID = request.form["taskID"]
+                for row in cur.fetchall():
+                        tID = row[0]
+                tID = str(tID)
+                cur.execute("DELETE FROM User_has_Calendar WHERE Calendar_TaskID = "+tID)
+                db.commit()
+                cur.execute("DELETE FROM Device_has_Calendar WHERE Calendar_TaskID ="+tID)
+                db.commit()
+                cur.execute("DELETE FROM Calendar WHERE TaskID = "+tID)
+                db.commit()
+                return redirect(url_for('adminTaskTable'))
+
+        username = session['username']
+        uName = session['username']
+
+        #cur.execute("select TaskName from Calendar, User_has_Calendar, User where User_UserID = UserID and TaskID$
+        cur.execute("SELECT TaskName from Calendar")
+        taskList = {}
+        for row in cur.fetchall():
+                taskList.setdefault(row, "")
+                taskList[row] = row[0]
+
+        return render_template('deleteCalendarTask.html', taskList = taskList, uName=uName)
+
 
 #delete device
 @app.route('/deleteDevice', methods=['GET', 'POST'])
@@ -1420,13 +1606,14 @@ def deleteDevice():
                 db.commit()
 		return redirect(url_for('Inventory'))
 
+	uName = session['username']
 	device = {}
 	cur.execute("SELECT DeviceName from Device")
 	for row in cur.fetchall():
 		device.setdefault(row, "")
 		device[row] = row[0]
 
-        return render_template('deleteDevice.html', device = device)
+        return render_template('deleteDevice.html', device = device, uName=uName)
 #delete deviceCategory
 @app.route('/deleteDeviceCategory', methods=['GET', 'POST'])
 @login_required
@@ -1443,13 +1630,15 @@ def deleteDeviceCategory():
                 db.commit()
                 return redirect(url_for('deviceCategoryTable'))
 
+	uName = session['username']
+
         cur.execute("SELECT CategoryName from DeviceCategory")
         category = {}
         for row in cur.fetchall():
                 category.setdefault(row, "")
                 category[row] = row[0]
 
-        return render_template('deleteDeviceCategory.html', category = category)
+        return render_template('deleteDeviceCategory.html', category = category, uName=uName)
 
 
 #delete deviceStatus
@@ -1468,13 +1657,14 @@ def deleteDeviceStatus():
                 db.commit()
                 return redirect(url_for('deviceStatusTable'))
 	
+	uName = session['username']
 	cur.execute("SELECT StatusName from DeviceStatus")
 	dStatus = {}
 	for row in cur.fetchall():
 		dStatus.setdefault(row, "")
 		dStatus[row] = row[0]
 
-        return render_template('deleteDeviceStatus.html', dStatus = dStatus)
+        return render_template('deleteDeviceStatus.html', dStatus = dStatus, uName=uName)
 
 #delete TaskType
 @app.route('/deleteTaskType', methods=['GET', 'POST'])
@@ -1492,12 +1682,14 @@ def deleteTaskType():
                 cur.execute("DELETE FROM Task WHERE TaskType = \'"+str(sID)+"\'")
                 db.commit()
                 return redirect(url_for('taskTypeTable'))
+
+	uName = session['username']
 	cur.execute("SELECT TaskTypeName from Task")
 	task = {}
 	for row in cur.fetchall():
 		task.setdefault(row, "")
 		task[row] = row[0]
-        return render_template('deleteTaskType.html', task = task)
+        return render_template('deleteTaskType.html', task = task, uName=uName)
  			
 #change password
 @app.route('/editPassword', methods=['GET', 'POST'])
@@ -1506,13 +1698,12 @@ def editPassword():
 	pWord = "null"
 	pCheck = "null"
 	username = session['username']
-	print(username)
+	uName = session['username']
 	if request.method == 'POST':
 		opWord = request.form["OldPassword"]
 		pWord = request.form["NewPassword"]
 		rpWord = request.form["RetypePassword"]
-		print(opWord)
-		print(rpWord)
+	
 		cur.execute("Select Password from User where UserName = \'"+username+"\'")
 		for row in cur.fetchall():
 			pCheck = row[0]
@@ -1524,19 +1715,20 @@ def editPassword():
 				return redirect(url_for('account'))
 			else:
 				error2 = "New passwords do not match."
-				return render_template('editPassword.html', error2=error2)
+				return render_template('editPassword.html', error2=error2, uName=uName)
 		else:
 			error1 = "Old Password does not match "
-			return render_template('editPassword.html', error1=error1)
+			return render_template('editPassword.html', error1=error1, uName=uName)
 				
-	return render_template('editPassword.html')
+	return render_template('editPassword.html', uName=uName)
 
 #userPage
 @app.route('/userPage', methods=['GET', 'POST'])
 @login_required
 @security_check
 def userPage():
-	return render_template('userPage.html')
+	uName = session['username']
+	return render_template('userPage.html', uName=uName)
 
 
 
@@ -1593,8 +1785,9 @@ def calendar():
 		for rows in cur.fetchall():
                         dic2[num].append(rows[0])
 		num = num + 1
-
-        return render_template('calendar.html', dic=dic, dic2=dic2)
+	
+	uName = session['username']
+        return render_template('calendar.html', dic=dic, dic2=dic2, uName=uName)
 	
 # start the server with the 'run()' method
 if __name__ == '__main__':

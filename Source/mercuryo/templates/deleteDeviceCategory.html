@@ -37,7 +37,7 @@
       <li><a class="hvr-underline-from-center"   href="userPage">Admin</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-		<li id="log">Logged In: John Smith</li>
+		<li id="log">Logged In: {{ uName }}</li>
       <li><a class="hvr-underline-from-center" href="logout">Log Out</a></li>
     </ul>
   </div>
@@ -53,7 +53,7 @@
     </div>
     <form name="deleteDeviceStatus" method="POST">
       <fieldset id="fields">
-        <p>Choose the Device Category to be deleted.</p>
+        <p>Choose a Device Category to be deleted.</p>
         <br>
         <label>Device Category</label>
         <select name="DeviceCategory" value="">
