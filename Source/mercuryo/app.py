@@ -1069,7 +1069,7 @@ def addtask():
 			nCheck = row[0]
 
 		if(nCheck == nTask):
-			error = "Task with than name already exists."
+			error = "Task with that name already exists."
 			return render_template('addtask.html', error=error, uName=uName)
 
 		else:
@@ -1163,7 +1163,7 @@ def adminaddtask():
                         nCheck = row[0]
 
                 if(nCheck == nTask):
-                        error = "Task with than name already exists."
+                        error = "Task with that name already exists."
                         return render_template('adminaddtask.html', error=error, uName=uName)
 
                 else:
@@ -2043,7 +2043,7 @@ def edit_task():
 	testN = "null"
 	OldName = "null"
 	devID = 0
-		
+			
 	cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID ="+tID)
 	for row in cur.fetchall():
         	devID = row[0]
