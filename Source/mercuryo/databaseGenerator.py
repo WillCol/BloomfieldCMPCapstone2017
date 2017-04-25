@@ -149,7 +149,7 @@ cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`Employee` ("
 +" DEFAULT CHARACTER SET = utf8;")
 
 cur.execute("CREATE TABLE IF NOT EXISTS "+dName+".`Phone` ("
-+"  `PhoneNum` CHAR(11) NOT NULL,"
++"  `PhoneNum` CHAR(20) NOT NULL,"
 +"  `Employee_EmployeeID` INT(11) NOT NULL,"
 +"  PRIMARY KEY (`PhoneNum`, `Employee_EmployeeID`),"
 +"  INDEX `fk_Phone_Employee1_idx` (`Employee_EmployeeID` ASC),"
