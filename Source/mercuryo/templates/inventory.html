@@ -14,11 +14,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" type="text/css" href="../static/css/pageTemplate.css">
 <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="../static/css/dataTables.bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="../static/css/hover.css">
 <link rel="stylesheet" href="../static/css/font-awesome.css">
-<link  rel="stylesheet"href="../static/css/jquery.dataTables.css">
-<link  rel="stylesheet"href="../static/css/dataTables.bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs-3.3.7/dt-1.10.15/b-1.3.1/r-2.1.1/datatables.min.css"/>
 <link rel="icon" href="../../favicon.ico">
 <title>Inventory</title>
 </head>
@@ -49,9 +47,8 @@
 <div class="content" style="max-width:1400px; margin:0 auto; margin-top:4em;" >
   <div class="wrapper">
     <div id="top-bar"> <a href="addDevice"><i class="fa fa-plus-circle" aria-hidden="true"></i></a> <a href="deleteDevice"><i class="fa fa-trash" aria-hidden="true"></i></a> </div>
-    <div class="row" >
-      <div class="col-md-12" style="padding-top:30px;">
-        <table class="table table-bordered table-striped  table-hover"  id="Table">
+ 
+        <table class="table table-bordered table-striped  table-hover"  id="Table" cellspacing="0" width="100%">
           <thead>
             <tr>
               <th>{{ labels["def"][0] }}</th>
@@ -105,12 +102,7 @@
 
 <script type="text/javascript" src="../static/js/jquery.js"></script>
 <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="../static/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="../static/js/dataTables.bootstrap.min.js"/></script>
-
-<script>	
-$('#Table').dataTable();
-
-</script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs-3.3.7/dt-1.10.15/b-1.3.1/r-2.1.1/datatables.min.js"></script>
+<script>$('#Table').dataTable({responsive: true});</script>
 </body>
 </html>

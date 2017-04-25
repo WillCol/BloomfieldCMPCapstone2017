@@ -53,12 +53,12 @@ $(function() {
     $("form[name='adddevicestatus']").validate({
 
         rules: {
-            StatusID: "required",
+            StatusName: "required",
             StatusDesc: "required",
         },
 
         messages: {
-            StatusID: "Please enter  a Status ID.",
+            StatusName: "Please enter  a Status Name.",
             StatusDesc: "Please enter a Status Desc.",
         },
 
@@ -238,7 +238,46 @@ $(function() {
         }
     });
    
-   
+   <!-- Change   -->
+    $("form[name='editPassword']").validate({
+
+       rules: {
+            OldPassword: {
+                required: true,
+                minlength: 5
+            },
+			 NewPassword: {
+                required: true,
+                minlength: 5
+            }, 
+			RetypePassword: {
+                required: true,
+                minlength: 5
+            }
+        },
+        messages: {
+            OldPassword: {
+                required: "You must enter your Old password",
+                minlength: "Your password must be more than 5 characters"
+            },
+			 NewPassword: {
+                required: "You must enter a New password",
+                minlength: "Your password must be more than 5 characters"
+            }, 
+			RetypePassword: {
+                required: "You must Retype your new password",
+                minlength: "Your password must be more than 5 characters"
+            }
+		},
+        // Make sure the form is submitted to the destination defined
+        // in the "action" attribute of the form when valid
+        submitHandler: function(form) {
+            form.submit();
+        }
+    });
+	
+	
+	
     <!-- Edit Device  -->
     $("form[name='editDevice']").validate({
 
