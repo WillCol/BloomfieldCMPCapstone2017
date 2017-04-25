@@ -1,4 +1,33 @@
 <!DOCTYPE html>
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+
+<script type="text/javascript">
+  $(function() {
+    var submit_form = function(e) {
+      $.getJSON($SCRIPT_ROOT + '/_edit_device_status', {
+		StatusName: $('input[name="StatusName"]').val(),
+        StatusDesc: $('input[name="StatusDesc"]').val(),
+		id: $('select[name="ID"]').val()
+      }, function(data) {
+        $('#result').text(data.result);
+        $('input[name=StatusName]').focus().select();
+      });
+      return false;
+    };
+    $('a#addValues').bind('click', submit_form);
+    $('input[type=text]').bind('keydown', function(e) {
+      if (e.keyCode == 13) {
+        submit_form(e);
+      }
+    });
+    $('input[name=StatusName]').focus();
+	
+  });
+</script>
 <html lang="en">
 			<head>
 		
@@ -58,13 +87,18 @@
 																	</div>
 																	
 
-																	<form id="inputInfo" method="POST">
+																	<form>
 																		<fieldset>
+																			<label>Status ID</label> 
+																			<select name="ID" value="">
+																			<option style="text-align:center" value="{{ emp["data"][2] }}">{{ emp["data"][2] }}</option>
+																			</select><br>
 																			<label>{{ emp["def"][0] }}</label> <input type="text" name="StatusName" value="{{ emp["data"][0] }}"><br>
 																			<label>{{ emp["def"][1] }}</label> <input type="text" name="StatusDesc" value="{{ emp["data"][1] }}"><br>
+																			<p id="result"></p><br>
 																		</fieldset>
 																	
-																	<input type="submit" value="Submit" id="submitButton" >
+																	<center><a href=# id="addValues" ><input type="submit" value="Submit"></a></center>	
 																	</form>
 																			
 

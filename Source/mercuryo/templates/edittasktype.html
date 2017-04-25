@@ -1,5 +1,33 @@
 <!DOCTYPE html>
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
 
+<script type="text/javascript">
+  $(function() {
+    var submit_form = function(e) {
+      $.getJSON($SCRIPT_ROOT + '/_edit_task_type', {
+		TaskName: $('input[name="TaskName"]').val(),
+        TaskDesc: $('input[name="TaskDesc"]').val(),
+		id: $('select[name="ID"]').val()
+      }, function(data) {
+        $('#result').text(data.result);
+        $('input[name=TaskName]').focus().select();
+      });
+      return false;
+    };
+    $('a#addValues').bind('click', submit_form);
+    $('input[type=text]').bind('keydown', function(e) {
+      if (e.keyCode == 13) {
+        submit_form(e);
+      }
+    });
+    $('input[name=TaskName]').focus();
+	
+  });
+</script>
 <!-- MY ACCOUNT PAGE -->
 <!-- COLOR NOT FINAL -->
 
@@ -53,9 +81,15 @@
         <h1>Edit Task Type</h1>
       </div>
       <hr style="color:black width:200px">
-      <form id="editTaskType" method="POST">
+      <form>
         <fieldset id="fields">
-          <label>Task Type Name</label>
+		
+		  <label>Task Type ID</label> 
+		  <select name="ID" value="">
+		  <option style="text-align:center" value="{{ emp["data"][2] }}">{{ emp["data"][2] }}</option>
+		  </select><br>
+          
+		  <label>Task Type Name</label>
           <input type="text" name="TaskName" value="{{ emp["data"][0] }}">
           <br>
           <label>Task Type Description</label>
@@ -64,8 +98,10 @@
           {% if error %}
           <p class="error"><Strong>Error:</strong></p>{{ error }}
           {% endif %}
-        </fieldset>
-        <input type="submit" value="Submit" id="submitButton">
+		  <p id="result"></p><br>
+		</fieldset>
+		
+        <center><a href=# id="addValues" ><input type="submit" value="Submit"></a></center>	
       </form>
     </div>
   </div>

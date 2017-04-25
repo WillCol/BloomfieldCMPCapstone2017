@@ -1,5 +1,34 @@
 <!DOCTYPE html>
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
 
+<script type="text/javascript">
+  $(function() {
+    var submit_form = function(e) {
+      $.getJSON($SCRIPT_ROOT + '/_edit_user', {
+		UserName: $('input[name="UserName"]').val(),
+        Password: $('input[name="Password"]').val(),
+		Security: $('input[name="Security"]').val(),
+		id: $('select[name="ID"]').val()
+      }, function(data) {
+        $('#result').text(data.result);
+        $('input[name=UserName]').focus().select();
+      });
+      return false;
+    };
+    $('a#addValues').bind('click', submit_form);
+    $('input[type=text]').bind('keydown', function(e) {
+      if (e.keyCode == 13) {
+        submit_form(e);
+      }
+    });
+    $('input[name=UserName]').focus();
+	
+  });
+</script>
 <!-- MY ACCOUNT PAGE -->
 <!-- COLOR NOT FINAL -->
 
@@ -52,8 +81,12 @@
       <h1>Edit User</h1>
     </div>
     <hr style="color:black width:200px">
-    <form id="editUser" method="POST">
+    <form>
       <fieldset id="fields">
+		<label>User ID</label> 
+		<select name="ID" value="">
+		<option style="text-align:center" value="{{ emp["data"][0] }}">{{ emp["data"][0] }}</option>
+		</select><br>
         <label>{{ emp["def"][1] }}</label>
         <input type="text" name="UserName" value="{{ emp["data"][1] }}">
         <br>
@@ -63,8 +96,9 @@
         <label>{{ emp["def"][4] }}</label>
         <input type="text" name="Security" value="{{ emp["data"][4] }}">
         <br>
+		<p id="result"></p><br>
       </fieldset>
-      <input type="submit" value="Submit" id="submitButton">
+      <center><a href=# id="addValues" ><input type="submit" value="Submit"></a></center>
     </form>
   </div>
 </div>

@@ -1,5 +1,41 @@
 <!DOCTYPE html>
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
 
+<script type="text/javascript">
+  $(function() {
+    var submit_form = function(e) {
+      $.getJSON($SCRIPT_ROOT + '/_edit_device', {
+		DeviceName: $('input[name="DeviceName"]').val(),
+        Description: $('input[name="Description"]').val(),
+		DeviceCategory: $('select[name="DeviceCategory"]').val(),
+		deviceStatus: $('select[name="deviceStatus"]').val(),
+		DeviceLocation: $('input[name="DeviceLocation"]').val(),
+		DeviceOwner: $('input[name="DeviceOwner"]').val(),
+		DateOfDeployment: $('input[name="DateOfDeployment"]').val(),
+		GoBackDate: $('input[name="GoBackDate"]').val(),
+		IPAddress: $('input[name="IPAddress"]').val(),
+		SerialNumber: $('input[name="SerialNumber"]').val(),
+		id: $('select[name="ID"]').val()
+      }, function(data) {
+        $('#result').text(data.result);
+        $('input[name=DeviceName]').focus().select();
+      });
+      return false;
+    };
+    $('a#addValues').bind('click', submit_form);
+    $('input[type=text]').bind('keydown', function(e) {
+      if (e.keyCode == 13) {
+        submit_form(e);
+      }
+    });
+    $('input[name=DeviceName]').focus();
+	
+  });
+</script>
 <!-- MY ACCOUNT PAGE -->
 <!-- COLOR NOT FINAL -->
 
@@ -53,8 +89,12 @@
       <div id="titleBar" class="col-md-12">
         <h1>Edit Device</h1>
       </div>
-      <form id="editDevice" method="POST">
+      <form>
         <fieldset id="fields">
+		  <label>Device ID</label> 
+		  <select name="ID" value="">
+		  <option style="text-align:center" value="{{ dev["data"][10] }}">{{ dev["data"][10] }}</option>
+		  </select><br>
           <label>{{ labels["def"][0] }}</label>
           <input type="text" name="DeviceName" value="{{ dev["data"][0] }}">
           <br>
@@ -105,8 +145,9 @@
           <label>{{ labels["def"][9] }}</label>
           <input type="text" name="SerialNumber" value="{{ dev["data"][9] }}">
           <br>
+		  <p id="result"></p><br>
         </fieldset>
-        <input type="submit" value="Submit" id="submitButton">
+        <center><a href=# id="addValues" ><input type="submit" value="Submit"></a></center>
       </form>
     </div>
   </div>

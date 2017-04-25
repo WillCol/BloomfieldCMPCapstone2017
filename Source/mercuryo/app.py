@@ -1,5 +1,5 @@
 # import the Flask class from the flask module
-from flask import Flask, render_template, redirect, url_for, request, session, flash
+from flask import Flask, render_template, redirect, url_for, request, session, flash, jsonify
 import MySQLdb
 import sys
 #import for login required decorator
@@ -73,7 +73,7 @@ def editDevice():
             deviceCategory = request.form["DeviceCategory"]
             deviceStatus = request.form["deviceStatus"]
 
-	    cur.execute("select StatusID from DeviceStatus where StatusDesc = \'"+deviceStatus+"\'")
+	    cur.execute("select StatusID from DeviceStatus where StatusName = \'"+deviceStatus+"\'")
             for row in cur.fetchall():
             	deviceStatus = row[0]
             deviceStatus = str(deviceStatus)
@@ -130,10 +130,10 @@ def editDevice():
 			dev["data"].append(row[8])
 			dev["data"].append(row[9])
 			dev["data"].append(row[10])
-		
+			dev["data"].append(row[0])	
 		rowNum = 0
         	dStatusL = { }
-        	cur.execute("select StatusDesc from DeviceStatus")
+        	cur.execute("select StatusName from DeviceStatus")
         	for row in cur.fetchall():
                 	dStatusL.setdefault(rowNum, [])
                 	dStatusL[rowNum].append(row[0])
@@ -716,7 +716,7 @@ def edittask():
                 tID = request.args['id']
 		uName = session['username']
                	emp = { }
-                cur.execute("SELECT DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion, TaskName, TaskLocation"
+                cur.execute("SELECT DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion, TaskName, TaskLocation, TaskID"
 				+" FROM Calendar WHERE TaskID = "+tID)
 		
                 for row in cur.fetchall():
@@ -729,7 +729,7 @@ def edittask():
 			emp["data"].append(row[5])
 			emp["data"].append(row[6])
 			emp["data"].append(row[7])
-
+			emp["data"].append(row[8])
                 cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID ="+tID)
 
 		for row in cur.fetchall():
@@ -789,7 +789,7 @@ def edittasktype():
                         emp.setdefault("data", [])
                         emp["data"].append(row[0])
 			emp["data"].append(row[1])
-                       
+		emp["data"].append(ttID)                       
                 return render_template('edittasktype.html', emp=emp, uName=uName)
 
 #edit device category
@@ -820,7 +820,7 @@ def editDeviceCategory():
                         emp.setdefault("data", [])
                         emp["data"].append(row[0])
 			emp["data"].append(row[1])
-
+			emp["data"].append(dID)
                 return render_template('editDeviceCategory.html', emp=emp, uName=uName)
 
 
@@ -853,7 +853,7 @@ def editdevicestatus():
                         emp.setdefault("data", [])
                         emp["data"].append(row[0])
 			emp["data"].append(row[1])
-            
+        		emp["data"].append(dID)    
                 return render_template('editdevicestatus.html', emp=emp, uName=uName)
 
 
@@ -1788,6 +1788,342 @@ def calendar():
 	
 	uName = session['username']
         return render_template('calendar.html', dic=dic, dic2=dic2, uName=uName)
+
+@app.route("/_edit_device")
+def edit_device():
+	deviceID = request.args.get("id")
+	dLocation = request.args.get("DeviceLocation")
+        sNumber = request.args.get("SerialNumber")
+        deviceName = request.args.get("DeviceName")
+        IP = request.args.get("IPAddress")
+        IPInt = int(IP)
+        owner = request.args.get("DeviceOwner")
+        desc = request.args.get("Description")
+        DoD = request.args.get("DateOfDeployment")
+        go_back = request.args.get("GoBackDate")
+        deviceCategory = request.args.get("DeviceCategory")
+        deviceStatus = request.args.get("deviceStatus")
+	testS = "NULL"
+	testN = "null"
+	OldName = "null"
+	OldSerial = "null"
+	try:
+		cur.execute("SELECT DeviceName FROM Device WHERE DeviceID = \'"+deviceID+"\'")
+                for row in cur.fetchall():
+                        OldName = row[0]
+                if(OldName != deviceName):
+                        cur.execute("SELECT DeviceName FROM Device WHERE DeviceName = \'"+deviceName+"\'")
+                        for row in cur.fetchall():
+                                testN = row[0]
+                        if(testN == deviceName):
+                                return jsonify(result="Device with that name already exists.")
+
+		cur.execute("SELECT SerialNumber FROM Device WHERE DeviceID = \'"+deviceID+"\'")
+                for row in cur.fetchall():
+                        OldSerial = row[0]
+                if(OldSerial != sNumber):
+                        cur.execute("SELECT SerialNumber FROM Device WHERE SerialNumber = \'"+sNumber+"\'")
+                        for row in cur.fetchall():
+                                testS = row[0]
+                        if(testS == sNumber):
+                                return jsonify(result="Device with that serial number already exists.")
+		
+	  	cur.execute("select StatusID from DeviceStatus where StatusName = \'"+deviceStatus+"\'")
+            	for row in cur.fetchall():
+                	deviceStatus = row[0]
+            	deviceStatus = str(deviceStatus)
+
+            	cur.execute("select CategoryID from DeviceCategory where CategoryName = \'"+deviceCategory+"\'")
+            	for row in cur.fetchall():
+                	deviceCategory = row[0]
+            	deviceCategory = str(deviceCategory)
+		cur.execute("UPDATE Device SET DeviceName = \'"+deviceName+"\' WHERE DeviceID = "+deviceID)
+            	cur.execute("UPDATE Device SET Description = \'"+desc+"\' WHERE DeviceID = "+deviceID)
+            	cur.execute("UPDATE Device SET DeviceCategory_CategoryID = \'"+deviceCategory+"\' WHERE DeviceID = "+deviceID)
+            	cur.execute("UPDATE Device SET DeviceStatus_StatusID = \'"+deviceStatus+"\' WHERE DeviceID = "+deviceID)
+            	cur.execute("UPDATE Device SET DeviceLocation = \'"+dLocation+"\' WHERE DeviceID = "+deviceID)
+            	cur.execute("UPDATE Device SET DeviceOwner = \'"+owner+"\' WHERE DeviceID = "+deviceID)
+            	cur.execute("UPDATE Device SET DateOfDeployment = \'"+DoD+"\' WHERE DeviceID = "+deviceID)
+            	cur.execute("UPDATE Device SET GoBackDate = \'"+go_back+"\' WHERE DeviceID = "+deviceID)
+            	cur.execute("UPDATE Device SET IPAddress = \'"+IP+"\' WHERE DeviceID = "+deviceID)
+            	cur.execute("UPDATE Device SET SerialNumber = \'"+sNumber+"\' WHERE DeviceID = "+deviceID)
+		db.commit()
+		return jsonify(result="Successful")
+
+        except MySQLdb.IntegrityError:
+                return jsonify(result="Failed")
+
+
+@app.route("/_edit_employee")
+def edit_employee():
+	eID = request.args.get("id")
+	eName = request.args.get("EmployeeName")
+	jTitle = request.args.get("JobTitle")
+	eAddress = request.args.get("EmployeeAddress")
+	ePNumber = request.args.get("EmployeePhoneNumber")
+	eDepartment = request.args.get("EmployeeDepartment")
+	email = request.args.get("EmployeeEmail")
+	testN = "null"
+	testP = "null"
+	testE = "null"
+        OldName = "null"
+	OldEmail = "null"
+	OldPhone = "null"
+	try:
+		cur.execute("SELECT EmployeeName FROM Employee WHERE EmployeeID = \'"+eID+"\'")
+                for row in cur.fetchall():
+                        OldName = row[0]
+                if(OldName != eName):
+                        cur.execute("SELECT EmployeeName FROM Employee WHERE EmployeeName = \'"+eName+"\'")
+                        for row in cur.fetchall():
+                                testN = row[0]
+                        if(testN == eName):
+                                return jsonify(result="Employee with that name already exists.")
+		
+		cur.execute("SELECT EmployeeEmail FROM Employee WHERE EmployeeID = \'"+eID+"\'")
+                for row in cur.fetchall():
+                        OldEmail = row[0]
+		if(OldEmail != email):
+                        cur.execute("SELECT EmployeeEmail FROM Employee WHERE EmployeeEmail = \'"+email+"\'")
+                        for row in cur.fetchall():
+                                testE = row[0]
+                        if(testE == email):
+                                return jsonify(result="Employee with that email address already exists.")
+
+		cur.execute("SELECT PhoneNum FROM Phone WHERE Employee_EmployeeID = \'"+eID+"\'")
+                for row in cur.fetchall():
+                        OldPhone = row[0]
+                if(OldPhone != ePNumber):
+                        cur.execute("SELECT PhoneNum FROM Phone WHERE PhoneNum = \'"+ePNumber+"\'")
+                        for row in cur.fetchall():
+                                testP = row[0]
+                        if(testP == ePNumber):
+                                return jsonify(result="Employee with that phone number already exists.")
+
+		cur.execute("UPDATE Employee SET EmployeeName = \'"+eName+"\' WHERE EmployeeID = "+eID)
+		cur.execute("UPDATE Employee SET JobTitle = \'"+jTitle+"\' WHERE EmployeeID = "+eID)
+		cur.execute("UPDATE Employee SET EmployeeAddress = \'"+eAddress+"\' WHERE EmployeeID = "+eID)
+		cur.execute("UPDATE Employee SET EmployeeDepartment = \'"+eDepartment+"\' WHERE EmployeeID = "+eID)
+		cur.execute("UPDATE Employee SET EmployeeEmail = \'"+email+"\' WHERE EmployeeID = "+eID)
+		cur.execute("UPDATE Phone SET PhoneNum = \'"+ePNumber+"\' WHERE Employee_EmployeeID = "+eID)
+		db.commit()
+		return jsonify(result="Successful")
+
+        except MySQLdb.IntegrityError:
+                return jsonify(result="Failed")
+
+@app.route("/_edit_user")
+def edit_user():
+	ID = request.args.get("id")
+	Name = request.args.get("UserName")
+	Word = request.args.get("Password")
+	sec = request.args.get("Security")
+	testN = "null"
+	OldName = "null"
+#	ID = ID[1:-1]
+	try:
+        	cur.execute("SELECT UserName FROM User WHERE UserID = \'"+ID+"\'")
+                for row in cur.fetchall():
+                        OldName = row[0]
+                if(OldName != Name):
+                        cur.execute("SELECT UserName FROM User WHERE UserName = \'"+Name+"\'")
+                        for row in cur.fetchall():
+                                testN = row[0]
+                        if(testN == Name):
+                                return jsonify(result="UserName with that name already exists.")
+			
+		cur.execute("UPDATE User SET UserName = \'"+Name+"\' WHERE UserID = "+ID)
+		cur.execute("UPDATE User SET Password = \'"+Word+"\' WHERE UserID = "+ID)
+		cur.execute("UPDATE User SET Security = \'"+sec+"\' WHERE UserID = "+ID)
+		db.commit()
+                return jsonify(result="Successful")
+
+        except MySQLdb.IntegrityError:
+                return jsonify(result="Failed")
+
+
+
+@app.route("/_edit_device_category")
+def edit_device_category():
+	ID = request.args.get('id')
+	Desc = request.args.get("CategoryDesc")
+	Name = request.args.get("CategoryName")
+	testN = "null"
+        testD = "null"
+        OldName = "null"
+        OldDesc = "null"
+        ID = ID[1:-1]
+	try:
+		cur.execute("SELECT CategoryName FROM DeviceCategory WHERE CategoryID = \'"+ID+"\'")
+                for row in cur.fetchall():
+                        OldName = row[0]
+                if(OldName != Name):
+                        cur.execute("SELECT CategoryName FROM DeviceCategory WHERE CategoryName = \'"+Name+"\'")
+                        for row in cur.fetchall():
+                                testN = row[0]
+                        if(testN == Name):
+                                return jsonify(result="Category Name with that name already exists.")
+
+		cur.execute("SELECT CategoryDesc FROM DeviceCategory WHERE CategoryID = \'"+ID+"\'")
+                for row in cur.fetchall():
+                        OldDesc = row[0]
+
+                if(OldDesc != Desc):
+                        cur.execute("SELECT CategoryDesc FROM DeviceCategory WHERE CategoryDesc = \'"+Desc+"\'")
+                        for col in cur.fetchall():
+                                testD = col[0]
+                        if(testD == Desc):
+                                return jsonify(result="Category Description already exists.")
+
+                cur.execute("UPDATE DeviceCategory SET CategoryName = \'"+Name+"\' WHERE CategoryID = "+ID)
+                cur.execute("UPDATE DeviceCategory SET CategoryDesc = \'"+Desc+"\' WHERE CategoryID = "+ID)
+                db.commit()
+                return jsonify(result="Successful")
+
+        except MySQLdb.IntegrityError:
+                return jsonify(result="Failed")
+
+
+
+
+@app.route("/_edit_device_status")
+def edit_device_status():
+	ID = request.args.get('id')
+	Name = request.args.get("StatusName")
+	Desc = request.args.get("StatusDesc")
+	testN = "null"
+        testD = "null"
+        OldName = "null"
+        OldDesc = "null"
+        ID = ID[1:-1]
+	try:
+		cur.execute("SELECT StatusName FROM DeviceStatus WHERE StatusID = \'"+ID+"\'")
+                for row in cur.fetchall():
+                        OldName = row[0]
+                if(OldName != Name):
+                        cur.execute("SELECT StatusName FROM DeviceStatus WHERE StatusName = \'"+Name+"\'")
+                        for row in cur.fetchall():
+                                testN = row[0]
+                        if(testN == Name):
+                                return jsonify(result="Status Name with that name already exists.")
+
+                cur.execute("SELECT StatusDesc FROM DeviceStatus WHERE StatusID = \'"+ID+"\'")
+                for row in cur.fetchall():
+                        OldDesc = row[0]
+
+                if(OldDesc != Desc):
+                        cur.execute("SELECT StatusDesc FROM DeviceStatus WHERE StatusDesc = \'"+Desc+"\'")
+                        for col in cur.fetchall():
+                                testD = col[0]
+                        if(testD == Desc):
+                                return jsonify(result="Status Description already exists.")
+
+		cur.execute("UPDATE DeviceStatus SET StatusName = \'"+Name+"\' WHERE StatusID = "+ID)
+                cur.execute("UPDATE DeviceStatus SET StatusDesc = \'"+Desc+"\' WHERE StatusID = "+ID)
+                db.commit()
+                return jsonify(result="Successful")
+
+	except MySQLdb.IntegrityError:
+                return jsonify(result="Failed")
+
+
+@app.route("/_edit_task")
+def edit_task():
+	
+	tID = request.args.get('id')
+	nTask = request.args.get("TaskName")
+        lTask = request.args.get("TaskLocation")
+        dStart = request.args.get("DateStarted")
+        dComp = request.args.get("DateCompleted")
+        tStatus = request.args.get("TaskStatus")
+        tType = request.args.get("TaskType")
+        aTask = request.args.get("ActiveTask")
+        acDate = request.args.get("ActualCompletionDate")
+        device = request.args.get("DeviceID")
+	testN = "null"
+	OldName = "null"
+	devID = 0
+		
+	cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID ="+tID)
+	for row in cur.fetchall():
+        	devID = row[0]
+
+        cur.execute("select TaskType from Task where TaskDesc = \'"+tType+"\'")
+        for row in cur.fetchall():
+        	tType  = row[0]
+        tType = str(tType)
+	
+	try:
+		cur.execute("SELECT TaskName FROM Calendar WHERE TaskID = \'"+tID+"\'")
+                for row in cur.fetchall():
+                        OldName = row[0]
+                if(OldName != nTask):
+                        cur.execute("SELECT TaskName FROM Calendar WHERE TaskName = \'"+nTask+"\'")
+                        for row in cur.fetchall():
+                                testN = row[0]
+                        if(testN == nTask):
+                                return jsonify(result="Task Type with that name already exists.")
+		print("task active: "+aTask)	
+		cur.execute("UPDATE Calendar SET DateStart = \'"+dStart+"\' WHERE TaskID = "+tID)
+                cur.execute("UPDATE Calendar SET DateComplete = \'"+dComp+"\' WHERE TaskID = "+tID)
+                cur.execute("UPDATE Calendar SET TaskStatus = \'"+tStatus+"\' WHERE TaskID = "+tID)
+                cur.execute("UPDATE Calendar SET Task_TaskType = \'"+tType+"\' WHERE TaskID = "+tID)
+                cur.execute("UPDATE Calendar SET ActiveTask = \'"+aTask+"\' WHERE TaskID = "+tID)
+                cur.execute("UPDATE Calendar SET DateActualCompletion = \'"+acDate+"\' WHERE TaskID = "+tID)
+                cur.execute("UPDATE Calendar SET TaskName = \'"+nTask+"\' WHERE TaskID = "+tID)
+                cur.execute("UPDATE Calendar SET TaskLocation = \'"+lTask+"\' WHERE TaskID = "+tID)
+                db.commit()
+
+                cur.execute("UPDATE Device_has_Calendar SET Device_DeviceID = \'"+device+"\' WHERE Calendar_TaskID = "+str(tID)+" AND Device_DeviceID = "+str(devID))
+
+                db.commit()
+		return jsonify(result="Successful")
+
+        except MySQLdb.IntegrityError:
+                return jsonify(result="Failed")
+	
+	
+
+@app.route("/_edit_task_type")
+def edit_task_type():
+	ttID = request.args.get('id')
+        tName = request.args.get("TaskName")
+        tDesc = request.args.get("TaskDesc")
+        testN = "null"
+        testD = "null"
+	tOldName = "null"
+	tOldDesc = "null"
+	ttID = ttID[1:-1]	
+	try:
+		cur.execute("SELECT TaskTypeName FROM Task WHERE TaskType = \'"+ttID+"\'")
+		for row in cur.fetchall():
+			tOldName = row[0]
+		if(tOldName != tName):
+			cur.execute("SELECT TaskTypeName FROM Task WHERE TaskTypeName = \'"+tName+"\'")
+			for row in cur.fetchall():
+                       		testN = row[0]
+			if(testN == tName):
+				print("inside")
+				return jsonify(result="Task Type with that name already exists.")
+					
+		cur.execute("SELECT TaskDesc FROM Task WHERE TaskType = \'"+ttID+"\'")
+		for row in cur.fetchall():
+			tOldDesc = row[0]
+		
+		if(tOldDesc != tDesc):		
+			cur.execute("SELECT TaskDesc FROM Task WHERE TaskDesc = \'"+tDesc+"\'")
+			for col in cur.fetchall():
+                       		testD = col[0]
+			if(testD == tDesc):
+				return jsonify(result="Task Description already exists.")
+						
+		cur.execute("UPDATE Task SET TaskTypeName = \'"+tName+"\' WHERE TaskType = "+ttID)
+		cur.execute("UPDATE Task SET TaskDesc = \'"+tDesc+"\' WHERE TaskType = "+ttID)
+		db.commit()
+		return jsonify(result="Successful")
+	
+	except MySQLdb.IntegrityError:
+		return jsonify(result="Failed")
 	
 # start the server with the 'run()' method
 if __name__ == '__main__':

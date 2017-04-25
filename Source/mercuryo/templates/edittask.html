@@ -1,5 +1,40 @@
 <!DOCTYPE html>
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
 
+<script type="text/javascript">
+  $(function() {
+    var submit_form = function(e) {
+      $.getJSON($SCRIPT_ROOT + '/_edit_task', {
+		TaskName: $('input[name="TaskName"]').val(),
+        TaskLocation: $('input[name="TaskLocation"]').val(),
+		DateStarted: $('input[name="DateStarted"]').val(),
+		DateCompleted: $('input[name="DateCompleted"]').val(),
+		ActualCompletionDate: $('input[name="ActualCompletionDate"]').val(),
+		TaskStatus: $('input[name="TaskStatus"]').val(),
+		TaskType: $('select[name="TaskType"]').val(),
+		DeviceID: $('select[name="DeviceID"]').val(),
+		activeTask: $('input[name="activeTask"]:checked').val(),
+		id: $('select[name="ID"]').val()
+      }, function(data) {
+        $('#result').text(data.result);
+        $('input[name=TaskName]').focus().select();
+      });
+      return false;
+    };
+    $('a#addValues').bind('click', submit_form);
+    $('input[type=text]').bind('keydown', function(e) {
+      if (e.keyCode == 13) {
+        submit_form(e);
+      }
+    });
+    $('input[name=TaskName]').focus();
+	
+  });
+</script>
 <!-- MY ACCOUNT PAGE -->
 <!-- COLOR NOT FINAL -->
 
@@ -55,6 +90,10 @@
       <hr style="color:black width:200px">
       <form id="editTask"method="POST">
         <fieldset id="fields">
+		  <label>Task ID</label> 
+		  <select name="ID" value="">
+		  <option style="text-align:center" value="{{ emp["data"][8] }}">{{ emp["data"][8] }}</option>
+		  </select><br>
           <label>Task Name</label>
           <input type="text" name="TaskName" value="{{ emp["data"][6] }}">
           <br>
@@ -99,12 +138,13 @@
             <label class="radioButton">Active Task
               <input type="radio" class="required" name="activeTask" value="1">
             </label>
-            <label class="radioButton">Inactive Task
+            <!---<label class="radioButton">Inactive Task
               <input type="radio"  name="activeTask" value="0">
-            </label>
+            </label> --->
           </div>
+		  <p id="result"></p><br>
         </fieldset>
-        <input type="submit" value="Submit" id="submitButton">
+        <center><a href=# id="addValues" ><input type="submit" value="Submit"></a></center>
       </form>
     </div>
   </div>
