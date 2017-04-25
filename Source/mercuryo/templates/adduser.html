@@ -61,14 +61,14 @@
           <input type="password"  name="Password">
           <br>
           <label>Security</label>
-          <input type="text"  name="Security">
+          <select name="Security" value="">
+		  <option style="text-align:center" value="0">Guest</option>
+		  <option style="text-align:center" value="1">User</option>
+		  <option style="text-align:center" value="2">Admin</option>
+		  </select><br>
           <br>
           <label>EmployeeID</label>
           <select name="EmployeeID" value="">
-		  {% if error %}
-			<p class="error"><Strong>Error:</strong></p> {{ error }}
-		  {% endif %}
-
             
 	{% for k in name %}
 	
@@ -78,6 +78,10 @@
 	
           </select>
           <br>
+		  {% if error %}
+			<p class="error"><Strong>Error:</strong></p> {{ error }}
+		  {% endif %}
+
           <input type="submit" value="Submit" id="submitButton">
         </fieldset>
       </form>

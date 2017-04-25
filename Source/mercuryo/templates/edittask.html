@@ -17,7 +17,7 @@
 		TaskStatus: $('input[name="TaskStatus"]').val(),
 		TaskType: $('select[name="TaskType"]').val(),
 		DeviceID: $('select[name="DeviceID"]').val(),
-		activeTask: $('input[name="activeTask"]:checked').val(),
+		ActiveTask: $('input[name="ActiveTask"]:checked').val(),
 		id: $('select[name="ID"]').val()
       }, function(data) {
         $('#result').text(data.result);
@@ -136,11 +136,11 @@
           <br>
           <div id="radio">
             <label class="radioButton">Active Task
-              <input type="radio" class="required" name="activeTask" value="1">
+              <input type="radio" class="required" name="ActiveTask" value="1">
             </label>
-            <!---<label class="radioButton">Inactive Task
-              <input type="radio"  name="activeTask" value="0">
-            </label> --->
+            <label class="radioButton">Inactive Task
+              <input type="radio"  name="ActiveTask" value="0">
+            </label>
           </div>
 		  <p id="result"></p><br>
         </fieldset>
