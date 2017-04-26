@@ -1595,7 +1595,7 @@ def admindeleteCalendarTask():
 def deleteDevice():
         if request.method == 'POST':
 		sNumber = request.form["SerialNumber"]
-		cur.execute("SELECT DeviceID from Device WHERE DeviceName = "+str(sNumber))
+		cur.execute("SELECT DeviceID from Device WHERE DeviceName = \'"+str(sNumber)+"\'")
 		for row in cur.fetchall():
 			dID = row[0]
 

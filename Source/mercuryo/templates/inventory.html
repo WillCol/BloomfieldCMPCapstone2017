@@ -51,7 +51,7 @@
         <table class="table table-bordered table-striped  table-hover"  id="Table" cellspacing="0" width="100%">
           <thead>
             <tr>
-              <th>{{ labels["def"][0] }}</th>
+              <!---<th>{{ labels["def"][0] }}</th>--->
               <th>{{ labels["def"][1] }}</th>
               <th>{{ labels["def"][2] }}</th>
               <th>{{ labels["def"][3] }}</th>
@@ -62,13 +62,14 @@
               <th>{{ labels["def"][8] }}</th>
               <th>{{ labels["def"][9] }}</th>
               <th>{{ labels["def"][10] }}</th>
+			  <th>Edit</th>
             </tr>
           </thead>
           <tbody>
           
           {% for k in dic %}
           <tr>
-            <td><a href=editDevice?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>
+            <!---<td><a href=editDevice?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>--->
             <td>{{ dic[k][1] }}</td>
             <td>{{ dic[k][2] }}</td>
             <td>{{ dic[k][3] }}</td>
@@ -79,6 +80,7 @@
             <td>{{ dic[k][8] }}</td>
             <td>{{ dic[k][9] }}</td>
             <td>{{ dic[k][10] }}</td>
+			<td><a href=editDevice?id="{{ dic[k][0] }}"><button type="button">edit</button></a></td>
           </tr>
           {% endfor %}
             </tbody>
