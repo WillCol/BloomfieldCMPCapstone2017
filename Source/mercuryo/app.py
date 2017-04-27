@@ -1853,9 +1853,14 @@ def calendar():
 		else:
 			for col in cur.fetchall():	
 				dev = col[0]
-		cur.execute("select SerialNumber from Device where DeviceID = \'"+str(dev)+"\'")
+		cur.execute("select DeviceName, Description, DeviceOwner, DeviceLocation, IPAddress, SerialNumber from Device where DeviceID = \'"+str(dev)+"\'")
 		for col in cur.fetchall():	
 			dic[rowNum].append(col[0])
+			dic[rowNum].append(col[1])
+                        dic[rowNum].append(col[2])
+                        dic[rowNum].append(col[3])
+                        dic[rowNum].append(col[4])
+                        dic[rowNum].append(col[5])
                 rowNum = rowNum + 1
 			
 	cur.execute("select TaskID, DateComplete, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task "
@@ -1877,11 +1882,20 @@ def calendar():
                 else:
 			for col in cur.fetchall():
                        		devID = col[0]
-                cur.execute("select SerialNumber from Device where DeviceID = \'"+str(devID)+"\'")
-		for rows in cur.fetchall():
-                        dic2[num].append(rows[0])
-		num = num + 1
-	
+                #cur.execute("select SerialNumber from Device where DeviceID = \'"+str(devID)+"\'")
+		#for rows in cur.fetchall():
+                #        dic2[num].append(rows[0])
+		#num = num + 1
+		cur.execute("select DeviceName, Description, DeviceOwner, DeviceLocation, IPAddress, SerialNumber from Device where DeviceID = \'"+str(dev)+"\'")
+                for col in cur.fetchall():
+                        dic2[num].append(column[0])
+                        dic2[num].append(column[1])
+                        dic2[num].append(column[2])
+                        dic2[num].append(column[3])
+                        dic2[num].append(column[4])
+                        dic2[num].append(column[5])
+                rowNum = rowNum + 1
+
 	uName = session['username']
         return render_template('calendar.html', dic=dic, dic2=dic2, uName=uName)
 
