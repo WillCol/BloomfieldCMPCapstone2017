@@ -102,7 +102,7 @@ $('#calendar').fullCalendar({
             title  : 'Task Name : {{ dic[k][4] }}',
             start  : '{{ dic[k][1] }}',
 			color : 'green',
-			description: 'Task ID : {{ dic[k][0] }}  <br> Description : {{ dic[k][2] }} <br> Status : {{ dic[k][3] }} <br> Task Location : {{ dic[k][5] }} <br> Device SerialNumber : {{ dic[k][6] }}',
+			description: 'Task ID : {{ dic[k][0] }}  <br>Task Description : {{ dic[k][2] }} <br>Task Status : {{ dic[k][3] }} <br>Task Location : {{ dic[k][5] }} <br>Device Name : {{ dic[k][6] }} <br>Device Description : {{ dic[k][7] }} <br>Device Owner : {{ dic[k][8] }} <br>Device Location : {{ dic[k][9] }} <br>Device IP Address : {{ dic[k][10] }} <br>Device SerialNumber : {{ dic[k][11] }}',
 			url: 'edittask?id={{ dic[k][0] }}'
 			
 			
@@ -113,7 +113,7 @@ $('#calendar').fullCalendar({
             title  : 'Task Name : {{ dic2[k][4] }}',
             start  : '{{ dic2[k][1] }}',
 			color : 'red',
-			description: 'Task ID : {{ dic2[k][0] }} <br> Description : {{ dic2[k][2] }} <br> Status : {{ dic2[k][3] }} <br> Task Location : {{ dic2[k][5] }} <br> Device SerialNumber : {{ dic2[k][6] }}',
+			description: 'Task ID : {{ dic2[k][0] }} <br>Task Description : {{ dic2[k][2] }} <br>Task Status : {{ dic2[k][3] }} <br> Task Location : {{ dic2[k][5] }}  <br>Device Name : {{ dic[k][6] }} <br>Device Description : {{ dic[k][7] }} <br>Device Owner : {{ dic[k][8] }} <br>Device Location : {{ dic[k][9] }} <br>Device IP Address : {{ dic[k][10] }} <br>Device SerialNumber : {{ dic[k][11] }}',
 			url:'edittask?id={{ dic2[k][0] }}'
 			
 			
