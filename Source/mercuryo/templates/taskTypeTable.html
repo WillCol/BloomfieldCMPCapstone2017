@@ -47,7 +47,8 @@
 <div class="content" style="max-width:1400px; margin:0 auto; margin-top:4em;" >
  
       <div id="top-bar"> <a href="addtasktype"><i class="fa fa-plus-circle" aria-hidden="true"></i></a> <a href="deleteTaskType"><i class="fa fa-trash" aria-hidden="true"></i></a> </div>
-      
+			<form method="POST" name="form">
+
             <table class="table table-bordered table-striped  table-hover"  id="Table" cellspacing="0" width="100%">
             <thead>
               <tr>
@@ -55,6 +56,7 @@
                 <th>Task Name</th>
                 <th>{{ labels["def"][1] }}</th>
 				<th>Edit</th>
+				<th>Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -65,12 +67,15 @@
               <td>{{ dic[k][1] }}</td>
               <td>{{ dic[k][2] }}</td>
 			  <td><a href=edittasktype?id="{{ dic[k][0] }}"><button type="button">edit</button></a></td>
+			  <td><input type="checkbox" name="{{ dic[k][0] }}" value="1"><br></td>
             </tr>
             {% endfor %}
               </tbody>
             
           </table>
-        </div>
+		 <input type="submit" value="Submit" id="submitButton">
+		 </form>
+		</div>
       
 
 
