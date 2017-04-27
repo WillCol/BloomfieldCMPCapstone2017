@@ -72,6 +72,7 @@ def editDevice():
             go_back = request.form["GoBackDate"]
             deviceCategory = request.form["DeviceCategory"]
             deviceStatus = request.form["deviceStatus"]
+	    print(dStart)
 
 	    cur.execute("select StatusID from DeviceStatus where StatusName = \'"+deviceStatus+"\'")
             for row in cur.fetchall():
@@ -112,7 +113,7 @@ def editDevice():
         	labels["def"].append("Location")
         	labels["def"].append("Owner")
         	labels["def"].append("Date of Deployment (YYYY-MM-DD)")
-        	labels["def"].append("Go-back Date(YYYY-MM-DD)")
+        	labels["def"].append("Go-back Date (YYYY-MM-DD)")
         	labels["def"].append("IP Address")
         	labels["def"].append("Serial Number")
 
@@ -987,15 +988,15 @@ def account():
 
 	#deactive dictionary for user tasks
 	deactive = {'start' : ""}
-        cur.execute("select distinct Calendar_TaskID, TaskDesc, DateComplete from User_has_Calendar, User, Task, Calendar"
+        cur.execute("select distinct Calendar_TaskID, TaskName, TaskDesc, DateActualCompletion from User_has_Calendar, User, Task, Calendar"
                         +" where User_UserID = UserID and Calendar_TaskID = TaskID and Task_TaskType = TaskType and UserName = \'"+userName+"\'"
                         +" and ActiveTask = 0")
         row = 0
         for column in cur.fetchall():
                 deactive.setdefault(row, [])
-                deactive[row].append(column[0])
                 deactive[row].append(column[1])
                 deactive[row].append(column[2])
+                deactive[row].append(column[3])
                 row = row + 1
 	
 	
@@ -1034,11 +1035,11 @@ def addemployee():
 			phnCheck = row[0]
 		phnCheck = str(phnCheck)
 		
-		if(nCheck == eName):
+		if(nCheck.lower() == eName.lower()):
 			error = "Employee with that name already exists."
 			return render_template('addemployee.html', error=error, uName=uName)
 	
-                if(emailCheck == email):
+                if(emailCheck.lower() == email.lower()):
                         error = "Employee with that email address already exists."
                         return render_template('addemployee.html', error=error, uName=uName)
 
@@ -1091,7 +1092,7 @@ def adduser():
                         eCheck = row[0]
 		eCheck = str(eCheck)
 	
-		if(nCheck == usName):
+		if(nCheck.lower() == usName.lower()):
 			error = "Account with that username already exists."
 			return render_template('adduser.html', error=error, uName=uName)
 
@@ -1153,11 +1154,14 @@ def addtask():
 		
 		nCheck = "null"
 	
+	
 		cur.execute("SELECT TaskName FROM Calendar WHERE TaskName = \'"+nTask+"\'")
 		for row in cur.fetchall():
 			nCheck = row[0]
+		print(nCheck)
+		print(nTask)
 
-		if(nCheck == nTask):
+		if(nCheck.lower() == nTask.lower()):
 			error = "Task with that name already exists."
 			return render_template('addtask.html', error=error, uName=uName)
 
@@ -1251,7 +1255,10 @@ def adminaddtask():
                 for row in cur.fetchall():
                         nCheck = row[0]
 
-                if(nCheck == nTask):
+		print(nCheck)
+		print(nTask)
+
+                if(nCheck.lower() == nTask.lower()):
                         error = "Task with that name already exists."
                         return render_template('adminaddtask.html', error=error, uName=uName)
 
@@ -1327,12 +1334,12 @@ def addtasktype():
 		cur.execute("SELECT TaskDesc FROM Task WHERE TaskDesc = \'"+tDesc+"\'")
 		for col in cur.fetchall():
 			testD = col[0]
-		if(testN == tName): 
+		if(testN.lower() == tName.lower()): 
 
                         error = "Task type with that name already exists."
                         return render_template('addtasktype.html', error=error, uName=uName)
 
-		elif(testD == tDesc):
+		elif(testD.lower() == tDesc.lower()):
 
 			error = "Task type with that description already exists"
                         return render_template('addtasktype.html', error=error, uName=uName)
@@ -1370,11 +1377,11 @@ def adddevicestatus():
                 for row in cur.fetchall():
                         dCheck = row[0]
 
-		if(nCheck == sName):
+		if(nCheck.lower() == sName.lower()):
 			error = "Device status with that name already exists."
 			return render_template('adddevicestatus.html', error=error, uName=uName)
 
-                elif(dCheck == sDesc):
+                elif(dCheck.lower() == sDesc.lower()):
                         error = "Device status with that description already exists."
                         return render_template('adddevicestatus.html', error=error, uName=uName)
 
@@ -1413,7 +1420,7 @@ def addDeviceCategory():
                 for row in cur.fetchall():
                         dCheck = row[0]
 
-		if(nCheck == cName):
+		if(nCheck.lower() == cName.lower()):
 			error = "Device category with that name already exists."
 			return render_template('addDeviceCategory.html', error=error, uName=uName)
               
@@ -1474,7 +1481,7 @@ def addDevice():
                 for col in cur.fetchall():
                         serCheck = col[0]
 		
-		if(nCheck == deviceName):
+		if(nCheck.lower() == deviceName.lower()):
 			error = "Device with that name already exists."
 			return render_template('addDevice.html', error=error, uName=uName)
 		
@@ -2141,7 +2148,7 @@ def edit_task():
         for row in cur.fetchall():
         	tType  = row[0]
         tType = str(tType)
-	
+	print(tID)
 	try:
 		cur.execute("SELECT TaskName FROM Calendar WHERE TaskID = \'"+tID+"\'")
                 for row in cur.fetchall():
@@ -2152,7 +2159,9 @@ def edit_task():
                                 testN = row[0]
                         if(testN == nTask):
                                 return jsonify(result="Task Type with that name already exists.")
-		print("task active: "+aTask)	
+		print("task active: "+aTask)
+		print(tID)	
+		print(dStart)
 		cur.execute("UPDATE Calendar SET DateStart = \'"+dStart+"\' WHERE TaskID = "+tID)
                 cur.execute("UPDATE Calendar SET DateComplete = \'"+dComp+"\' WHERE TaskID = "+tID)
                 cur.execute("UPDATE Calendar SET TaskStatus = \'"+tStatus+"\' WHERE TaskID = "+tID)
