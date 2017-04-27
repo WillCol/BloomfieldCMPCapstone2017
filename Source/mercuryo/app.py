@@ -150,248 +150,337 @@ def editDevice():
                 return render_template('editDevice.html', dev=dev, labels=labels, dStatusL = dStatusL, cat=cat, uName=uName)
 
 # inventory page
-@app.route('/inventory')
+@app.route('/inventory', methods=['GET', 'POST'])
 @login_required
 def Inventory():
-	uName = session['username']
+	if request.method == 'POST':
+		cur.execute("SELECT DeviceID FROM Device")
+		dic = { }
+		for row in cur.fetchall():
+			dic[row[0]] = "null"
+		for key in dic:
+			if(request.form.get(str(key)) == "1"):
+				cur.execute("DELETE FROM Device_has_Calendar WHERE Device_deviceID = \'"+str(key)+"\'")
+				cur.execute("DELETE FROM Device WHERE DeviceID = \'"+str(key)+"\'")
+		db.commit()
+		return redirect(url_for("Inventory"))
+			
+	else:
+		uName = session['username']
 		
-	labels = { }
-	labels.setdefault("def", [])
-	labels["def"].append("Device ID")
-	labels["def"].append("Device Name")
-	labels["def"].append("Description")
-	labels["def"].append("Category")
-	labels["def"].append("Status")
-	labels["def"].append("Location")
-	labels["def"].append("Owner")
-	labels["def"].append("Date of Deployment")
-	labels["def"].append("Go-back Date")
-	labels["def"].append("IP Address")
-	labels["def"].append("Serial Number")
+		labels = { }
+		labels.setdefault("def", [])
+		labels["def"].append("Device ID")
+		labels["def"].append("Device Name")
+		labels["def"].append("Description")
+		labels["def"].append("Category")
+		labels["def"].append("Status")
+		labels["def"].append("Location")
+		labels["def"].append("Owner")
+		labels["def"].append("Date of Deployment")
+		labels["def"].append("Go-back Date")
+		labels["def"].append("IP Address")
+		labels["def"].append("Serial Number")
 
-	cur.execute("Select * from Device")
+		cur.execute("Select * from Device")
 
-	dic = { }
-	rowNum = 0
-	for row in cur.fetchall():
-		dic.setdefault(rowNum, [])
-		dic[rowNum].append(row[0])
-		dic[rowNum].append(row[1])
-		dic[rowNum].append(row[2])
-		cur.execute("SELECT CategoryName from DeviceCategory WHERE CategoryID = \'"+str(row[3])+"\'")
-		for col in cur.fetchall():
-			dic[rowNum].append(col[0])
-                cur.execute("SELECT StatusName from DeviceStatus WHERE StatusID = \'"+str(row[4])+"\'")
-                for col in cur.fetchall():
-                        dic[rowNum].append(col[0])
-		dic[rowNum].append(row[5])
-		dic[rowNum].append(row[6])
-		dic[rowNum].append(row[7])
-		dic[rowNum].append(row[8])
-		dic[rowNum].append(row[9])
-		dic[rowNum].append(row[10])
-		rowNum = rowNum + 1	
+		dic = { }
+		rowNum = 0
+		for row in cur.fetchall():
+			dic.setdefault(rowNum, [])
+			dic[rowNum].append(row[0])
+			dic[rowNum].append(row[1])
+			dic[rowNum].append(row[2])
+			cur.execute("SELECT CategoryName from DeviceCategory WHERE CategoryID = \'"+str(row[3])+"\'")
+			for col in cur.fetchall():
+				dic[rowNum].append(col[0])
+                	cur.execute("SELECT StatusName from DeviceStatus WHERE StatusID = \'"+str(row[4])+"\'")
+                	for col in cur.fetchall():
+                	        dic[rowNum].append(col[0])
+			dic[rowNum].append(row[5])
+			dic[rowNum].append(row[6])
+			dic[rowNum].append(row[7])
+			dic[rowNum].append(row[8])
+			dic[rowNum].append(row[9])
+			dic[rowNum].append(row[10])
+			rowNum = rowNum + 1	
 
-        return render_template('inventory.html', dic=dic, labels=labels, uName=uName)
+        	return render_template('inventory.html', dic=dic, labels=labels, uName=uName)
 
 #user table
-@app.route('/userTable')
+@app.route('/userTable',  methods=['GET', 'POST'])
 @login_required
 @security_check
 def userTable():
-	uName = session['username']
+	if request.method == 'POST':
+		cur.execute("SELECT UserID FROM User")
+		dic = { }	
+		for row in cur.fetchall():
+			dic[row[0]] = "null"
+		for key in dic:
+			if(request.form.get(str(key)) == "1"):
+				cur.execute("DELETE FROM User_has_Calendar WHERE User_UserID = \'"+str(key)+"\'")
+				cur.execute("DELETE FROM User WHERE UserID = \'"+str(key)+"\'")
+		db.commit()
+		return redirect(url_for("userTable"))
+	else:
 	
-        labels = { }
-        labels.setdefault("def", [])
-        labels["def"].append("UserID")
-        labels["def"].append("UserName")
-        labels["def"].append("Password")
-        labels["def"].append("Employee ID")
-        labels["def"].append("Security")
+		uName = session['username']
+	
+        	labels = { }
+        	labels.setdefault("def", [])
+        	labels["def"].append("UserID")
+        	labels["def"].append("UserName")
+        	labels["def"].append("Password")
+        	labels["def"].append("Employee ID")
+        	labels["def"].append("Security")
+	
+        	cur.execute("Select * from User")
 
-        cur.execute("Select * from User")
+        	dic = { }
+        	rowNum = 0
+        	for row in cur.fetchall():
+                	dic.setdefault(rowNum, [])
+                	dic[rowNum].append(row[0])
+                	dic[rowNum].append(row[1])
+                	dic[rowNum].append(row[2])
+                	dic[rowNum].append(row[3])
+                	dic[rowNum].append(row[4])
+                	rowNum = rowNum + 1
 
-        dic = { }
-        rowNum = 0
-        for row in cur.fetchall():
-                dic.setdefault(rowNum, [])
-                dic[rowNum].append(row[0])
-                dic[rowNum].append(row[1])
-                dic[rowNum].append(row[2])
-                dic[rowNum].append(row[3])
-                dic[rowNum].append(row[4])
-                rowNum = rowNum + 1
-
-        return render_template('userTable.html', dic=dic, labels=labels, uName=uName)
+   	     	return render_template('userTable.html', dic=dic, labels=labels, uName=uName)
 
 #employee table
-@app.route('/employeeTable')
+@app.route('/employeeTable', methods=['GET', 'POST'])
 @login_required
 @security_check
 def employeeTable():
-	uName = session['username']
+	if request.method == 'POST':
+		cur.execute("SELECT EmployeeID FROM Employee")
+		dic = { }
+		for row in cur.fetchall():
+			dic[row[0]] = "null"
+		for key in dic:
+			if(request.form.get(str(key)) == "1"):
+				cur.execute("DELETE FROM User WHERE Employee_EmployeeID = \'"+str(key)+"\'")			
+				cur.execute("DELETE FROM Employee WHERE EmployeeID = \'"+str(key)+"\'")
+				cur.execute("DELETE FROM Phone WHERE Employee_EmployeeID = \'"+str(key)+"\'")
+		db.commit()
+		return redirect(url_for("employeeTable"))
+	else:
+	
+		uName = session['username']
 
-        labels = { }
-        labels.setdefault("def", [])
-        labels["def"].append("Employee ID")
-        labels["def"].append("Employee Name")
-        labels["def"].append("Job Title")
-        labels["def"].append("Employee Address")
-        labels["def"].append("Employee Department")
-        labels["def"].append("Employee Email")
-	labels["def"].append("Employee Phone Number")
+        	labels = { }
+        	labels.setdefault("def", [])
+        	labels["def"].append("Employee ID")
+        	labels["def"].append("Employee Name")
+        	labels["def"].append("Job Title")
+        	labels["def"].append("Employee Address")
+       		labels["def"].append("Employee Department")
+        	labels["def"].append("Employee Email")
+		labels["def"].append("Employee Phone Number")
 
 
-        cur.execute("Select * from Employee")
+        	cur.execute("Select * from Employee")
 
-        dic = { }
-        rowNum = 0
-        for row in cur.fetchall():
-                dic.setdefault(rowNum, [])
-                dic[rowNum].append(row[0])
-		dic[rowNum].append(row[1])
-                dic[rowNum].append(row[2])
-                dic[rowNum].append(row[3])
-                dic[rowNum].append(row[4])
-		dic[rowNum].append(row[5])
-		pNum = "null"
-		empID = str(row[0])
-		cur.execute("SELECT PhoneNum FROM Phone WHERE Employee_EmployeeID = "+empID)
-		for column in cur.fetchall():
-			pNum = column[0]
-		dic[rowNum].append(pNum) 
-                rowNum = rowNum + 1
+  	     	dic = { }
+        	rowNum = 0
+        	for row in cur.fetchall():
+                	dic.setdefault(rowNum, [])
+                	dic[rowNum].append(row[0])
+			dic[rowNum].append(row[1])
+                	dic[rowNum].append(row[2])
+                	dic[rowNum].append(row[3])
+                	dic[rowNum].append(row[4])
+			dic[rowNum].append(row[5])
+			pNum = "null"
+			empID = str(row[0])
+			cur.execute("SELECT PhoneNum FROM Phone WHERE Employee_EmployeeID = "+empID)
+			for column in cur.fetchall():
+				pNum = column[0]
+			dic[rowNum].append(pNum) 
+                	rowNum = rowNum + 1
 
-        return render_template('employeeTable.html', dic=dic, labels=labels, uName=uName)
+        	return render_template('employeeTable.html', dic=dic, labels=labels, uName=uName)
 
 #DeviceCategory table
-@app.route('/deviceCategoryTable')
+@app.route('/deviceCategoryTable', methods=['GET', 'POST'])
 @login_required
 @security_check
 def deviceCategoryTable():
-	uName = session['username']
+	if request.method == 'POST':
+		cur.execute("SELECT CategoryID FROM DeviceCategory")
+		dic = { }
+		for row in cur.fetchall():
+			dic[row[0]] = "null"	
+		for key in dic:
+			if(request.form.get(str(key)) == "1"):
+				cur.execute("UPDATE Device SET DeviceCategory_CategoryID = NULL WHERE DeviceCategory_CategoryID = \'"+str(key)+"\'")
+				cur.execute("DELETE FROM DeviceCategory WHERE CategoryID = \'"+str(key)+"\'")
+		db.commit()
+		return redirect(url_for("deviceCategoryTable"))
+	else:
+		uName = session['username']
 
-        labels = { }
-        labels.setdefault("def", [])
-	labels["def"].append("Device Category ID")
-        labels["def"].append("Device Category Name")
-        labels["def"].append("Device Category  Description")
-
-        cur.execute("Select * from DeviceCategory")
-        dic = { }
-        rowNum = 0
-        for row in cur.fetchall():
-                dic.setdefault(rowNum, [])
-                dic[rowNum].append(row[0])
-                dic[rowNum].append(row[1])
-		dic[rowNum].append(row[2])
-                rowNum = rowNum + 1
-
-        return render_template('deviceCategoryTable.html', dic=dic, labels=labels, uName=uName)
+	        labels = { }
+	        labels.setdefault("def", [])
+		labels["def"].append("Device Category ID")
+	        labels["def"].append("Device Category Name")
+	        labels["def"].append("Device Category  Description")
+	
+	        cur.execute("Select * from DeviceCategory")
+	        dic = { }
+	        rowNum = 0
+	        for row in cur.fetchall():
+	                dic.setdefault(rowNum, [])
+	                dic[rowNum].append(row[0])
+	                dic[rowNum].append(row[1])
+			dic[rowNum].append(row[2])
+	                rowNum = rowNum + 1
+	
+	        return render_template('deviceCategoryTable.html', dic=dic, labels=labels, uName=uName)
 
 
 
 #taskType table
-@app.route('/taskTypeTable')
+@app.route('/taskTypeTable', methods=['GET', 'POST'])
 @login_required
 @security_check
 def taskTypeTable():
-	uName = session['username']
+	if request.method == 'POST':
+		cur.execute("SELECT TaskType FROM Task")
+		dic = { }	
+		for row in cur.fetchall():
+			dic[row[0]] = "null"
+		for key in dic:
+			if(request.form.get(str(key)) == "1"):
+				cur.execute("UPDATE Calendar SET Task_TaskType = NULL WHERE Task_TaskType - \'"+str(key)+"\'")			
+				cur.execute("DELETE FROM Task  WHERE TaskType = \'"+str(key)+"\'")
+		db.commit()
+		return	redirect(url_for("taskTypeTable"))
+	else:
+		uName = session['username']
 
-        labels = { }
-        labels.setdefault("def", [])
-        labels["def"].append("Task Type")
-        labels["def"].append("Task Description")
+        	labels = { }
+        	labels.setdefault("def", [])
+        	labels["def"].append("Task Type")
+        	labels["def"].append("Task Description")
+	
+        	cur.execute("Select * from Task")
 
-        cur.execute("Select * from Task")
-
-        dic = { }
-        rowNum = 0
-        for row in cur.fetchall():
-                dic.setdefault(rowNum, [])
-                dic[rowNum].append(row[0])
-                dic[rowNum].append(row[1])
-		dic[rowNum].append(row[2])
-                rowNum = rowNum + 1
-
-        return render_template('taskTypeTable.html', dic=dic, labels=labels, uName=uName)
+        	dic = { }
+        	rowNum = 0
+        	for row in cur.fetchall():
+                	dic.setdefault(rowNum, [])
+                	dic[rowNum].append(row[0])
+                	dic[rowNum].append(row[1])
+			dic[rowNum].append(row[2])
+                	rowNum = rowNum + 1
+	
+        	return render_template('taskTypeTable.html', dic=dic, labels=labels, uName=uName)
 
 #deviceStatus table
-@app.route('/deviceStatusTable')
+@app.route('/deviceStatusTable', methods=['GET', 'POST'])
 @login_required
 @security_check
 def deviceStatusTable():
-	uName = session['username']
+	if request.method == 'POST':
+		cur.execute("SELECT StatusID FROM DeviceStatus")
+		dic = { }
+		for row in cur.fetchall():
+			dic[row[0]] = "null"
+		for key in dic:
+			if(request.form.get(str(key)) == "1"):
+				cur.execute("UPDATE Device SET DeviceStatus_StatusID = NULL WHERE DeviceStatus_StatusID = \'"+str(key)+"\'")			
+				cur.execute("DELETE FROM DeviceStatus WHERE StatusID = \'"+str(key)+"\'")
+		db.commit()
+		return redirect(url_for("deviceStatusTable"))
+	else:
+		uName = session['username']
 
-        labels = { }
-        labels.setdefault("def", [])
-        labels["def"].append("Status ID")
-        labels["def"].append("Status Description")
+        	labels = { }
+        	labels.setdefault("def", [])
+        	labels["def"].append("Status ID")
+        	labels["def"].append("Status Description")
 
-        cur.execute("Select * from DeviceStatus")
+        	cur.execute("Select * from DeviceStatus")
 
-        dic = { }
-        rowNum = 0
-        for row in cur.fetchall():
-                dic.setdefault(rowNum, [])
-                dic[rowNum].append(row[0])
-                dic[rowNum].append(row[1])
-		dic[rowNum].append(row[2])
-                rowNum = rowNum + 1
+        	dic = { }
+        	rowNum = 0
+       	 	for row in cur.fetchall():
+                	dic.setdefault(rowNum, [])
+                	dic[rowNum].append(row[0])
+                	dic[rowNum].append(row[1])
+			dic[rowNum].append(row[2])
+                	rowNum = rowNum + 1
 
-        return render_template('deviceStatusTable.html', dic=dic, labels=labels, uName=uName)
+	        return render_template('deviceStatusTable.html', dic=dic, labels=labels, uName=uName)
 
 #admin task table
-@app.route('/adminTaskTable')
+@app.route('/adminTaskTable', methods=['GET', 'POST'])
 @login_required
 @security_check
 def adminTaskTable():
-	uName = session['username']
-	
-	labels = { }
-        labels.setdefault("def", [])
-        labels["def"].append("Task ID")
-        labels["def"].append("Task Name")
-        labels["def"].append("Task Location")
-        labels["def"].append("Date Started")
-        labels["def"].append("Date Completed")
-        labels["def"].append("Task Status")
-        labels["def"].append("Task Type")
-        labels["def"].append("Active Task")
-        labels["def"].append("Actual Completion Date")
-        labels["def"].append("Device ID")
-	labels["def"].append("User ID")
+	if request.method == 'POST':
+		cur.execute("SELECT TaskID FROM Calendar")
+		dic = { }
+		for row in cur.fetchall():
+			dic[row[0]] = "null"
+		for key in dic:
+			if(request.form.get(str(key)) == "1"):
+				cur.execute("DELETE FROM User_has_Calendar WHERE Calendar_TaskID = \'"+str(key)+"\'")
+                		cur.execute("DELETE FROM Device_has_Calendar WHERE Calendar_TaskID = \'"+str(key)+"\'")
+				cur.execute("DELETE FROM Calendar WHERE TaskID = \'"+str(key)+"\'")		
+		db.commit()
+		return redirect(url_for("adminTaskTable"))
+	else:
+		uName = session['username']
+		
+		labels = { }
+        	labels.setdefault("def", [])
+        	labels["def"].append("Task ID")
+        	labels["def"].append("Task Name")
+        	labels["def"].append("Task Location")
+        	labels["def"].append("Date Started")
+        	labels["def"].append("Date Completed")
+        	labels["def"].append("Task Status")
+        	labels["def"].append("Task Type")
+        	labels["def"].append("Active Task")
+        	labels["def"].append("Actual Completion Date")
+        	labels["def"].append("Device ID")
+		labels["def"].append("User ID")
     
-	dic = { }
-        rowNum = 0
-        cur.execute("SELECT * FROM Calendar")
-        for row in cur.fetchall():
-        	dic.setdefault(rowNum, [])
-                dic[rowNum].append(row[0])
-                dic[rowNum].append(row[1])
-                dic[rowNum].append(row[2])
-                dic[rowNum].append(row[3])
-                dic[rowNum].append(row[4])
+		dic = { }
+        	rowNum = 0
+        	cur.execute("SELECT * FROM Calendar")
+        	for row in cur.fetchall():
+        		dic.setdefault(rowNum, [])
+                	dic[rowNum].append(row[0])
+                	dic[rowNum].append(row[1])
+                	dic[rowNum].append(row[2])
+                	dic[rowNum].append(row[3])
+                	dic[rowNum].append(row[4])
 			
-		if row[5] == 1:
-                	dic[rowNum].append("yes")
-                else:
-                        dic[rowNum].append("no")
-                dic[rowNum].append(row[6])
-                dic[rowNum].append(row[7])
-                dic[rowNum].append(row[8])
+			if row[5] == 1:
+                		dic[rowNum].append("yes")
+                	else:
+                        	dic[rowNum].append("no")
+                	dic[rowNum].append(row[6])
+               		dic[rowNum].append(row[7])
+                	dic[rowNum].append(row[8])
 
-		dID = "null"
-                cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID = "+str(row[0]))
-                for column in cur.fetchall():
-                	dID = column[0]
-                	dic[rowNum].append(column[0])
-                cur.execute("SELECT User_UserID FROM User_has_Calendar WHERE Calendar_TaskID = "+str(row[0]))
-                for column in cur.fetchall():
-                        dID = column[0]
-                	dic[rowNum].append(column[0])
-                rowNum = rowNum + 1
-        return render_template('taskTable.html', dic=dic, labels=labels, uName=uName)
+			dID = "null"
+                	cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID = "+str(row[0]))
+                	for column in cur.fetchall():
+                		dID = column[0]
+                		dic[rowNum].append(column[0])
+                	cur.execute("SELECT User_UserID FROM User_has_Calendar WHERE Calendar_TaskID = "+str(row[0]))
+                	for column in cur.fetchall():
+                        	dID = column[0]
+                		dic[rowNum].append(column[0])
+               		rowNum = rowNum + 1
+        	return render_template('taskTable.html', dic=dic, labels=labels, uName=uName)
 		
 
 #dropDownTestPage
@@ -1595,7 +1684,7 @@ def admindeleteCalendarTask():
 def deleteDevice():
         if request.method == 'POST':
 		sNumber = request.form["SerialNumber"]
-		cur.execute("SELECT DeviceID from Device WHERE DeviceName = "+str(sNumber))
+		cur.execute("SELECT DeviceID from Device WHERE DeviceName = \'"+str(sNumber)+"\'")
 		for row in cur.fetchall():
 			dID = row[0]
 
@@ -1709,10 +1798,10 @@ def editPassword():
 			pCheck = row[0]
 		if(opWord == pCheck):	
 			if(pWord == rpWord):
-				print("test")
+				pChange = "Password change successful."
 				cur.execute("Update User set Password = \'" + pWord + "\' where UserName = \'"+username+"\'")
 				db.commit()
-				return redirect(url_for('account'))
+				return redirect(url_for('account', pChange=pChange))
 			else:
 				error2 = "New passwords do not match."
 				return render_template('editPassword.html', error2=error2, uName=uName)
