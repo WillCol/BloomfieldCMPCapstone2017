@@ -28,11 +28,48 @@ body {
   margin: 0 auto;
   
   max-width: 640px;
-  width: 94%;
+  width: 100%;
   padding-bottom:6rem;
 }
 
+.editcol{
 
+}
+input#submitButton{
+color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+    boder: 1px solid #ccc;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+font-size: 17px;
+}
+input#submitButton:hover{
+background-color: #e6f2ff
+}
+button{
+	  color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+	padding: 6px 12px;
+	border: 1px solid #ccc;
+    border-radius: 4px;
+}
+button:hover{
+	background-color: #e6f2ff
+	
+}
+#spanButton{
+	padding:20px;
+}
+#top-bar button  {
+	font-size:16px;
+	
+	
+}
+td.control{
+	width:20px;
+}
 .footer {
   position: absolute;
   right: 0;
@@ -70,7 +107,7 @@ table {
 
 td, th {
     border: 1px solid #dddddd;
-    text-align: left;
+    
     padding: 8px;
 }
 
