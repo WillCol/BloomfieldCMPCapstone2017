@@ -1709,10 +1709,10 @@ def editPassword():
 			pCheck = row[0]
 		if(opWord == pCheck):	
 			if(pWord == rpWord):
-				print("test")
+				pChange = "Password change successful."
 				cur.execute("Update User set Password = \'" + pWord + "\' where UserName = \'"+username+"\'")
 				db.commit()
-				return redirect(url_for('account'))
+				return redirect(url_for('account', pChange=pChange))
 			else:
 				error2 = "New passwords do not match."
 				return render_template('editPassword.html', error2=error2, uName=uName)
