@@ -47,8 +47,11 @@
 <div class="container">
  <div class="row">
  <div class="col">
+ <div id="titleBar" class="col-md-12">
+        <h1>Device Category Table</h1>
+      </div>
     <div id="top-bar"> 
-	 <a href="adddevicestatus"><button>Add</button></a> 
+	 <a href="adddeviceCategory"><button>Add</button></a> 
   <a id="deleteButton"><button>Delete</button></a> 
 		<form method="POST" name="form">
           <table class="table table-bordered table-striped  table-hover "  id="Table" cellspacing="0" width="100%">
@@ -70,7 +73,7 @@
               <!---<td><a href=editDeviceCategory?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>--->
              <td></td>
 			  <td><center><input type="checkbox" name="{{ dic[k][0] }}" value="1"><br></td>
-			 <td><a href=editUser?id="{{ dic[k][0] }}"><center><button type="button">Edit</button></center></a>
+			 <td><a href=editDeviceCategory?id="{{ dic[k][0] }}"><center><button type="button">Edit</button></center></a>
 			  <td>{{ dic[k][1] }}</td>
               <td>{{ dic[k][2] }}</td>
             </tr>

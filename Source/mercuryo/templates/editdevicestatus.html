@@ -46,7 +46,7 @@
 	<link  rel="stylesheet"href="../static/css/jquery.dataTables.css">
 	<link  rel="stylesheet"href="../static/css/dataTables.bootstrap.min.css">
 	
-	<link rel="icon" href="../static/images/favicon.ico">
+        <link rel="icon" href="../static/images/favicon.ico">
 
 			</head>
 	<!-- BODY START -->
@@ -72,37 +72,34 @@
   <!--/.nav-collapse --> 
   
 </nav>
-												<div id="wrapper">
+	<div id="wrapper">
 
 
-													
-														<div class="content" style="max-width:1400px; margin:0 auto; margin-top:4em;" >
+		
+			<div class="content" style="max-width:1400px; margin:0 auto; margin-top:4em;" >
 
-															<div class="container-fluid" >
-																<div  class="row">
-																	<div id="titleBar" class="col-md-12">
-																		<h1>Edit Device Status<h1>
-																			</div>
-																		</div>
-																	</div>
-																	
+	
+				
+						<div id="titleBar" class="col-md-12">
+							<h1>Edit Device Status<h1>
+						</div>
+										
+						<form>
+							<fieldset>
+								<label>Status ID</label> 
+								<select name="ID" value="">
+								<option style="text-align:center" value="{{ emp["data"][2] }}">{{ emp["data"][2] }}</option>
+								</select><br>
+								<label>{{ emp["def"][0] }}</label> <input type="text" name="StatusName" value="{{ emp["data"][0] }}"><br>
+								<label>{{ emp["def"][1] }}</label> <input type="text" name="StatusDesc" value="{{ emp["data"][1] }}"><br>
+								<p id="result"></p><br>
+							</fieldset>
+						
+						<center><a href=# id="addValues" ><input type="submit" value="Submit"></a></center>	
+						</form>
+								
 
-																	<form>
-																		<fieldset>
-																			<label>Status ID</label> 
-																			<select name="ID" value="">
-																			<option style="text-align:center" value="{{ emp["data"][2] }}">{{ emp["data"][2] }}</option>
-																			</select><br>
-																			<label>{{ emp["def"][0] }}</label> <input type="text" name="StatusName" value="{{ emp["data"][0] }}"><br>
-																			<label>{{ emp["def"][1] }}</label> <input type="text" name="StatusDesc" value="{{ emp["data"][1] }}"><br>
-																			<p id="result"></p><br>
-																		</fieldset>
-																	
-																	<center><a href=# id="addValues" ><input type="submit" value="Submit"></a></center>	
-																	</form>
-																			
-
-														</div>
+			</div>
 																	
 
 

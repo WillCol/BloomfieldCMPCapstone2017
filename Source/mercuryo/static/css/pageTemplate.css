@@ -35,6 +35,14 @@ body {
 .editcol{
 
 }
+h1{
+	text-align:center;
+	padding-bottom:40px;
+	
+}
+#titleBar h1 {
+    font-size: 40px;
+}
 input#submitButton{
 color: #333;
     background-color: #fff;
