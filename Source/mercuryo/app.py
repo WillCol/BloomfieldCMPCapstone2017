@@ -1906,7 +1906,6 @@ def edit_device():
         sNumber = request.args.get("SerialNumber")
         deviceName = request.args.get("DeviceName")
         IP = request.args.get("IPAddress")
-        IPInt = int(IP)
         owner = request.args.get("DeviceOwner")
         desc = request.args.get("Description")
         DoD = request.args.get("DateOfDeployment")
