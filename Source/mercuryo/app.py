@@ -1833,35 +1833,47 @@ def userPage():
 @app.route('/calendar', methods=['GET', 'POST'])
 @login_required
 def calendar():
+	uID = session['userID']
 	dev = 0
+	tasksC = {}
+	rowT = 0
+	cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID = \'"+str(uID)+"\'")
+	for row in cur.fetchall():
+		tasksC.setdefault(rowT, [])
+		tasksC[0].append(str(row[0]))
+		print(tasksC.values())	
+
 	cur.execute("select TaskID, DateStart, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task "
 			+"where Calendar.Task_TaskType = Task.TaskType and DateStart != '0000-00-00'")
-        dic = {"start": "beginning"}
+        dic = {}
         rowNum = 0
 	
         for row in cur.fetchall():
-                dic.setdefault(rowNum, [])
-                dic[rowNum].append(row[0])
-                dic[rowNum].append(row[1])
-		dic[rowNum].append(row[2])
-		dic[rowNum].append(row[3])
-		dic[rowNum].append(row[4])
-		dic[rowNum].append(row[5])
-		cur.execute("Select Device_DeviceID from Device_has_Calendar WHERE Calendar_TaskID = \'"+str(row[0])+"\'")
-		if cur.rowcount == 0:
-			dev = 0
-		else:
+		print(str(row[0]))
+		if str(row[0]) in tasksC:
+			print("inside")
+                	dic.setdefault(rowNum, [])
+                	dic[rowNum].append(row[0])
+                	dic[rowNum].append(row[1])
+			dic[rowNum].append(row[2])
+			dic[rowNum].append(row[3])
+			dic[rowNum].append(row[4])
+			dic[rowNum].append(row[5])
+			cur.execute("Select Device_DeviceID from Device_has_Calendar WHERE Calendar_TaskID = \'"+row[0]+"\'")
+			if cur.rowcount == 0:
+				dev = 0
+			else:
+				for col in cur.fetchall():	
+					dev = col[0]
+			cur.execute("select DeviceName, Description, DeviceOwner, DeviceLocation, IPAddress, SerialNumber from Device where DeviceID = \'"+str(dev)+"\'")
 			for col in cur.fetchall():	
-				dev = col[0]
-		cur.execute("select DeviceName, Description, DeviceOwner, DeviceLocation, IPAddress, SerialNumber from Device where DeviceID = \'"+str(dev)+"\'")
-		for col in cur.fetchall():	
-			dic[rowNum].append(col[0])
-			dic[rowNum].append(col[1])
-                        dic[rowNum].append(col[2])
-                        dic[rowNum].append(col[3])
-                        dic[rowNum].append(col[4])
-                        dic[rowNum].append(col[5])
-                rowNum = rowNum + 1
+				dic[rowNum].append(col[0])
+				dic[rowNum].append(col[1])
+        	                dic[rowNum].append(col[2])
+        	                dic[rowNum].append(col[3])
+        	                dic[rowNum].append(col[4])
+        	                dic[rowNum].append(col[5])
+        	        rowNum = rowNum + 1
 			
 	cur.execute("select TaskID, DateComplete, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task "
                         +"where Calendar.Task_TaskType = Task.TaskType and DateComplete != '0000-00-00'")
@@ -1886,7 +1898,7 @@ def calendar():
 		#for rows in cur.fetchall():
                 #        dic2[num].append(rows[0])
 		#num = num + 1
-		cur.execute("select DeviceName, Description, DeviceOwner, DeviceLocation, IPAddress, SerialNumber from Device where DeviceID = \'"+str(dev)+"\'")
+		cur.execute("select DeviceName, Description, DeviceOwner, DeviceLocation, IPAddress, SerialNumber from Device where DeviceID = \'"+str(devID)+"\'")
                 for col in cur.fetchall():
                         dic2[num].append(column[0])
                         dic2[num].append(column[1])
@@ -1894,7 +1906,7 @@ def calendar():
                         dic2[num].append(column[3])
                         dic2[num].append(column[4])
                         dic2[num].append(column[5])
-                rowNum = rowNum + 1
+                num = num + 1
 
 	uName = session['username']
         return render_template('calendar.html', dic=dic, dic2=dic2, uName=uName)
