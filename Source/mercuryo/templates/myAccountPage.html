@@ -112,7 +112,7 @@
           {% for k in active %}
           <tr>
             <td><h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>{{ active[k][2] }}</h6></td>
-            <td><p>Task ID: {{ active[k][0] }}</p></td>
+            <td><p>Task Name: {{ active[k][0] }}</p></td>
             <td><p>Description: {{ active[k][1] }}</p></td>
           </tr>
           {% endfor %}
@@ -130,7 +130,7 @@
             </tr>
             <tr>
               <th>Completion Date</th>
-              <th>Task ID/Name</th>
+              <th>Task Name</th>
               <th>Task Description</th>
             </tr>
           </thead>
@@ -139,7 +139,7 @@
           {% for k in deactive %}
           <tr>
             <td><h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i>{{ deactive[k][2] }}</h6></td>
-            <td><p>Task ID: {{ deactive[k][0] }}</p></td>
+            <td><p>Task Name: {{ deactive[k][0] }}</p></td>
             <td><p>Description: {{ deactive[k][1] }}</p></td>
           </tr>
           {% endfor %}

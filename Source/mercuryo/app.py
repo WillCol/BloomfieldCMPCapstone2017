@@ -975,19 +975,19 @@ def account():
 	
 	#active dictionary for user tasks
 	active = { }
-	cur.execute("select distinct Calendar_TaskID, TaskDesc, DateComplete from User_has_Calendar, User, Task, Calendar" 
+	cur.execute("select distinct Calendar_TaskID, TaskName, TaskDesc, DateComplete from User_has_Calendar, User, Task, Calendar" 
 			+" where User_UserID = UserID and Calendar_TaskID = TaskID and Task_TaskType = TaskType and UserName = \'"+userName+"\'"
 			+" and ActiveTask = 1")
 	rowNum = 0
 	for column in cur.fetchall():
 		active.setdefault(rowNum, [])
-		active[rowNum].append(column[0])
 		active[rowNum].append(column[1])
 		active[rowNum].append(column[2])
+		active[rowNum].append(column[3])
 		rowNum = rowNum + 1
 
 	#deactive dictionary for user tasks
-	deactive = {'start' : ""}
+	deactive = { }
         cur.execute("select distinct Calendar_TaskID, TaskName, TaskDesc, DateActualCompletion from User_has_Calendar, User, Task, Calendar"
                         +" where User_UserID = UserID and Calendar_TaskID = TaskID and Task_TaskType = TaskType and UserName = \'"+userName+"\'"
                         +" and ActiveTask = 0")
@@ -1835,48 +1835,43 @@ def userPage():
 def calendar():
 	uID = session['userID']
 	dev = 0
-	tasksC = {}
-	rowT = 0
-	cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID = \'"+str(uID)+"\'")
-	for row in cur.fetchall():
-		tasksC.setdefault(rowT, [])
-		tasksC[0].append(str(row[0]))
-		print(tasksC.values())	
-
-	cur.execute("select TaskID, DateStart, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task "
-			+"where Calendar.Task_TaskType = Task.TaskType and DateStart != '0000-00-00'")
-        dic = {}
+	
+	cur.execute("select TaskID, DateStart, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task, User_has_Calendar "
+			+"where Calendar.Task_TaskType = Task.TaskType and DateStart != '0000-00-00'"
+			+" and User_has_Calendar.Calendar_TaskID = Calendar.TaskID "
+			+" and User_has_Calendar.User_UserID = \'"+str(uID)+"\'")
+        
+	dic = {}
         rowNum = 0
 	
         for row in cur.fetchall():
-		print(str(row[0]))
-		if str(row[0]) in tasksC:
-			print("inside")
-                	dic.setdefault(rowNum, [])
-                	dic[rowNum].append(row[0])
-                	dic[rowNum].append(row[1])
-			dic[rowNum].append(row[2])
-			dic[rowNum].append(row[3])
-			dic[rowNum].append(row[4])
-			dic[rowNum].append(row[5])
-			cur.execute("Select Device_DeviceID from Device_has_Calendar WHERE Calendar_TaskID = \'"+row[0]+"\'")
-			if cur.rowcount == 0:
-				dev = 0
-			else:
-				for col in cur.fetchall():	
-					dev = col[0]
-			cur.execute("select DeviceName, Description, DeviceOwner, DeviceLocation, IPAddress, SerialNumber from Device where DeviceID = \'"+str(dev)+"\'")
+                dic.setdefault(rowNum, [])
+                dic[rowNum].append(row[0])
+                dic[rowNum].append(row[1])
+		dic[rowNum].append(row[2])
+		dic[rowNum].append(row[3])
+		dic[rowNum].append(row[4])
+		dic[rowNum].append(row[5])
+		cur.execute("Select Device_DeviceID from Device_has_Calendar WHERE Calendar_TaskID = \'"+str(row[0])+"\'")
+		if cur.rowcount == 0:
+			dev = 0
+		else:
 			for col in cur.fetchall():	
-				dic[rowNum].append(col[0])
-				dic[rowNum].append(col[1])
-        	                dic[rowNum].append(col[2])
-        	                dic[rowNum].append(col[3])
-        	                dic[rowNum].append(col[4])
-        	                dic[rowNum].append(col[5])
-        	        rowNum = rowNum + 1
+				dev = col[0]
+		cur.execute("select DeviceName, Description, DeviceOwner, DeviceLocation, IPAddress, SerialNumber from Device where DeviceID = \'"+str(dev)+"\'")
+		for col in cur.fetchall():	
+			dic[rowNum].append(col[0])
+			dic[rowNum].append(col[1])
+        	        dic[rowNum].append(col[2])
+        	        dic[rowNum].append(col[3])
+      	                dic[rowNum].append(col[4])
+       	                dic[rowNum].append(col[5])
+                rowNum = rowNum + 1
 			
-	cur.execute("select TaskID, DateComplete, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task "
-                        +"where Calendar.Task_TaskType = Task.TaskType and DateComplete != '0000-00-00'")
+	cur.execute("select TaskID, DateComplete, TaskDesc, TaskStatus, TaskName, TaskLocation from User_has_Calendar, Calendar, Task "
+                        +"where Calendar.Task_TaskType = Task.TaskType and DateComplete != '0000-00-00'"
+			+" and User_has_Calendar.Calendar_TaskID = Calendar.TaskID "
+			+" and User_has_Calendar.User_UserID = \'"+str(uID)+"\'")
         dic2 = { }
         num = 0
 	devID = 0
