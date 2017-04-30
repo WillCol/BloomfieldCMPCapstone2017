@@ -1,8 +1,9 @@
 $(document).ready(function() {
-     
+    
 <!-- Initalize DataTable --!>	 
-	 $('#Table').DataTable( {
-         buttons: [
+	var dataTable= $('#Table').DataTable( {
+
+		buttons: [
         'copy', 'excel', 'pdf'
     ],
 		responsive: {
@@ -14,18 +15,27 @@ $(document).ready(function() {
             className: 'control',
             orderable: false,
             targets:   0
-        } ],
+        },{
+			"targets": [ 1 ],
+			 "visible": false
+		} ],
         order: [ 1, 'asc' ]
     } );
+
+			 $("#submitButton").hide();
 			  
-			  
-	<!-- "Allows deleteButton to toggle the delete column within tables" --!>	   
-	 $("#submitButton").hide();
-     $('td:nth-child(2),th:nth-child(2)').hide();
-	 $('#deleteButton').click(function() 
-		{
-		$('td:nth-child(2),th:nth-child(2)').toggle();
+			 $('.showHideColumn').on( 'click', function (e) {
+				e.preventDefault();
+ 
+        // Get the column API object
+        var column = dataTable.column( $(this).attr('data-column') );
+ 
+        // Toggle the visibility
+        column.visible( ! column.visible() );
 		$("#submitButton").toggle();
-                
-    });
+
+
+
+   } );
+
 } );

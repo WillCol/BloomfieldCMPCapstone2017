@@ -27,7 +27,8 @@
   <!-- NAVIGATION -->
   <nav class="navbar navbar-default">
     <div id="nav" class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+      <a class="navbar-brand" href="inventory"><img  class="Logo"src="../static/images/LOGO.png" /></a>
+	  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -53,7 +54,7 @@
         <h1>User Table</h1>
       </div>
    <div id="top-bar">  <a href="adduser"><button>Add</button></a> 
-  <a id="deleteButton"><button>Delete</button></a>  </div>
+ <a class="showHideColumn" data-column="1"><button>Delete</button></a> 
 			 <form method="POST" name="form">
            <table class="table table-bordered table-striped  table-hover dt"  id="Table" cellspacing="0" width="100%">
           <thead>
@@ -73,7 +74,7 @@
           <tr>
           <!--<td><a href=editUser?id="{{ dic[k][0] }}">{{ dic[k][0] }}</a></td>-->
             <td></td>
-			<td><center><input type="checkbox" name="{{ dic[k][0] }}" value="1"><br></td>
+			<td class="center"><center><input type="checkbox" name="{{ dic[k][0] }}" value="1"><br></td>
 			<td><a href=editUser?id="{{ dic[k][0] }}"><center><button type="button">Edit</button></center></a></td>
 			
 			<td>{{ dic[k][1] }}</td>

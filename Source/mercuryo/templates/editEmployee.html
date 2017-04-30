@@ -61,7 +61,8 @@
 <!-- NAVIGATION -->
 <nav class="navbar navbar-default">
   <div id="nav" class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    <a class="navbar-brand" href="inventory"><img  class="Logo"src="../static/images/LOGO.png" /></a>
+	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
   </div>
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
@@ -89,10 +90,11 @@
       <hr style="color:black width:200px">
       <form>
         <fieldset id="fields">
+		  <div class="hideID">
 		  <label>Employee ID</label> 
 		 <select name="ID" value="">
 		 <option style="text-align:center" value="{{ emp["data"][0] }}">{{ emp["data"][0] }}</option>
-		 </select><br>
+		 </select></div>
           <label>{{ emp["def"][1] }}</label>
           <input type="text" name="EmployeeName" value="{{ emp["data"][1] }}">
           <br>
@@ -114,7 +116,7 @@
           <br>
 		  <p id="result"></p><br>
         </fieldset>
-		<center><a href=# id="addValues" ><input type="submit" value="Submit"></a></center>      </form>
+		<center><a href=# id="addValues" ><input type="submit" value="Submit" id="submitButton"></a></center>      </form>
     </div>
   </div>
   

@@ -64,7 +64,8 @@
 <!-- NAVIGATION -->
 <nav class="navbar navbar-default">
   <div id="nav" class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    <a class="navbar-brand" href="inventory"><img  class="Logo"src="../static/images/LOGO.png" /></a>
+	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
   </div>
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
@@ -92,10 +93,11 @@
       <hr style="color:black width:200px">
       <form id="editTask"method="POST">
         <fieldset id="fields">
+		  <div class="hideID">
 		  <label>Task ID</label> 
 		  <select name="ID" value="">
 		  <option style="text-align:center" value="{{ emp["data"][8] }}">{{ emp["data"][8] }}</option>
-		  </select><br>
+		  </select></div>
           <label>Task Name</label>
           <input type="text" name="TaskName" value="{{ emp["data"][6] }}">
           <br>
@@ -146,7 +148,7 @@
           </div>
 		  <p id="result"></p><br>
         </fieldset>
-        <center><a href=# id="addValues" ><input type="submit" value="Submit"></a></center>
+        <center><a href=# id="addValues" ><input type="submit" value="Submit" id="submitButton"></a></center>
       </form>
     </div>
   </div>

@@ -55,7 +55,8 @@
 		<!-- NAVIGATION -->
 		<nav class="navbar navbar-default">
   <div id="nav" class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+    <a class="navbar-brand" href="inventory"><img  class="Logo"src="../static/images/LOGO.png" /></a>
+	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
   </div>
   <div id="navbar" class="navbar-collapse collapse">
     <ul class="nav navbar-nav">
@@ -81,21 +82,22 @@
 	
 				
 						<div id="titleBar" class="col-md-12">
-							<h1>Edit Device Status<h1>
+							<h1>Edit Device Status</h1>
 						</div>
 										
 						<form>
 							<fieldset>
+								<div class="hideID">
 								<label>Status ID</label> 
 								<select name="ID" value="">
 								<option style="text-align:center" value="{{ emp["data"][2] }}">{{ emp["data"][2] }}</option>
-								</select><br>
+								</select></div>
 								<label>{{ emp["def"][0] }}</label> <input type="text" name="StatusName" value="{{ emp["data"][0] }}"><br>
 								<label>{{ emp["def"][1] }}</label> <input type="text" name="StatusDesc" value="{{ emp["data"][1] }}"><br>
 								<p id="result"></p><br>
 							</fieldset>
 						
-						<center><a href=# id="addValues" ><input type="submit" value="Submit"></a></center>	
+						<center><a href=# id="addValues" ><input type="submit" value="Submit" id="submitButton"></a></center>	
 						</form>
 								
 
