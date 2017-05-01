@@ -1856,11 +1856,11 @@ def calendar():
 	uID = session['userID']
 	dev = 0
 	
-	cur.execute("select TaskID, DateStart, TaskDesc, TaskStatus, TaskName, TaskLocation from Calendar, Task, User_has_Calendar "
+	cur.execute("select TaskID, DateStart, TaskDesc, TaskStatus, TaskName, TaskLocation, ActiveTask from Calendar, Task, User_has_Calendar "
 			+"where Calendar.Task_TaskType = Task.TaskType and DateStart != '0000-00-00'"
 			+" and User_has_Calendar.Calendar_TaskID = Calendar.TaskID "
-			+" and User_has_Calendar.User_UserID = \'"+str(uID)+"\'")
-        
+			+" and User_has_Calendar.User_UserID = \'"+str(uID)+"\'"
+                        +" and Calendar.ActiveTask = 1")
 	dic = {}
         rowNum = 0
 	
@@ -1888,10 +1888,11 @@ def calendar():
        	                dic[rowNum].append(col[5])
                 rowNum = rowNum + 1
 			
-	cur.execute("select TaskID, DateComplete, TaskDesc, TaskStatus, TaskName, TaskLocation from User_has_Calendar, Calendar, Task "
+	cur.execute("select TaskID, DateComplete, TaskDesc, TaskStatus, TaskName, TaskLocation, ActiveTask from User_has_Calendar, Calendar, Task "
                         +"where Calendar.Task_TaskType = Task.TaskType and DateComplete != '0000-00-00'"
 			+" and User_has_Calendar.Calendar_TaskID = Calendar.TaskID "
-			+" and User_has_Calendar.User_UserID = \'"+str(uID)+"\'")
+			+" and User_has_Calendar.User_UserID = \'"+str(uID)+"\'"
+			+" and Calendar.ActiveTask = 1")
         dic2 = { }
         num = 0
 	devID = 0

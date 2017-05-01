@@ -208,5 +208,21 @@ cur.execute("INSERT INTO User (UserName, Password, Employee_EmployeeID, Security
 		+" VALUES ('admin', 'admin',(SELECT EmployeeID FROM Employee WHERE EmployeeName = 'admin'),'2')")
 con.commit()
 
+cur.execute("INSERT INTO DeviceCategory (CategoryID, CategoryName, CategoryDesc)"
+		+" VALUES ('0', 'NULL', 'NULL')")
+
+con.commit()
+
+cur.execute("INSERT INTO DeviceStatus (StatusID, StatusName, StatusDesc)"
+                +" VALUES ('0', 'NULL', 'NULL')")
+
+con.commit()
+
+cur.execute("INSERT INTO Task (TaskType, TaskTypeName, TaskDesc)"
+                +" VALUES ('0', 'NULL', 'NULL')")
+
+con.commit()
+
+
 con.close()
 
