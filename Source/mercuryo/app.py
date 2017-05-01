@@ -758,7 +758,6 @@ def editUser():
 #edit task
 @app.route('/edittask', methods=['GET', 'POST'])
 @login_required
-@security_check
 def edittask():
 	
 	tID = request.args["id"]
@@ -1463,7 +1462,7 @@ def addDevice():
 		serCheck = "null"
 		strSerNum = str(sNumber)
 
-		cur.execute("select StatusID from DeviceStatus where StatusDesc = \'"+deviceStatus+"\'")
+		cur.execute("select StatusID from DeviceStatus where StatusName = \'"+deviceStatus+"\'")
 		for row in cur.fetchall():
 			deviceStatus = row[0]
 		deviceStatus = str(deviceStatus)
@@ -1511,7 +1510,7 @@ def addDevice():
 	uName = session['username']
 	rowNum = 0
 	dStatusL = { }
-	cur.execute("select StatusDesc from DeviceStatus")
+	cur.execute("select StatusName from DeviceStatus")
 	for row in cur.fetchall():
 		dStatusL.setdefault(rowNum, [])
 		dStatusL[rowNum].append(row[0])
