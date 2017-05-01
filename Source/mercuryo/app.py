@@ -263,9 +263,14 @@ def employeeTable():
 			dic[row[0]] = "null"
 		for key in dic:
 			if(request.form.get(str(key)) == "1"):
+				cur.execute("SELECT UserID FROM User WHERE Employee_EmployeeID = \'"+str(key)+"\'")
+				userID = "null"
+				for row in cur.fetchall():
+					userID = row[0]
+				cur.execute("DELETE FROM User_has_Calendar WHERE User_UserID = \'"+str(userID)+"\'")
 				cur.execute("DELETE FROM User WHERE Employee_EmployeeID = \'"+str(key)+"\'")			
-				cur.execute("DELETE FROM Employee WHERE EmployeeID = \'"+str(key)+"\'")
 				cur.execute("DELETE FROM Phone WHERE Employee_EmployeeID = \'"+str(key)+"\'")
+				cur.execute("DELETE FROM Employee WHERE EmployeeID = \'"+str(key)+"\'")
 		db.commit()
 		return redirect(url_for("employeeTable"))
 	else:
@@ -315,9 +320,13 @@ def deviceCategoryTable():
 		dic = { }
 		for row in cur.fetchall():
 			dic[row[0]] = "null"	
+		cur.execute("SELECT CategoryID FROM DeviceCategory WHERE CategoryName = \'NULL\'")
+		categoryID = "null"
+		for row in cur.fetchall():
+			categoryID = row[0]
 		for key in dic:
 			if(request.form.get(str(key)) == "1"):
-				cur.execute("UPDATE Device SET DeviceCategory_CategoryID = NULL WHERE DeviceCategory_CategoryID = \'"+str(key)+"\'")
+				cur.execute("UPDATE Device SET DeviceCategory_CategoryID = \'"+str(categoryID)+"\' WHERE DeviceCategory_CategoryID = \'"+str(key)+"\'")
 				cur.execute("DELETE FROM DeviceCategory WHERE CategoryID = \'"+str(key)+"\'")
 		db.commit()
 		return redirect(url_for("deviceCategoryTable"))
@@ -354,9 +363,13 @@ def taskTypeTable():
 		dic = { }	
 		for row in cur.fetchall():
 			dic[row[0]] = "null"
+		cur.execute("SELECT TaskType FROM Task WHERE TaskTypeName = \'NULL\'")
+		tasktypeID = "null"
+		for row in cur.fetchall():
+			tasktypeID = row[0]
 		for key in dic:
 			if(request.form.get(str(key)) == "1"):
-				cur.execute("UPDATE Calendar SET Task_TaskType = NULL WHERE Task_TaskType - \'"+str(key)+"\'")			
+				cur.execute("UPDATE Calendar SET Task_TaskType = \'"+str(tasktypeID)+"\' WHERE Task_TaskType = \'"+str(key)+"\'")			
 				cur.execute("DELETE FROM Task  WHERE TaskType = \'"+str(key)+"\'")
 		db.commit()
 		return	redirect(url_for("taskTypeTable"))
@@ -391,9 +404,13 @@ def deviceStatusTable():
 		dic = { }
 		for row in cur.fetchall():
 			dic[row[0]] = "null"
+		statusID = "null"
+		cur.execute("SELECT StatusID FROM DeviceStatus WHERE StatusName = \'NULL\'")
+		for row in cur.fetchall():
+			statusID = row[0]
 		for key in dic:
 			if(request.form.get(str(key)) == "1"):
-				cur.execute("UPDATE Device SET DeviceStatus_StatusID = NULL WHERE DeviceStatus_StatusID = \'"+str(key)+"\'")			
+				cur.execute("UPDATE Device SET DeviceStatus_StatusID = \'"+str(statusID)+"\' WHERE DeviceStatus_StatusID = \'"+str(key)+"\'")			
 				cur.execute("DELETE FROM DeviceStatus WHERE StatusID = \'"+str(key)+"\'")
 		db.commit()
 		return redirect(url_for("deviceStatusTable"))
@@ -452,6 +469,11 @@ def adminTaskTable():
         	labels["def"].append("Device ID")
 		labels["def"].append("User ID")
     
+		cur.execute("SELECT * FROM Task")
+		taskType = { }
+		for row in cur.fetchall():
+			taskType[row[0]] = row[1]
+		
 		dic = { }
         	rowNum = 0
         	cur.execute("SELECT * FROM Calendar")
@@ -461,8 +483,7 @@ def adminTaskTable():
                 	dic[rowNum].append(row[1])
                 	dic[rowNum].append(row[2])
                 	dic[rowNum].append(row[3])
-                	dic[rowNum].append(row[4])
-			
+                	dic[rowNum].append(taskType[row[4]])	
 			if row[5] == 1:
                 		dic[rowNum].append("yes")
                 	else:
@@ -779,11 +800,11 @@ def edittask():
 		acDate = request.form["ActualCompletionDate"]
                 device = request.form["DeviceID"]
 		
-		cur.execute("select TaskType from Task where TaskDesc = \'"+tType+"\'")
+		cur.execute("select TaskType from Task where TaskTypeName = \'"+tType+"\'")
                 for row in cur.fetchall():
                         tType  = row[0]
                 tType = str(tType)
-
+		print("tType = "+tType)
 				
 		                
 		cur.execute("UPDATE Calendar SET DateStart = \'"+dStart+"\' WHERE TaskID = "+tID)
@@ -835,7 +856,7 @@ def edittask():
 
         	rowNum = 0
         	task = { }
-        	cur.execute("select TaskDesc from Task")
+        	cur.execute("select TaskTypeName from Task")
         	for row in cur.fetchall():
                 	task.setdefault(rowNum, [])
                 	task[rowNum].append(row[0])
@@ -2163,7 +2184,7 @@ def edit_task():
 	for row in cur.fetchall():
         	devID = row[0]
 
-        cur.execute("select TaskType from Task where TaskDesc = \'"+tType+"\'")
+        cur.execute("select TaskType from Task where TaskTypeName = \'"+tType+"\'")
         for row in cur.fetchall():
         	tType  = row[0]
         tType = str(tType)
