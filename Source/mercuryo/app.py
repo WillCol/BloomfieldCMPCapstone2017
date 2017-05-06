@@ -157,11 +157,23 @@ def Inventory():
 	if request.method == 'POST':
 		cur.execute("SELECT DeviceID FROM Device")
 		dic = { }
+		deviceDic= []
+		userDic = {}
+		rowNumD = 0
+		rowNumU = 0
 		for row in cur.fetchall():
 			dic[row[0]] = "null"
 		for key in dic:
 			if(request.form.get(str(key)) == "1"):
-				cur.execute("DELETE FROM Device_has_Calendar WHERE Device_deviceID = \'"+str(key)+"\'")
+				cur.execute("SELECT Calendar_TaskID FROM Device_has_Calendar WHERE Device_DeviceID = \'"+str(key)+"\'")
+				for row in cur.fetchall():
+					print(row[0])
+					deviceDic.append(row[0])					
+       				cur.execute("DELETE FROM Device_has_Calendar WHERE Device_DeviceID = \'"+str(key)+"\'")
+				for n in deviceDic:
+					print(n)
+					cur.execute("DELETE FROM User_has_Calendar WHERE Calendar_TaskID = \'"+str(n)+"\'")
+					cur.execute("DELETE FROM Calendar WHERE TaskID = \'"+str(n)+"\'")
 				cur.execute("DELETE FROM Device WHERE DeviceID = \'"+str(key)+"\'")
 		db.commit()
 		return redirect(url_for("Inventory"))
@@ -216,11 +228,22 @@ def userTable():
 	if request.method == 'POST':
 		cur.execute("SELECT UserID FROM User")
 		dic = { }	
+		taskList = []
+		uID = session['userID']
 		for row in cur.fetchall():
 			dic[row[0]] = "null"
 		for key in dic:
 			if(request.form.get(str(key)) == "1"):
-				cur.execute("DELETE FROM User_has_Calendar WHERE User_UserID = \'"+str(key)+"\'")
+                                cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID = \'"+str(key)+"\'")
+                                for row in cur.fetchall():
+                                        print(row[0])
+           				taskList.append(row[0])
+				for k in taskList:
+        	                        cur.execute("DELETE FROM Device_has_Calendar WHERE Calendar_TaskID = \'"+str(k)+"\'")
+                                for n in taskList:
+                                        print(n)
+                                        cur.execute("DELETE FROM User_has_Calendar WHERE Calendar_TaskID = \'"+str(n)+"\'")
+                                        cur.execute("DELETE FROM Calendar WHERE TaskID = \'"+str(n)+"\'")
 				cur.execute("DELETE FROM User WHERE UserID = \'"+str(key)+"\'")
 		db.commit()
 		return redirect(url_for("userTable"))
@@ -259,6 +282,8 @@ def employeeTable():
 	if request.method == 'POST':
 		cur.execute("SELECT EmployeeID FROM Employee")
 		dic = { }
+		taskList = []
+		uID = session['username']
 		for row in cur.fetchall():
 			dic[row[0]] = "null"
 		for key in dic:
@@ -267,7 +292,16 @@ def employeeTable():
 				userID = "null"
 				for row in cur.fetchall():
 					userID = row[0]
-				cur.execute("DELETE FROM User_has_Calendar WHERE User_UserID = \'"+str(userID)+"\'")
+	                        cur.execute("SELECT Calendar_TaskID FROM User_has_Calendar WHERE User_UserID = \'"+uID+"\'")
+                                for row in cur.fetchall():
+                                        print(row[0])
+                                        taskList.append(row[0])
+                                for k in taskList:
+                                        cur.execute("DELETE FROM Device_has_Calendar WHERE Calendar_TaskID = \'"+str(k)+"\'")
+                                for n in taskList:
+                                        print(n)
+                                        cur.execute("DELETE FROM User_has_Calendar WHERE Calendar_TaskID = \'"+str(n)+"\'")
+                                        cur.execute("DELETE FROM Calendar WHERE TaskID = \'"+str(n)+"\'")
 				cur.execute("DELETE FROM User WHERE Employee_EmployeeID = \'"+str(key)+"\'")			
 				cur.execute("DELETE FROM Phone WHERE Employee_EmployeeID = \'"+str(key)+"\'")
 				cur.execute("DELETE FROM Employee WHERE EmployeeID = \'"+str(key)+"\'")
@@ -848,7 +882,7 @@ def edittask():
                 
 		rowNum = 0
 	        device = { }
-        	cur.execute("select DeviceID from Device")
+        	cur.execute("select DeviceName from Device")
         	for row in cur.fetchall():
                 	device.setdefault(rowNum, [])
                 	device[rowNum].append(row[0])
@@ -1114,11 +1148,28 @@ def adduser():
 	
 		if(nCheck.lower() == usName.lower()):
 			error = "Account with that username already exists."
-			return render_template('adduser.html', error=error, uName=uName)
+                        rowNum = 0
+                        name = { }
+                        cur.execute("select EmployeeName from Employee")
+                        for row in cur.fetchall():
+                                name.setdefault(rowNum, [])
+                                name[rowNum].append(row[0])
+                                rowNum = rowNum + 1
+
+			return render_template('adduser.html', name=name, error=error, uName=uName)
 
                 elif(eCheck == eID):
                         error = "Account for selected employee already exists."
-                        return render_template('adduser.html', error=error, uName=uName)
+		        uName = session['username']
+        		rowNum = 0
+       			name = { }
+        		cur.execute("select EmployeeName from Employee")
+        		for row in cur.fetchall():
+                		name.setdefault(rowNum, [])
+                		name[rowNum].append(row[0])
+                		rowNum = rowNum + 1
+
+                        return render_template('adduser.html', name=name, error=error, uName=uName)
 		
 		else:
 			cur.execute("INSERT INTO User (UserName, Password, Employee_EmployeeID, Security)"
@@ -1183,7 +1234,25 @@ def addtask():
 
 		if(nCheck.lower() == nTask.lower()):
 			error = "Task with that name already exists."
-			return render_template('addtask.html', error=error, uName=uName)
+
+	       	 	uName = session['username']
+	        	rowNum = 0
+        		device = { }
+        		cur.execute("select DeviceName from Device")
+        		for row in cur.fetchall():
+				device.setdefault(rowNum, [])
+               			device[rowNum].append(row[0])
+        	       	 	rowNum = rowNum + 1
+	
+			rowNum = 0
+			task = { }
+     		   	cur.execute("select TaskTypeName from Task")
+     		   	for row in cur.fetchall():
+                		task.setdefault(rowNum, [])
+        		        task[rowNum].append(row[0])
+		                rowNum = rowNum + 1
+
+			return render_template('addtask.html', task = task, device = device, error=error, uName=uName)
 
 		else:
 	
@@ -1280,8 +1349,33 @@ def adminaddtask():
 
                 if(nCheck.lower() == nTask.lower()):
                         error = "Task with that name already exists."
-                        return render_template('adminaddtask.html', error=error, uName=uName)
+                        uName = session['username']
+                        rowNum = 0
+                        device = { }
+                        cur.execute("select DeviceName from Device")
+                        for row in cur.fetchall():
+                                device.setdefault(rowNum, [])
+                                device[rowNum].append(row[0])
+                                rowNum = rowNum + 1
 
+                        rowNum = 0
+                        task = { }
+                        cur.execute("select TaskTypeName from Task")
+                        for row in cur.fetchall():
+                                task.setdefault(rowNum, [])
+                                task[rowNum].append(row[0])
+                                rowNum = rowNum + 1
+
+		        rowNum = 0
+        		users = { }
+        		cur.execute("select UserName from User")
+        		for row in cur.fetchall():
+                		users.setdefault(rowNum, [])
+               			users[rowNum].append(row[0])
+        	        	rowNum = rowNum + 1
+	
+ 
+			return render_template('adminaddtask.html', device=device, task=task, users=users, error=error, uName=uName)
                 else:
           
                         cur.execute("INSERT INTO Calendar (DateStart, DateComplete, TaskStatus, Task_TaskType, ActiveTask, DateActualCompletion, TaskName, TaskLocation)"
@@ -1503,11 +1597,43 @@ def addDevice():
 		
 		if(nCheck.lower() == deviceName.lower()):
 			error = "Device with that name already exists."
-			return render_template('addDevice.html', error=error, uName=uName)
+		        uName = session['username']
+		        rowNum = 0
+        		dStatusL = { }
+        		cur.execute("select StatusName from DeviceStatus")
+        		for row in cur.fetchall():
+                		dStatusL.setdefault(rowNum, [])
+                		dStatusL[rowNum].append(row[0])
+                		rowNum = rowNum + 1
+        		num = 0
+        		cat = { }
+        		cur.execute("select CategoryName from DeviceCategory")
+        		for row in cur.fetchall():
+                		cat.setdefault(num, [])
+                		cat[num].append(row[0])
+                		num = num + 1
+
+			return render_template('addDevice.html', dStatusL=dStatusL, cat=cat, error=error, uName=uName)
 		
 		elif(serCheck == strSerNum):
 			error = "Device with that serial number already exists."
-			return render_template('addDevice.html', error=error, uName=uName)
+                        uName = session['username']
+                        rowNum = 0
+                        dStatusL = { }
+                        cur.execute("select StatusName from DeviceStatus")
+                        for row in cur.fetchall():
+                                dStatusL.setdefault(rowNum, [])
+                                dStatusL[rowNum].append(row[0])
+                                rowNum = rowNum + 1
+                        num = 0
+                        cat = { }
+                        cur.execute("select CategoryName from DeviceCategory")
+                        for row in cur.fetchall():
+                                cat.setdefault(num, [])
+                                cat[num].append(row[0])
+                                num = num + 1
+
+			return render_template('addDevice.html', dStatusL=dStatusL, cat=cat, error=error, uName=uName)
 		
 		else:
 			cur.execute("INSERT INTO Device (DeviceName, Description, DeviceCategory_CategoryID, DeviceStatus_StatusID, DeviceLocation, DeviceOwner, DateOfDeployment, GoBackDate, IPAddress, SerialNumber)"
@@ -2184,6 +2310,11 @@ def edit_task():
 	cur.execute("SELECT Device_DeviceID FROM Device_has_Calendar WHERE Calendar_TaskID ="+tID)
 	for row in cur.fetchall():
         	devID = row[0]
+	
+	cur.execute("SELECT DeviceID FROM Device WHERE DeviceName = \'"+device+"\'")
+	for row in cur.fetchall():
+		device = row[0]
+	device = str(device)
 
         cur.execute("select TaskType from Task where TaskTypeName = \'"+tType+"\'")
         for row in cur.fetchall():
